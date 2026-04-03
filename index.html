@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alejandro Lozano · Risk Data Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   RESET & VARIABLES
+═══════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --black: #0a0a0a;
+  --white: #fafaf8;
+  --grey-100: #f5f4f0;
+  --grey-200: #e8e6e0;
+  --grey-400: #9e9b94;
+  --grey-600: #5a5750;
+  --grey-800: #2a2926;
+  --accent: #c9a84c;
+  --accent-light: #e8d5a0;
+  --accent-dark: #a07a28;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font-body);
+  background: var(--white);
+  color: var(--grey-800);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════ */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--grey-100); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.4s ease;
+}
+nav.scrolled {
+  background: rgba(10, 10, 10, 0.96);
+  backdrop-filter: blur(12px);
+  padding: 14px 48px;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+}
+.nav-logo {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--accent); }
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  background: var(--black);
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 0 8%;
+}
+.hero-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.hero-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+  top: -100px; right: -100px;
+  pointer-events: none;
+}
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 860px;
+}
+.hero-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 28px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s ease 0.2s forwards;
+}
+.hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  line-height: 1;
+  color: var(--white);
+  margin-bottom: 24px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.9s ease 0.4s forwards;
+}
+.hero-name span { color: var(--accent); }
+.hero-tagline {
+  font-size: 1.15rem;
+  font-weight: 300;
+  color: rgba(250,250,248,0.55);
+  max-width: 540px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.9s ease 0.6s forwards;
+}
+.hero-ctas {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.9s ease 0.8s forwards;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: var(--accent);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); }
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border: 1px solid rgba(201,168,76,0.4);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.btn-outline:hover { border-color: var(--accent); background: rgba(201,168,76,0.08); }
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.2s forwards;
+}
+.scroll-line {
+  width: 1px;
+  height: 50px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+.hero-scroll-hint span {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════
+   SECTIONS BASE
+═══════════════════════════════════════════ */
+section { padding: 120px 8%; }
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-label::after {
+  content: '';
+  height: 1px;
+  width: 60px;
+  background: var(--accent);
+  opacity: 0.5;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  line-height: 1.1;
+  color: var(--black);
+  margin-bottom: 60px;
+}
+
+/* ═══════════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════════ */
+#about { background: var(--grey-100); }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 80px;
+  align-items: start;
+}
+.about-photo-wrapper {
+  position: relative;
+}
+.about-photo {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  filter: grayscale(20%);
+  border-radius: 3px;
+}
+.about-photo-frame {
+  position: absolute;
+  top: 16px; left: 16px; right: -16px; bottom: -16px;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  z-index: -1;
+  opacity: 0.5;
+}
+.about-text p {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--grey-600);
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+.about-text p strong {
+  color: var(--grey-800);
+  font-weight: 600;
+}
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 44px;
+  padding-top: 44px;
+  border-top: 1px solid var(--grey-200);
+}
+.stat-item .stat-num {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-item .stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--grey-400);
+}
+
+/* ═══════════════════════════════════════════
+   SKILLS STRIP
+═══════════════════════════════════════════ */
+.skills-strip {
+  background: var(--black);
+  padding: 60px 8%;
+  overflow: hidden;
+}
+.skills-scroll-track {
+  display: flex;
+  gap: 48px;
+  animation: marquee 25s linear infinite;
+  width: max-content;
+}
+.skill-chip {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.skill-chip::before {
+  content: '◆';
+  color: var(--accent);
+  font-size: 0.5rem;
+}
+
+/* ═══════════════════════════════════════════
+   TIMELINE (ACADEMIC + PROFESSIONAL)
+═══════════════════════════════════════════ */
+#timeline { background: var(--white); }
+.timeline-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 64px;
+  border-bottom: 1px solid var(--grey-200);
+}
+.tab-btn {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 12px 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--grey-400);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.3s;
+}
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.timeline {
+  position: relative;
+  padding-left: 48px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent), rgba(201,168,76,0.1));
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 56px;
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.6s ease;
+}
+.timeline-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+.timeline-dot {
+  position: absolute;
+  left: -45px;
+  top: 4px;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2px solid var(--accent);
+  transition: background 0.3s;
+}
+.timeline-item:hover .timeline-dot { background: var(--accent); }
+.timeline-period {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.timeline-role {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  color: var(--black);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.timeline-org {
+  font-size: 0.85rem;
+  color: var(--grey-400);
+  margin-bottom: 14px;
+  font-style: italic;
+}
+.timeline-desc {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--grey-600);
+  max-width: 640px;
+}
+.timeline-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
+  padding: 4px 12px;
+  border: 1px solid var(--grey-200);
+  color: var(--grey-600);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.tag:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══════════════════════════════════════════
+   PROJECTS
+═══════════════════════════════════════════ */
+#projects { background: var(--grey-100); }
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 28px;
+}
+.project-card {
+  background: var(--white);
+  border: 1px solid var(--grey-200);
+  border-radius: 3px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  opacity: 0;
+  transform: translateY(24px);
+  cursor: pointer;
+}
+.project-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.project-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.08);
+}
+.project-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(20%);
+  transition: filter 0.4s;
+}
+.project-card:hover .project-img { filter: grayscale(0%); }
+.project-img-placeholder {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, var(--black) 0%, var(--grey-800) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.project-body { padding: 28px; }
+.project-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  padding: 3px 10px;
+  background: var(--black);
+  color: var(--accent);
+  border-radius: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.project-badge.live { background: var(--accent); color: var(--black); }
+.project-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--black);
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+.project-desc {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--grey-600);
+  margin-bottom: 20px;
+}
+.project-link {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: gap 0.3s;
+}
+.project-link:hover { gap: 14px; }
+
+/* ═══════════════════════════════════════════
+   CERTIFICATIONS
+═══════════════════════════════════════════ */
+#certifications { background: var(--white); }
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+.cert-card {
+  padding: 28px;
+  border: 1px solid var(--grey-200);
+  border-radius: 3px;
+  transition: all 0.3s;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.cert-card.visible { opacity: 1; transform: translateY(0); }
+.cert-card:hover { border-color: var(--accent); }
+.cert-issuer-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.cert-name { font-size: 0.95rem; font-weight: 600; color: var(--black); line-height: 1.35; }
+.cert-year { font-family: var(--font-mono); font-size: 0.65rem; color: var(--grey-400); margin-top: 8px; }
+
+/* ═══════════════════════════════════════════
+   LANGUAGES
+═══════════════════════════════════════════ */
+.langs-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 48px;
+}
+.lang-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border: 1px solid var(--grey-200);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.lang-pill:hover { border-color: var(--accent); }
+.lang-name-p { font-size: 0.9rem; font-weight: 600; color: var(--black); }
+.lang-level {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  padding: 3px 9px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+.level-native { background: var(--black); color: var(--white); }
+.level-pro { background: var(--grey-200); color: var(--grey-600); }
+.level-basic { background: var(--grey-100); color: var(--grey-400); }
+
+/* ═══════════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════════ */
+#contact {
+  background: var(--black);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+#contact .hero-bg-grid { opacity: 0.5; }
+#contact .section-title { color: var(--white); }
+#contact .section-label { justify-content: center; }
+#contact .section-label::after { display: none; }
+.contact-subtitle {
+  font-size: 1.05rem;
+  color: rgba(250,250,248,0.45);
+  font-weight: 300;
+  max-width: 480px;
+  margin: -36px auto 48px;
+  line-height: 1.75;
+}
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 80px;
+}
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 32px;
+  border: 1px solid rgba(201,168,76,0.3);
+  color: rgba(250,250,248,0.7);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.contact-link:hover { border-color: var(--accent); color: var(--accent); background: rgba(201,168,76,0.06); }
+.contact-link svg { width: 16px; height: 16px; fill: currentColor; }
+footer {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 24px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-note {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.2);
+}
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════ */
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.5; transform: scaleY(1); }
+  50% { opacity: 1; transform: scaleY(1.1); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  nav { padding: 18px 24px; }
+  nav.scrolled { padding: 12px 24px; }
+  .nav-links { display: none; }
+  section { padding: 80px 6%; }
+  .about-grid { grid-template-columns: 1fr; gap: 48px; }
+  .about-photo-wrapper { max-width: 280px; }
+  .about-stats { grid-template-columns: repeat(3, 1fr); }
+  .hero-name { font-size: clamp(2.8rem, 12vw, 4rem); }
+  footer { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">AL</a>
+  <ul class="nav-links">
+    <li><a href="#about">Sobre mí</a></li>
+    <li><a href="#timeline">Trayectoria</a></li>
+    <li><a href="#projects">Proyectos</a></li>
+    <li><a href="#certifications">Formación</a></li>
+    <li><a href="#contact">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Risk · Data · Engineering</div>
+    <h1 class="hero-name">Alejandro<br><span>Lozano</span></h1>
+    <p class="hero-tagline">Senior Data Engineer especializado en riesgo bancario, analytics regulatorio y transformación digital en entornos financieros de alta exigencia.</p>
+    <div class="hero-ctas">
+      <a href="#projects" class="btn-primary">Ver proyectos →</a>
+      <a href="https://www.linkedin.com/in/alejandro-lozano-pastor" target="_blank" class="btn-outline">LinkedIn ↗</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ═══ SKILLS MARQUEE ═══ -->
+<div class="skills-strip">
+  <div class="skills-scroll-track">
+    <span class="skill-chip">SAS</span>
+    <span class="skill-chip">SQL</span>
+    <span class="skill-chip">Power BI</span>
+    <span class="skill-chip">Python</span>
+    <span class="skill-chip">DAX</span>
+    <span class="skill-chip">ETL Pipelines</span>
+    <span class="skill-chip">COREP / FINREP</span>
+    <span class="skill-chip">Riesgo de Crédito</span>
+    <span class="skill-chip">RWA / CET1</span>
+    <span class="skill-chip">Power Query</span>
+    <span class="skill-chip">LLM / Gen AI</span>
+    <span class="skill-chip">Data Governance</span>
+    <span class="skill-chip">Regulación EBA / BCE</span>
+    <span class="skill-chip">NASA Exoplanet Archive</span>
+    <!-- duplicate for seamless loop -->
+    <span class="skill-chip">SAS</span>
+    <span class="skill-chip">SQL</span>
+    <span class="skill-chip">Power BI</span>
+    <span class="skill-chip">Python</span>
+    <span class="skill-chip">DAX</span>
+    <span class="skill-chip">ETL Pipelines</span>
+    <span class="skill-chip">COREP / FINREP</span>
+    <span class="skill-chip">Riesgo de Crédito</span>
+    <span class="skill-chip">RWA / CET1</span>
+    <span class="skill-chip">Power Query</span>
+    <span class="skill-chip">LLM / Gen AI</span>
+    <span class="skill-chip">Data Governance</span>
+    <span class="skill-chip">Regulación EBA / BCE</span>
+    <span class="skill-chip">NASA Exoplanet Archive</span>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about">
+  <div class="reveal">
+    <div class="section-label">Sobre mí</div>
+    <h2 class="section-title">Datos que cuentan<br><em>historias reales</em></h2>
+  </div>
+  <div class="about-grid reveal">
+    <div class="about-photo-wrapper">
+      <img
+        class="about-photo"
+        src="https://drive.google.com/thumbnail?id=196pZGLYekm1hk820lWX4a1_0oRT0H-FL&sz=s4000"
+        alt="Alejandro Lozano"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div style="display:none; width:100%; aspect-ratio:3/4; background:var(--grey-200); align-items:center; justify-content:center; font-family:var(--font-mono); font-size:0.7rem; color:var(--grey-400); letter-spacing:2px;">AL</div>
+      <div class="about-photo-frame"></div>
+    </div>
+    <div class="about-text">
+      <p>Soy un <strong>Data Engineer con sólida especialización en riesgo bancario y analytics regulatorio</strong>, con experiencia en entornos de alta exigencia normativa junto a entidades financieras de primer nivel.</p>
+      <p>Mi pasión nació en la ingeniería informática — en modelado de datos y algoritmos — y creció hacia el mundo financiero, donde convergen la precisión técnica y el impacto estratégico real. Transformo datos complejos en soluciones que mueven decisiones.</p>
+      <p>Actualmente en <strong>Management Solutions (Barcelona)</strong>, construyo pipelines ETL críticos en SAS/SQL, automatizo reporting regulatorio COREP para G-SIBs internacionales y desarrollo ecosistemas BI que eliminan ineficiencias y garantizan el cumplimiento con EBA y BCE.</p>
+      <div class="about-stats">
+        <div class="stat-item">
+          <div class="stat-num">50%+</div>
+          <div class="stat-label">Mejora eficiencia ETL</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100+</div>
+          <div class="stat-label">Informes consolidados</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">40+</div>
+          <div class="stat-label">KPIs macro automatizados</div>
+        </div>
+      </div>
+      <!-- Languages -->
+      <div class="langs-row" style="margin-top:40px;">
+        <div class="lang-pill"><span class="lang-name-p">Español</span><span class="lang-level level-native">Nativo</span></div>
+        <div class="lang-pill"><span class="lang-name-p">Catalán</span><span class="lang-level level-native">Nativo</span></div>
+        <div class="lang-pill"><span class="lang-name-p">Inglés</span><span class="lang-level level-pro">Profesional</span></div>
+        <div class="lang-pill"><span class="lang-name-p">Mandarín</span><span class="lang-level level-basic">Principiante</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TIMELINE ═══ -->
+<section id="timeline">
+  <div class="reveal">
+    <div class="section-label">Trayectoria</div>
+    <h2 class="section-title">El camino<br><em>hasta aquí</em></h2>
+  </div>
+
+  <div class="timeline-tabs reveal">
+    <button class="tab-btn active" data-tab="professional">Experiencia profesional</button>
+    <button class="tab-btn" data-tab="academic">Formación académica</button>
+  </div>
+
+  <!-- PROFESSIONAL -->
+  <div class="tab-content active" id="tab-professional">
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Nov 2023 – Ago 2025 · Barcelona</div>
+        <div class="timeline-role">Data Engineer – Risk & Regulatory Data</div>
+        <div class="timeline-org">Management Solutions</div>
+        <div class="timeline-desc">
+          Diseño y optimización de pipelines ETL críticos en SAS/SQL para carteras de riesgo de crédito, con mejoras de eficiencia superiores al 50%. Automatización de reportes COREP para G-SIB internacional, garantizando cumplimiento con EBA y BCE. Construcción de frameworks de validación de parámetros de capital regulatorio (RWA, CET1, provisiones).
+        </div>
+        <div class="timeline-tags">
+          <span class="tag">SAS</span><span class="tag">SQL</span><span class="tag">COREP</span><span class="tag">RWA / CET1</span><span class="tag">EBA / BCE</span><span class="tag">ETL</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">2023 – 2023 · Barcelona</div>
+        <div class="timeline-role">Data Analyst – BI & Risk Reporting</div>
+        <div class="timeline-org">Management Solutions</div>
+        <div class="timeline-desc">
+          Consolidación de 100+ informes en 6 dashboards Power BI unificados, reduciendo la carga operativa de reporting en más del 90%. Desarrollo end-to-end del ecosistema BI: desde inventariado de informes hasta despliegue en producción. Diseño del modelo semántico centralizado integrando fuentes heterogéneas del datamart bancario.
+        </div>
+        <div class="timeline-tags">
+          <span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">Power Query</span><span class="tag">Data Modeling</span><span class="tag">Stakeholders</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ACADEMIC -->
+  <div class="tab-content" id="tab-academic">
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">2023 – 2025</div>
+        <div class="timeline-role">Máster en Consultoría de Negocio</div>
+        <div class="timeline-org">Universidad Pontificia de Comillas – ICADE · Especialización en Data Science</div>
+        <div class="timeline-desc">
+          Amplié la comprensión del negocio bancario y regulatorio, integrando visión estratégica con capacidad analítica aplicada. Formación en regulación financiera, core bancario, Business Intelligence e IA aplicada a negocios.
+        </div>
+        <div class="timeline-tags">
+          <span class="tag">Core Bancario</span><span class="tag">Regulación Financiera</span><span class="tag">Business Intelligence</span><span class="tag">IA en Negocios</span><span class="tag">Project Management</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">2019 – 2023</div>
+        <div class="timeline-role">Grado en Ingeniería Informática</div>
+        <div class="timeline-org">Universidad Miguel Hernández · Tecnologías de la Información</div>
+        <div class="timeline-desc">
+          Aquí nació mi pasión por el análisis y la ingeniería de datos. Formación sólida en programación, modelado de bases de datos, algoritmos y procesamiento de lenguaje natural.
+        </div>
+        <div class="timeline-tags">
+          <span class="tag">SQL</span><span class="tag">POO</span><span class="tag">R Studio</span><span class="tag">NLP</span><span class="tag">Programación Paralela</span><span class="tag">Modelado BD</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROJECTS ═══ -->
+<section id="projects">
+  <div class="reveal">
+    <div class="section-label">Proyectos</div>
+    <h2 class="section-title">Trabajo que<br><em>habla por sí solo</em></h2>
+  </div>
+  <div class="projects-grid">
+
+    <!-- Project 1 -->
+    <div class="project-card reveal">
+      <img
+        class="project-img"
+        src="https://drive.google.com/thumbnail?id=1fxneeEHQ2Mfj14ivzweZoSG1knQ-2KKr&sz=s4000"
+        alt="Dashboard Macroeconómico"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      >
+      <div class="project-img-placeholder" style="display:none;">Power BI Dashboard</div>
+      <div class="project-body">
+        <span class="project-badge live">Live</span>
+        <div class="project-title">Dashboard de Indicadores Macroeconómicos</div>
+        <p class="project-desc">Dashboard interactivo con fuentes open-source internacionales (Banco Mundial, FMI, Eurostat). Mapas coropléticos, series temporales y 40+ KPIs macroeconómicos actualizados automáticamente. Tiempo de análisis reducido a menos de 5 minutos.</p>
+        <a href="https://app.powerbi.com/view?r=eyJrIjoiYTFjOTZlMzYtNmE4OC00MThjLThiMGYtYTMwOGZlMjkyZDUwIiwidCI6ImJjZDI3MDFjLWFhOWItNGQxMi1iYTIwLWYzZTNiODMwNzBjMSIsImMiOjh9&pageName=ReportSection" target="_blank" class="project-link">Ver proyecto →</a>
+      </div>
+    </div>
+
+    <!-- Project 2 - ExoEDA -->
+    <div class="project-card reveal" style="transition-delay: 0.15s;">
+      <div class="project-img-placeholder">Exoplanet EDA · NASA</div>
+      <div class="project-body">
+        <span class="project-badge">Data Science</span>
+        <div class="project-title">ExoEDA — Análisis Exploratorio</div>
+        <p class="project-desc">Análisis exploratorio de datos del NASA Exoplanet Archive. Visualizaciones interactivas sobre métodos de detección, distribución de exoplanetas y correlaciones astrofísicas. Una exploración del cosmos a través de los datos.</p>
+        <a href="#" class="project-link">Ver análisis →</a>
+      </div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="project-card reveal" style="transition-delay: 0.3s;">
+      <div class="project-img-placeholder" style="background: linear-gradient(135deg, #0d1117 0%, #1a2332 100%);">ETL · Risk Analytics</div>
+      <div class="project-body">
+        <span class="project-badge">Risk Engineering</span>
+        <div class="project-title">Framework de Validación Regulatoria</div>
+        <p class="project-desc">Construcción de pipelines ETL críticos en SAS/SQL para carteras de riesgo de crédito. Automatización de cierres mensuales y control de calidad sobre parámetros de capital regulatorio (RWA, CET1, provisiones) para G-SIB internacional.</p>
+        <span class="project-link" style="cursor:default; opacity:0.4;">Proyecto confidencial</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ CERTIFICATIONS ═══ -->
+<section id="certifications">
+  <div class="reveal">
+    <div class="section-label">Certificaciones</div>
+    <h2 class="section-title">Aprendizaje<br><em>continuo</em></h2>
+  </div>
+  <div class="certs-grid">
+    <div class="cert-card reveal">
+      <div class="cert-issuer-tag">DeepLearning.AI · 2025</div>
+      <div class="cert-name">Generative AI with Large Language Models</div>
+      <div class="cert-year">Coursera / DeepLearning.AI</div>
+    </div>
+    <div class="cert-card reveal" style="transition-delay:0.1s;">
+      <div class="cert-issuer-tag">IBM · 2022</div>
+      <div class="cert-name">Data Analysis with Python</div>
+      <div class="cert-year">IBM Professional Certificate</div>
+    </div>
+    <div class="cert-card reveal" style="transition-delay:0.2s;">
+      <div class="cert-issuer-tag">IBM · 2022</div>
+      <div class="cert-name">Python 101 for Data Science</div>
+      <div class="cert-year">IBM Professional Certificate</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact">
+  <div class="hero-bg-grid"></div>
+  <div class="reveal" style="position:relative; z-index:1;">
+    <div class="section-label" style="justify-content:center;">Contacto</div>
+    <h2 class="section-title">¿Hablamos?</h2>
+    <p class="contact-subtitle">Abierto a nuevas oportunidades, colaboraciones y conversaciones sobre datos, riesgo y tecnología financiera.</p>
+    <div class="contact-links">
+      <a href="mailto:alejandrolozanopastor@gmail.com" class="contact-link">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        Email
+      </a>
+      <a href="https://www.linkedin.com/in/alejandro-lozano-pastor" target="_blank" class="contact-link">
+        <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+        LinkedIn
+      </a>
+      <a href="tel:+34647075077" class="contact-link">
+        <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.09 15.09 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C9.39 21 3 14.61 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z"/></svg>
+        +34 647 07 50 77
+      </a>
+    </div>
+  </div>
+  <footer>
+    <span class="footer-note">© 2025 Alejandro Lozano Pastor · Barcelona, España</span>
+    <span class="footer-note">Diseñado & desarrollado a mano</span>
+  </footer>
+</section>
+
+<!-- ═══ SCRIPTS ═══ -->
+<script>
+// NAV scroll effect
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Scroll reveal
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // also trigger children timeline-item and project-card
+      entry.target.querySelectorAll('.timeline-item, .project-card, .cert-card').forEach((child, i) => {
+        setTimeout(() => child.classList.add('visible'), i * 120);
+      });
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal, .timeline-item, .project-card, .cert-card').forEach(el => {
+  revealObserver.observe(el);
+});
+
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + target).classList.add('active');
+    // trigger reveal for newly shown timeline items
+    document.querySelectorAll('#tab-' + target + ' .timeline-item').forEach((item, i) => {
+      setTimeout(() => item.classList.add('visible'), i * 120);
+    });
+  });
+});
+
+// Trigger initial timeline items
+setTimeout(() => {
+  document.querySelectorAll('#tab-professional .timeline-item').forEach((item, i) => {
+    setTimeout(() => item.classList.add('visible'), i * 150);
+  });
+}, 300);
+</script>
+
+</body>
+</html>
