@@ -160,37 +160,6 @@ nav.scrolled {
   transform: translateY(20px);
   animation: fadeUp 0.9s ease 0.8s forwards;
 }
-.hero-layout {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  align-items: center;
-  gap: 80px;
-}
-
-.hero-right {
-  display: flex;
-  justify-content: center;
-}
-
-.hero-photo-wrapper {
-  position: relative;
-  width: 320px;
-}
-
-.hero-photo {
-  width: 100%;
-  border-radius: 6px;
-  object-fit: cover;
-  filter: grayscale(10%);
-  border: 1px solid rgba(201,168,76,0.3);
-}
-
-.hero-photo-glow {
-  position: absolute;
-  inset: -20px;
-  background: radial-gradient(circle, rgba(201,168,76,0.15), transparent 70%);
-  z-index: -1;
-}
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -249,29 +218,7 @@ nav.scrolled {
   color: var(--accent);
   text-transform: uppercase;
 }
-.hero-metrics {
-  display: flex;
-  gap: 32px;
-  margin-top: 32px;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.6);
-}
 
-.hero-metrics span {
-  color: var(--accent);
-  font-weight: 600;
-}
-   .hero-badge {
-  display: inline-block;
-  margin-top: 12px;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 2px;
-  padding: 4px 10px;
-  border: 1px solid rgba(201,168,76,0.4);
-  color: var(--accent);
-}
 /* ═══════════════════════════════════════════
    SECTIONS BASE
 ═══════════════════════════════════════════ */
@@ -531,7 +478,7 @@ section { padding: 120px 8%; }
 }
 .project-card:hover {
   border-color: var(--accent);
-  transform: translateY(-6px) scale(1.01);
+  transform: translateY(-6px);
   box-shadow: 0 24px 48px rgba(0,0,0,0.08);
 }
 .project-img {
@@ -749,20 +696,6 @@ footer {
   .hero-name { font-size: clamp(2.8rem, 12vw, 4rem); }
   footer { flex-direction: column; text-align: center; }
 }
-@media (max-width: 768px) {
-  .hero-layout {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-
-  .hero-right {
-    order: -1;
-  }
-
-  .hero-photo-wrapper {
-    width: 220px;
-  }
-}
 </style>
 </head>
 <body>
@@ -783,36 +716,15 @@ footer {
 <section id="hero">
   <div class="hero-bg-grid"></div>
   <div class="hero-glow"></div>
-  <div class="hero-content hero-layout">
-  
-  <div class="hero-left">
+  <div class="hero-content">
     <div class="hero-tag">Risk · Data · Engineering</div>
     <h1 class="hero-name">Alejandro<br><span>Lozano</span></h1>
-   <p class="hero-tagline">
-<div class="hero-badge">BANKING · RISK · DATA</div>
-Especializado en v<strong>riesgo de crédito, reporting regulatorio (COREP / FINREP)</strong> y automatización de pipelines críticos en entornos bancarios. 
-Transformo datos complejos en decisiones alineadas con regulación EBA/BCE.
-</p>
-
+    <p class="hero-tagline">Senior Data Engineer especializado en riesgo bancario, analytics regulatorio y transformación digital en entornos financieros de alta exigencia.</p>
     <div class="hero-ctas">
       <a href="#projects" class="btn-primary">Ver proyectos →</a>
       <a href="https://www.linkedin.com/in/alejandro-lozano-pastor" target="_blank" class="btn-outline">LinkedIn ↗</a>
     </div>
   </div>
-
-  <div class="hero-right">
-    <div class="hero-photo-wrapper">
-      <img src="TU_FOTO_AQUI.jpg" alt="Alejandro Lozano" class="hero-photo">
-      <div class="hero-photo-glow"></div>
-    </div>
-  </div>
-   <div class="hero-metrics">
-  <div><span>+50%</span> eficiencia ETL</div>
-  <div><span>-90%</span> carga reporting</div>
-  <div><span>100+</span> informes automatizados</div>
-</div>
-
-</div>
   <div class="hero-scroll-hint">
     <span>Scroll</span>
     <div class="scroll-line"></div>
@@ -922,9 +834,8 @@ Transformo datos complejos en decisiones alineadas con regulación EBA/BCE.
         <div class="timeline-role">Data Engineer – Risk & Regulatory Data</div>
         <div class="timeline-org">Management Solutions</div>
         <div class="timeline-desc">
-Optimización de pipelines ETL críticos en SAS/SQL para carteras de riesgo de crédito (~XXM€ exposición), logrando mejoras de eficiencia >50%. 
-Automatización de reporting COREP para G-SIB, asegurando cumplimiento regulatorio (EBA/BCE) y reduciendo tiempos de cierre mensual.
-</div>
+          Diseño y optimización de pipelines ETL críticos en SAS/SQL para carteras de riesgo de crédito, con mejoras de eficiencia superiores al 50%. Automatización de reportes COREP para G-SIB internacional, garantizando cumplimiento con EBA y BCE. Construcción de frameworks de validación de parámetros de capital regulatorio (RWA, CET1, provisiones).
+        </div>
         <div class="timeline-tags">
           <span class="tag">SAS</span><span class="tag">SQL</span><span class="tag">COREP</span><span class="tag">RWA / CET1</span><span class="tag">EBA / BCE</span><span class="tag">ETL</span>
         </div>
