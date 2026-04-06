@@ -177,17 +177,28 @@ nav.scrolled{background:rgba(8,9,12,.96);backdrop-filter:blur(16px);padding:14px
 .tab-content{display:none}.tab-content.active{display:block}
 .timeline{position:relative;padding-left:40px}
 .timeline::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:linear-gradient(to bottom,var(--accent),rgba(0,212,255,.04))}
-.timeline-item{position:relative;margin-bottom:48px;opacity:0;transform:translateX(-16px);transition:all .55s ease}
+.timeline-item{position:relative;margin-bottom:52px;opacity:0;transform:translateX(-16px);transition:all .55s ease;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto auto;gap:0 20px;align-items:start}
 .timeline-item.visible{opacity:1;transform:none}
 .timeline-dot{position:absolute;left:-37px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--black);border:2px solid var(--accent);transition:background .3s}
 .timeline-item:hover .timeline-dot{background:var(--accent)}
-.timeline-period{font-family:var(--font-m);font-size:.58rem;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;margin-bottom:5px}
-.timeline-role{font-family:var(--font-d);font-size:1.35rem;color:var(--white);margin-bottom:3px;line-height:1.2}
-.timeline-org{font-size:.78rem;color:rgba(255,255,255,.26);margin-bottom:10px;font-style:italic}
-.timeline-desc{font-size:.84rem;line-height:1.75;color:rgba(255,255,255,.36);max-width:600px}
-.timeline-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.timeline-period{font-family:var(--font-m);font-size:.58rem;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;margin-bottom:5px;grid-column:1}
+.timeline-role{font-family:var(--font-d);font-size:1.35rem;color:var(--white);margin-bottom:3px;line-height:1.2;grid-column:1}
+.timeline-org{font-size:.78rem;color:rgba(255,255,255,.26);margin-bottom:10px;font-style:italic;grid-column:1}
+.timeline-desc{font-size:.84rem;line-height:1.75;color:rgba(255,255,255,.36);max-width:560px;grid-column:1}
+.timeline-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;grid-column:1}
 .tag{font-family:var(--font-m);font-size:.57rem;letter-spacing:.5px;padding:3px 10px;border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.28);border-radius:2px;transition:all .3s}
 .tag:hover{border-color:var(--accent);color:var(--accent)}
+/* Timeline logo side panel */
+.timeline-logo-panel{grid-column:2;grid-row:1 / 5;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:100px;padding:16px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:4px;gap:8px;align-self:start;margin-top:0}
+.tl-logo-img{width:64px;height:64px;object-fit:contain;filter:brightness(0.9) contrast(1.1);border-radius:4px}
+.tl-logo-name{font-family:var(--font-m);font-size:.48rem;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.2);text-align:center}
+/* Confidential project */
+.proj-confidential-bg{width:100%;height:180px;background:linear-gradient(135deg,#050810,#0a1020);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.05)}
+.proj-lock-icon{font-size:2rem;opacity:.3}
+.proj-conf-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 24px;width:100%}
+.proj-conf-stat{text-align:center;padding:8px;background:rgba(255,85,119,.06);border:1px solid rgba(255,85,119,.15);border-radius:3px}
+.proj-conf-num{font-family:var(--font-d);font-size:1.1rem;color:rgba(255,100,130,.8);display:block}
+.proj-conf-lbl{font-family:var(--font-m);font-size:.42rem;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.2);display:block}
 
 /* PROJECTS */
 #projects{padding:120px 6%;background:#050607}
@@ -246,6 +257,26 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
 .lang-btn.active{background:rgba(0,212,255,.15);color:var(--accent);}
 .lang-btn:hover:not(.active){color:rgba(255,255,255,.7);}
 
+/* ── WORK LINES — FULL WIDTH SELECTOR TABS ── */
+.wl-tabs{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:64px;border:1px solid rgba(0,212,255,.15);border-radius:6px;overflow:hidden}
+.wl-btn{display:flex;align-items:center;justify-content:center;gap:16px;padding:28px 20px;background:rgba(0,212,255,.02);border:none;color:rgba(255,255,255,.3);font-family:var(--font-m);font-size:.7rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .4s;outline:none;position:relative;overflow:hidden}
+.wl-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,.08),transparent);opacity:0;transition:opacity .4s}
+.wl-btn:hover::before{opacity:1}
+.wl-btn:hover{color:rgba(255,255,255,.7)}
+.wl-btn:first-child{border-right:1px solid rgba(0,212,255,.15)}
+.wl-btn.active{background:rgba(0,212,255,.07);color:var(--accent)}
+.wl-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--accent),transparent)}
+.wl-btn-inner{display:flex;flex-direction:column;align-items:center;gap:6px}
+.wl-btn-icon{font-size:1.6rem;line-height:1}
+.wl-btn-title{font-family:var(--font-d);font-size:1.1rem;color:inherit}
+.wl-btn-sub{font-family:var(--font-m);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);transition:color .4s}
+.wl-btn.active .wl-btn-sub{color:rgba(0,212,255,.5)}
+.wl-btn:hover .wl-btn-sub{color:rgba(255,255,255,.4)}
+.wl-btn-kpi{display:flex;gap:20px;margin-top:8px}
+.wl-kpi-chip{font-family:var(--font-m);font-size:.58rem;padding:3px 10px;border-radius:100px;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.2);color:rgba(0,229,160,.7);white-space:nowrap}
+.wl-content{display:none}
+.wl-content.active{display:block}
+
 /* ── WORK LINES — VISUAL INFOGRAPHIC ── */
 .wl-infographic{display:flex;flex-direction:column;gap:0}
 .wl-hero-stat{display:flex;align-items:center;justify-content:center;gap:28px;padding:40px 0 56px;flex-wrap:wrap}
@@ -256,87 +287,174 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
 .wl-big-num .lbl{font-family:var(--font-m);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-top:6px}
 .wl-divider-v{width:1px;height:80px;background:linear-gradient(to bottom,transparent,rgba(0,212,255,.2),transparent)}
 
+/* ── PHASE NODES with HOVER TOOLTIP ── */
 .phases-track{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;margin-bottom:72px}
+.phases-track.etl-track{grid-template-columns:repeat(4,1fr)}
 .phases-track::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:1px;background:linear-gradient(to right,var(--accent),var(--green));opacity:.25;z-index:0}
-.phase-node{display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1;padding:0 8px}
-.phase-dot{width:56px;height:56px;border-radius:50%;border:1px solid rgba(0,212,255,.3);background:rgba(0,18,28,.8);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.72rem;font-weight:700;color:var(--accent);margin-bottom:14px;transition:all .4s;cursor:default;position:relative}
-.phase-dot:hover{background:rgba(0,212,255,.12);border-color:var(--accent);box-shadow:0 0 24px rgba(0,212,255,.25);transform:scale(1.08)}
+.phase-node{display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1;padding:0 8px;cursor:pointer}
+.phase-dot{width:56px;height:56px;border-radius:50%;border:1px solid rgba(0,212,255,.3);background:rgba(0,18,28,.8);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.72rem;font-weight:700;color:var(--accent);margin-bottom:14px;transition:all .35s;position:relative}
+.phase-node:hover .phase-dot,.phase-dot.active-dot{background:rgba(0,212,255,.14);border-color:var(--accent);box-shadow:0 0 0 4px rgba(0,212,255,.1),0 0 24px rgba(0,212,255,.3);transform:scale(1.12)}
 .phase-dot.result{border-color:rgba(0,229,160,.4);color:var(--green)}
-.phase-dot.result:hover{background:rgba(0,229,160,.1);border-color:var(--green);box-shadow:0 0 24px rgba(0,229,160,.25)}
-.phase-node-title{font-family:var(--font-d);font-size:.78rem;color:rgba(255,255,255,.7);margin-bottom:4px;line-height:1.3}
+.phase-node:hover .phase-dot.result,.phase-dot.result.active-dot{background:rgba(0,229,160,.1);border-color:var(--green);box-shadow:0 0 0 4px rgba(0,229,160,.1),0 0 24px rgba(0,229,160,.25)}
+.phase-node-title{font-family:var(--font-d);font-size:.78rem;color:rgba(255,255,255,.7);margin-bottom:4px;line-height:1.3;transition:color .3s}
+.phase-node:hover .phase-node-title{color:var(--white)}
 .phase-node-tech{font-family:var(--font-m);font-size:.52rem;letter-spacing:.5px;color:rgba(0,212,255,.45);text-transform:uppercase}
 
-/* expanded detail card */
-.phase-detail{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;opacity:0;max-height:0;overflow:hidden;transition:opacity .5s ease,max-height .6s ease}
-.phase-detail.open{opacity:1;max-height:800px}
-.detail-visual{background:rgba(0,18,28,.5);border:1px solid rgba(0,212,255,.13);border-radius:4px;overflow:hidden}
-.detail-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(0,212,255,.05);border-bottom:1px solid rgba(0,212,255,.08)}
-.detail-header-title{font-family:var(--font-m);font-size:.56rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(0,212,255,.7)}
-.detail-badge{font-family:var(--font-m);font-size:.55rem;padding:2px 8px;border-radius:2px;letter-spacing:1px;text-transform:uppercase}
-.detail-text{padding-top:8px}
-.detail-step{font-family:var(--font-m);font-size:.62rem;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
-.detail-step-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--black);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;flex-shrink:0}
-.detail-title-text{font-family:var(--font-d);font-size:1.5rem;color:var(--white);margin-bottom:8px;line-height:1.2}
-.detail-tech-tag{font-family:var(--font-m);font-size:.6rem;letter-spacing:1px;color:rgba(0,212,255,.5);margin-bottom:14px;text-transform:uppercase}
-.detail-desc{font-size:.86rem;line-height:1.82;color:rgba(255,255,255,.38)}
-.detail-kpi-row{display:flex;gap:10px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid rgba(0,212,255,.07)}
-.detail-kpi{padding:7px 13px;border-radius:2px;background:rgba(0,229,160,.07);border:1px solid rgba(0,229,160,.22);color:var(--green);font-family:var(--font-m);font-size:.6rem;letter-spacing:.3px;display:flex;align-items:center;gap:7px}
-.detail-kpi .kv{font-size:1rem;font-weight:700}
+/* Hover tooltip panel */
+.phase-tooltip{
+  position:absolute;top:calc(100% + 16px);left:50%;
+  width:460px;background:rgba(6,12,22,.98);border:1px solid rgba(0,212,255,.2);
+  border-radius:8px;padding:0;z-index:100;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease;
+  transform:translateX(-50%) translateY(8px);
+  box-shadow:0 24px 60px rgba(0,0,0,.8),0 0 0 1px rgba(0,212,255,.05);
+}
+.phase-node:hover .phase-tooltip,.phase-node.active-phase .phase-tooltip{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+/* Arrow */
+.phase-tooltip::before{content:'';position:absolute;top:-6px;left:50%;width:10px;height:10px;background:rgba(6,12,22,.98);border-left:1px solid rgba(0,212,255,.2);border-top:1px solid rgba(0,212,255,.2);transform:translateX(-50%) rotate(45deg)}
+.tt-header{padding:14px 20px;border-bottom:1px solid rgba(0,212,255,.08);display:flex;align-items:center;gap:12px}
+.tt-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--black);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.62rem;font-weight:700;flex-shrink:0}
+.tt-num.green{background:var(--green)}
+.tt-title{font-family:var(--font-d);font-size:1.05rem;color:var(--white);line-height:1.2}
+.tt-tech{font-family:var(--font-m);font-size:.52rem;letter-spacing:1px;color:rgba(0,212,255,.5);text-transform:uppercase;margin-top:3px}
+.tt-body{padding:16px 20px}
+.tt-visual{margin-bottom:14px;border-radius:6px;overflow:hidden;background:rgba(0,12,24,.7);border:1px solid rgba(255,255,255,.06);min-height:120px;display:flex;align-items:center;justify-content:center;padding:16px}
+.tt-desc{font-size:.82rem;line-height:1.75;color:rgba(255,255,255,.42)}
+/* Active phase dot */
+.phase-node.active-phase .phase-dot{background:rgba(0,212,255,.18);border-color:var(--accent);box-shadow:0 0 0 4px rgba(0,212,255,.15),0 0 28px rgba(0,212,255,.35);transform:scale(1.15)}
+.phase-node.active-phase .phase-dot.result{background:rgba(0,229,160,.15);border-color:var(--green);box-shadow:0 0 0 4px rgba(0,229,160,.12),0 0 28px rgba(0,229,160,.3)}
+.phase-node.active-phase .phase-node-title{color:var(--white)}
 
-/* before/after comparison bar */
-.compare-bar{padding:16px}
-.compare-row{margin-bottom:12px}
-.compare-label{font-family:var(--font-m);font-size:.58rem;letter-spacing:.5px;color:rgba(255,255,255,.4);margin-bottom:5px;text-transform:uppercase}
-.compare-bars{display:flex;gap:6px;align-items:center}
-.bar-before{height:8px;border-radius:2px;background:rgba(255,85,119,.35);border:1px solid rgba(255,85,119,.4);flex-shrink:0}
-.bar-after{height:8px;border-radius:2px;background:rgba(0,229,160,.5);border:1px solid rgba(0,229,160,.5);flex-shrink:0;transition:width 1.2s ease}
-.bar-val{font-family:var(--font-m);font-size:.58rem;color:var(--green);min-width:36px;flex-shrink:0}
-.bar-val-before{font-family:var(--font-m);font-size:.58rem;color:rgba(255,85,119,.8);min-width:36px;flex-shrink:0}
+/* ── FILE ICONS VISUAL ── */
+.file-icons-grid{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;justify-content:center;width:100%}
+.fi{display:flex;flex-direction:column;align-items:center;gap:4px;transition:transform .3s}
+.fi:hover{transform:translateY(-4px)}
+.fi-body{border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;font-family:var(--font-m);letter-spacing:.5px;position:relative;width:32px;height:40px}
+.fi-body::after{content:'';position:absolute;top:0;right:0;width:8px;height:8px;background:inherit;filter:brightness(.6);clip-path:polygon(0 0,100% 100%,100% 0)}
+.fi-xl .fi-body{background:#217346;color:#fff}
+.fi-wd .fi-body{background:#2b579a;color:#fff}
+.fi-pp .fi-body{background:#C43E1C;color:#fff}
+.fi-ac .fi-body{background:#7B0099;color:#fff}
+.fi-pdf .fi-body{background:#ff3b2f;color:#fff}
+.fi-em .fi-body{background:#0072c6;color:#fff}
+.fi-txt .fi-body{background:#555;color:#fff}
+.fi-csv .fi-body{background:#388e3c;color:#fff}
+.fi-label{font-family:var(--font-m);font-size:.44rem;letter-spacing:.5px;color:rgba(255,255,255,.35);text-transform:uppercase}
+.fi-sm .fi-body{width:24px;height:30px;font-size:.42rem}
+.fi-sm .fi-label{font-size:.35rem}
 
-/* ETL before/after table */
-.etl-table{width:100%;border-collapse:collapse;font-family:var(--font-m);font-size:.6rem}
-.etl-table th{padding:6px 12px;background:rgba(255,255,255,.025);color:rgba(255,255,255,.3);text-align:left;text-transform:uppercase;letter-spacing:1px;font-size:.53rem;border-bottom:1px solid rgba(255,255,255,.05)}
-.etl-table td{padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.035);color:rgba(255,255,255,.5)}
-.etl-table tr:last-child td{border-bottom:none}
-.etl-table tr:hover td{background:rgba(0,212,255,.04);color:rgba(255,255,255,.8)}
-.tc-ok{color:var(--green);font-weight:600}
-.tc-err{color:#ff5577}
-.tc-num{color:var(--accent);font-weight:600}
+/* ── REQUIREMENTS VISUAL ── */
+.req-visual{display:grid;grid-template-columns:1fr;gap:10px;width:100%}
+.req-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:4px;background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.1)}
+.req-icon-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.req-team-icon{font-size:1.1rem;flex-shrink:0}
+.req-avatar{width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--black);font-family:var(--font-m);font-size:.55rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.req-avatar.green{background:var(--green)}
+.req-avatar.warn{background:var(--warn)}
+.req-name{font-family:var(--font-m);font-size:.6rem;color:rgba(255,255,255,.65);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.req-kpi{font-family:var(--font-m);font-size:.52rem;padding:2px 7px;border-radius:2px;background:rgba(0,212,255,.12);color:var(--accent);white-space:nowrap}
+.req-prio{font-family:var(--font-m);font-size:.5rem;padding:2px 7px;border-radius:100px;white-space:nowrap}
+.req-prio.high{background:rgba(0,229,160,.12);color:var(--green)}
+.req-prio.med{background:rgba(255,180,0,.12);color:var(--warn)}
 
-/* report consolidation visual */
-.consolidation-visual{padding:20px}
-.cons-from{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
-.cons-mini-rpt{width:18px;height:22px;border-radius:2px;background:rgba(255,180,0,.12);border:1px solid rgba(255,180,0,.25)}
-.cons-mini-rpt.active{background:rgba(255,180,0,.22);border-color:rgba(255,180,0,.5)}
-.cons-arrow{text-align:center;font-family:var(--font-m);font-size:.62rem;color:rgba(0,212,255,.4);letter-spacing:1px;margin:8px 0;text-transform:uppercase}
-.cons-to{display:flex;gap:8px;flex-wrap:wrap}
-.cons-dashboard{padding:8px 14px;border-radius:3px;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.25);color:var(--green);font-family:var(--font-m);font-size:.6rem;letter-spacing:.5px;display:flex;align-items:center;gap:6px}
-.cons-dashboard::before{content:'▦';font-size:.5rem}
+/* ── STAR SCHEMA VISUAL ── */
+.star-schema{position:relative;width:200px;height:160px;margin:0 auto}
+.ss-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;background:rgba(0,212,255,.12);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.48rem;color:var(--accent);text-align:center;font-weight:700;z-index:2}
+.ss-dim{position:absolute;width:44px;height:44px;border-radius:4px;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.42rem;color:var(--green);text-align:center}
+.ss-line{position:absolute;background:rgba(0,212,255,.15);z-index:0}
+.ss-line.h{height:1px;top:50%}
+.ss-line.v{width:1px;left:50%}
 
-/* hash visual */
-.hash-visual{padding:18px}
-.hash-comparison{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.hash-col{text-align:center}
-.hash-col-label{font-family:var(--font-m);font-size:.55rem;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:10px}
-.hash-block{padding:10px;border-radius:3px;margin-bottom:6px;font-family:var(--font-m);font-size:.62rem}
-.hash-block.old{background:rgba(255,85,119,.08);border:1px solid rgba(255,85,119,.18);color:rgba(255,85,119,.7)}
-.hash-block.new{background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.2);color:rgba(0,229,160,.8)}
-.hash-time{font-size:.8rem;font-weight:700;display:block;margin-top:2px}
+/* ── DASHBOARD UX VISUAL ── */
+.dash-mockup{width:100%;background:rgba(2,10,22,.9);border:1px solid rgba(0,212,255,.15);border-radius:6px;padding:12px;font-family:var(--font-m);overflow:hidden}
+.dash-topbar{display:flex;gap:6px;margin-bottom:10px;align-items:center;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.05)}
+.dash-logo{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px rgba(0,212,255,.5)}
+.dash-title-txt{font-size:.48rem;color:rgba(255,255,255,.5);letter-spacing:1px;text-transform:uppercase;margin-right:auto}
+.dash-tab{font-size:.45rem;padding:2px 8px;border-radius:2px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);color:rgba(0,212,255,.5);cursor:pointer}
+.dash-tab.on{background:rgba(0,212,255,.18);color:var(--accent);border-color:rgba(0,212,255,.4)}
+.dash-kpi-row{display:flex;gap:5px;margin-bottom:8px}
+.dash-kpi{flex:1;padding:6px 5px;border-radius:3px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);text-align:center;position:relative;overflow:hidden}
+.dash-kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--accent);opacity:.3}
+.dash-kpi-v{font-size:.72rem;color:var(--accent);font-weight:700;display:block;line-height:1.2}
+.dash-kpi-l{font-size:.38rem;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.5px;display:block;margin-top:2px}
+.dash-kpi-delta{font-size:.36rem;color:var(--green);display:block}
+.dash-chart-row{display:flex;gap:6px;margin-bottom:6px}
+.dash-bar-chart{flex:2;height:52px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:3px;display:flex;align-items:flex-end;gap:3px;padding:6px 5px 4px}
+.dash-bar{border-radius:2px 2px 0 0;background:rgba(0,212,255,.35);transition:height .3s}
+.dash-bar.accent{background:rgba(0,229,160,.5)}
+.dash-bar.warn{background:rgba(255,184,0,.4)}
+.dash-line-chart{flex:1.5;height:52px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:3px;padding:6px;position:relative;overflow:hidden}
+.dash-line-chart svg{width:100%;height:100%}
+.dash-mini-table{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:3px;overflow:hidden}
+.dash-mini-tr{display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.38rem}
+.dash-mini-tr:last-child{border-bottom:none}
+.dash-mini-td{padding:3px 6px;color:rgba(255,255,255,.35);flex:1}
+.dash-mini-td.accent{color:var(--accent)}
+.dash-mini-td.ok{color:var(--green)}
+.dash-mini-td.hd{color:rgba(255,255,255,.2);font-size:.34rem;text-transform:uppercase;background:rgba(255,255,255,.02)}
+
+/* ── RESULT CONSOLIDATION VISUAL ── */
+.result-visual{width:100%}
+.result-from{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:10px;justify-content:center}
+.result-rpt{width:14px;height:18px;border-radius:1px;background:rgba(255,85,119,.1);border:1px solid rgba(255,85,119,.25);transition:all .3s}
+.result-arrow-row{display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:10px}
+.result-arrow-line{flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(0,212,255,.3))}
+.result-arrow-txt{font-family:var(--font-m);font-size:.5rem;color:rgba(0,212,255,.5);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+.result-to{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.result-dash{padding:6px 12px;border-radius:3px;background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.25);color:var(--green);font-family:var(--font-m);font-size:.52rem;display:flex;align-items:center;gap:5px}
+.result-dash::before{content:'▦';font-size:.45rem}
+
+/* ── ETL DIAGNOSTIC VISUAL ── */
+.etl-diag{width:100%;display:flex;flex-direction:column;gap:7px}
+.etl-proc-row{display:flex;align-items:center;gap:6px}
+.etl-proc-name{font-family:var(--font-m);font-size:.5rem;color:rgba(255,255,255,.35);width:80px;flex-shrink:0;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+.etl-proc-track{flex:1;height:14px;background:rgba(255,255,255,.03);border-radius:2px;overflow:hidden;border:1px solid rgba(255,255,255,.05)}
+.etl-proc-fill{height:100%;border-radius:2px;display:flex;align-items:center;padding-left:5px;font-family:var(--font-m);font-size:.45rem;font-weight:700}
+.etl-proc-fill.bad{background:rgba(255,85,119,.25);color:rgba(255,85,119,.8)}
+.etl-proc-fill.ok{background:rgba(0,229,160,.2);color:rgba(0,229,160,.8)}
+
+/* ── SQL VISUAL ── */
+.sql-visual{width:100%;display:flex;flex-direction:column;gap:5px}
+.sql-tech{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:3px;background:rgba(0,212,255,.03);border:1px solid rgba(0,212,255,.06)}
+.sql-tech-name{font-family:var(--font-m);font-size:.54rem;color:rgba(255,255,255,.5);flex:1}
+.sql-gain{font-family:var(--font-m);font-size:.62rem;color:var(--green);font-weight:700;white-space:nowrap}
+.sql-bar-wrap{flex:1.2;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.sql-bar-fill{height:100%;border-radius:3px;background:linear-gradient(to right,rgba(0,212,255,.4),var(--green))}
+
+/* ── HASH COMPARISON VISUAL ── */
+.hash-vis{width:100%;display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center}
+.hash-col{display:flex;flex-direction:column;gap:5px}
+.hash-col-lbl{font-family:var(--font-m);font-size:.48rem;letter-spacing:1px;text-transform:uppercase;text-align:center;margin-bottom:4px}
+.hash-col-lbl.bad{color:rgba(255,85,119,.6)}
+.hash-col-lbl.good{color:rgba(0,229,160,.6)}
+.hash-item{padding:5px 8px;border-radius:3px;font-family:var(--font-m);font-size:.52rem;text-align:center}
+.hash-item.bad{background:rgba(255,85,119,.07);border:1px solid rgba(255,85,119,.15);color:rgba(255,85,119,.7)}
+.hash-item.good{background:rgba(0,229,160,.07);border:1px solid rgba(0,229,160,.18);color:rgba(0,229,160,.8)}
+.hash-arrow-col{display:flex;flex-direction:column;gap:5px;align-items:center;padding-top:20px}
+.hash-arr{font-size:.8rem;color:rgba(0,212,255,.4)}
+
+/* ── ETL RESULT VISUAL ── */
+.result-bars{width:100%;display:flex;flex-direction:column;gap:8px}
+.rb-row{display:flex;flex-direction:column;gap:3px}
+.rb-label{font-family:var(--font-m);font-size:.5rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.5px}
+.rb-track{position:relative;height:16px;background:rgba(255,255,255,.04);border-radius:2px;border:1px solid rgba(255,255,255,.06);overflow:hidden;display:flex}
+.rb-fill-bad{height:100%;background:rgba(255,85,119,.25);border-radius:2px;display:flex;align-items:center;padding-left:6px}
+.rb-fill-good{height:100%;background:rgba(0,229,160,.2);border-radius:2px;display:flex;align-items:center;padding-left:4px;margin-left:2px}
+.rb-txt{font-family:var(--font-m);font-size:.44rem;font-weight:700;white-space:nowrap}
+.rb-txt.bad{color:rgba(255,85,119,.8)}
+.rb-txt.ok{color:rgba(0,229,160,.9)}
 
 @media(max-width:900px){
   .phases-track{grid-template-columns:repeat(2,1fr);gap:24px}
+  .phases-track.etl-track{grid-template-columns:repeat(2,1fr)}
   .phases-track::before{display:none}
-  .phase-detail{grid-template-columns:1fr}
-  .hash-comparison{grid-template-columns:1fr}
+  .phase-tooltip{width:260px;left:0;transform:none}
+  .phase-node:hover .phase-tooltip{transform:translateY(0)}
+  .hash-vis{grid-template-columns:1fr}
+  .wl-tabs{grid-template-columns:1fr}
+  .wl-btn:first-child{border-right:none;border-bottom:1px solid rgba(0,212,255,.15)}
 }
-
-.wl-tabs{display:flex;gap:12px;margin-bottom:64px;flex-wrap:wrap}
-.wl-btn{display:flex;align-items:center;gap:10px;padding:14px 28px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.35);font-family:var(--font-m);font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .35s;outline:none}
-.wl-btn:hover{border-color:rgba(0,212,255,.35);color:rgba(0,212,255,.7);background:rgba(0,212,255,.04)}
-.wl-btn.active{background:rgba(0,212,255,.09);border-color:var(--accent);color:var(--accent);box-shadow:0 0 24px rgba(0,212,255,.08)}
-.wl-ico{font-size:1.1rem}
-.wl-content{display:none}
-.wl-content.active{display:block}
 @media(max-width:900px){
   #hero{grid-template-columns:1fr;padding-top:100px}
   .sphere-wrap{min-height:340px}
@@ -383,12 +501,12 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
     </div>
     <div class="hero-btns">
       <a href="#data-story" class="btn-p">Ver cómo trabajo →</a>
-      <a href="https://www.linkedin.com/in/alejandro-lozano-pastor-52437a251/" target="_blank" class="btn-o">LinkedIn ↗</a>
+      <a href="https://www.linkedin.com/in/alejandro-lozano-pastor" target="_blank" class="btn-o">LinkedIn ↗</a>
     </div>
   </div>
   <div class="sphere-wrap">
     <canvas id="sphereCanvas" width="500" height="500"></canvas>
-    <div class="sphere-caption">"Entender el negocio bancario es lo que convierte una buena solución en una solución sólida y escalable"</div>
+    <div class="sphere-caption">Ecosistema bancario · Hover para explorar · Arrastra para rotar</div>
   </div>
   <div class="scroll-hint">
     <div class="scroll-line"></div>
@@ -417,8 +535,28 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
   </div>
 
   <div class="wl-tabs reveal">
-    <button class="wl-btn active" data-wl="powerbi"><span class="wl-ico">📊</span>&nbsp;<span data-i18n="wl-btn-pbi">Power BI · Creación de Informes</span></button>
-    <button class="wl-btn" data-wl="etl"><span class="wl-ico">⚙</span>&nbsp;<span data-i18n="wl-btn-etl">ETL · Optimización de Procesos</span></button>
+    <button class="wl-btn active" data-wl="powerbi">
+      <div class="wl-btn-inner">
+        <span class="wl-btn-icon">📊</span>
+        <span class="wl-btn-title" data-i18n="wl-btn-pbi-title">Power BI</span>
+        <span class="wl-btn-sub" data-i18n="wl-btn-pbi-sub">Creación & consolidación de informes</span>
+        <div class="wl-btn-kpi">
+          <span class="wl-kpi-chip">100+ → 6</span>
+          <span class="wl-kpi-chip">−90% carga</span>
+        </div>
+      </div>
+    </button>
+    <button class="wl-btn" data-wl="etl">
+      <div class="wl-btn-inner">
+        <span class="wl-btn-icon">⚙️</span>
+        <span class="wl-btn-title" data-i18n="wl-btn-etl-title">ETL / SAS</span>
+        <span class="wl-btn-sub" data-i18n="wl-btn-etl-sub">Optimización de pipelines</span>
+        <div class="wl-btn-kpi">
+          <span class="wl-kpi-chip">+50% eficiencia</span>
+          <span class="wl-kpi-chip">Hash SAS</span>
+        </div>
+      </div>
+    </button>
   </div>
 
   <!-- ═══ POWER BI LINE ═══ -->
@@ -443,154 +581,149 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
         </div>
       </div>
 
-      <!-- Phase nodes track -->
+      <!-- Phase nodes track with hover tooltips -->
       <div class="phases-track reveal" id="pbi-phases">
-        <div class="phase-node" data-phase="pbi-1" onclick="openPhase('pbi',1)">
-          <div class="phase-dot" id="pbi-dot-1">01</div>
+
+        <div class="phase-node">
+          <div class="phase-dot">01</div>
           <div class="phase-node-title" data-i18n="pbi-phase1-title">Inventario</div>
           <div class="phase-node-tech" data-i18n="pbi-phase1-tech">Auditoría · Catalogación</div>
-        </div>
-        <div class="phase-node" data-phase="pbi-2" onclick="openPhase('pbi',2)">
-          <div class="phase-dot" id="pbi-dot-2">02</div>
-          <div class="phase-node-title" data-i18n="pbi-phase2-title">Requerimientos</div>
-          <div class="phase-node-tech" data-i18n="pbi-phase2-tech">Análisis funcional · KPIs</div>
-        </div>
-        <div class="phase-node" data-phase="pbi-3" onclick="openPhase('pbi',3)">
-          <div class="phase-dot" id="pbi-dot-3">03</div>
-          <div class="phase-node-title" data-i18n="pbi-phase3-title">ETL & Modelado</div>
-          <div class="phase-node-tech" data-i18n="pbi-phase3-tech">Power Query · Star Schema</div>
-        </div>
-        <div class="phase-node" data-phase="pbi-4" onclick="openPhase('pbi',4)">
-          <div class="phase-dot" id="pbi-dot-4">04</div>
-          <div class="phase-node-title" data-i18n="pbi-phase4-title">Diseño UX</div>
-          <div class="phase-node-tech" data-i18n="pbi-phase4-tech">KPI Design · Data Storytelling</div>
-        </div>
-        <div class="phase-node" data-phase="pbi-5" onclick="openPhase('pbi',5)">
-          <div class="phase-dot result" id="pbi-dot-5">✓</div>
-          <div class="phase-node-title" data-i18n="pbi-phase5-title">Impacto Real</div>
-          <div class="phase-node-tech" data-i18n="pbi-phase5-tech">Automatización · −90% carga</div>
-        </div>
-      </div>
-
-      <!-- Phase detail panels (shown on click) -->
-      <div class="phase-detail" id="pbi-detail-1">
-        <div class="detail-visual">
-          <div class="detail-header">
-            <span class="detail-header-title">report_inventory · Estado inicial</span>
-            <span class="detail-badge" style="background:rgba(255,180,0,.1);border:1px solid rgba(255,180,0,.3);color:#ffb800" data-i18n="badge-100">100+ Informes</span>
-          </div>
-          <div class="consolidation-visual">
-            <div class="cons-from" id="cons-mini-reports"></div>
-            <div class="cons-arrow" data-i18n="inv-arrow">100+ informes · manuales · redundantes</div>
-          </div>
-        </div>
-        <div class="detail-text">
-          <div class="detail-step"><div class="detail-step-num">01</div><span data-i18n="pbi-d1-step">Paso 01 · Inventario</span></div>
-          <div class="detail-title-text" data-i18n="pbi-d1-title">Inventario de Informes a Optimizar</div>
-          <div class="detail-tech-tag">Análisis · Auditoría de reporting · Catalogación</div>
-          <div class="detail-desc" data-i18n="pbi-d1-desc">Identificación y catalogación de más de 100 informes existentes. Evaluación del coste operativo, frecuencia y prioridad de cada uno. Sin este inventario cualquier optimización es ciega. El primer paso define el alcance real del impacto.</div>
-        </div>
-      </div>
-
-      <div class="phase-detail" id="pbi-detail-2">
-        <div class="detail-visual">
-          <div class="detail-header">
-            <span class="detail-header-title">requirements_matrix · Usuarios entrevistados</span>
-            <span class="detail-badge" style="background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.3);color:#00e5a0" data-i18n="badge-validated">✓ Validado</span>
-          </div>
-          <table class="etl-table">
-            <thead><tr><th data-i18n="th-user">Usuario</th><th data-i18n="th-area">Área</th><th data-i18n="th-kpi">KPI requerido</th><th data-i18n="th-priority">Prioridad</th></tr></thead>
-            <tbody>
-              <tr><td data-i18n="td-risk-committee">Comité Riesgo</td><td>Riesgo</td><td>RWA / CET1</td><td class="tc-ok" data-i18n="td-high">Alta</td></tr>
-              <tr><td data-i18n="td-regulatory">Regulatorio</td><td>COREP</td><td>C02 / C07</td><td class="tc-ok" data-i18n="td-high">Alta</td></tr>
-              <tr><td data-i18n="td-mgmt">Dirección</td><td>Mgmt</td><td>NPL · LCR</td><td class="tc-num" data-i18n="td-mid">Media</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="detail-text">
-          <div class="detail-step"><div class="detail-step-num">02</div><span data-i18n="pbi-d2-step">Paso 02 · Requerimientos</span></div>
-          <div class="detail-title-text" data-i18n="pbi-d2-title">Recolección de Requerimientos con Usuarios</div>
-          <div class="detail-tech-tag">Análisis funcional · Entrevistas · Priorización</div>
-          <div class="detail-desc" data-i18n="pbi-d2-desc">Trabajo directo con usuarios finales: comité de riesgo, regulatorio y dirección. Definición de KPIs críticos, granularidad y frecuencia de actualización. Los informes se diseñan desde la necesidad real del negocio, no desde la tecnología disponible.</div>
-        </div>
-      </div>
-
-      <div class="phase-detail" id="pbi-detail-3">
-        <div class="detail-visual">
-          <div class="detail-header">
-            <span class="detail-header-title">semantic_model · Star Schema · Power Query</span>
-            <span class="detail-badge" style="background:rgba(100,120,255,.1);border:1px solid rgba(100,120,255,.3);color:#7eb8ff" data-i18n="badge-semantic">Modelo Semántico</span>
-          </div>
-          <table class="etl-table">
-            <thead><tr><th data-i18n="th-table">Tabla</th><th data-i18n="th-type">Tipo</th><th data-i18n="th-rows">Filas</th><th data-i18n="th-update">Actualiz.</th></tr></thead>
-            <tbody>
-              <tr><td>fact_rwa</td><td class="tc-ok" data-i18n="td-fact">Hecho</td><td class="tc-num">128K</td><td class="tc-ok" data-i18n="td-daily">Diaria</td></tr>
-              <tr><td>dim_contrato</td><td class="tc-num" data-i18n="td-dim">Dimensión</td><td class="tc-num">45K</td><td class="tc-ok" data-i18n="td-monthly">Mensual</td></tr>
-              <tr><td>agg_cet1</td><td style="color:var(--warn)" data-i18n="td-agg">Agregado</td><td class="tc-num">2.1K</td><td class="tc-ok" data-i18n="td-daily">Diaria</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="detail-text">
-          <div class="detail-step"><div class="detail-step-num">03</div><span data-i18n="pbi-d3-step">Paso 03 · ETL & Modelado</span></div>
-          <div class="detail-title-text" data-i18n="pbi-d3-title">Procesos ETL para Modelado de Datos</div>
-          <div class="detail-tech-tag">Power Query · DAX · Star Schema · Datamart</div>
-          <div class="detail-desc" data-i18n="pbi-d3-desc">Construcción del modelo semántico centralizado sobre el datamart bancario. Esquema en estrella, transformaciones Power Query y medidas DAX. Un modelo sólido garantiza que todos los informes hablen el mismo idioma y la misma fuente de verdad.</div>
-        </div>
-      </div>
-
-      <div class="phase-detail" id="pbi-detail-4">
-        <div class="detail-visual">
-          <div class="detail-header">
-            <span class="detail-header-title">dashboard_design · UX · Iteraciones</span>
-            <span class="detail-badge" style="background:rgba(100,120,255,.1);border:1px solid rgba(100,120,255,.3);color:#7eb8ff" data-i18n="badge-design">Diseño</span>
-          </div>
-          <table class="etl-table">
-            <thead><tr><th>Dashboard</th><th data-i18n="th-pages">Páginas</th><th>KPIs</th><th data-i18n="th-filters">Filtros</th></tr></thead>
-            <tbody>
-              <tr><td data-i18n="td-cap-reg">Capital Reg.</td><td class="tc-num">4</td><td class="tc-num">12</td><td class="tc-ok" data-i18n="td-dynamic">Dinámicos</td></tr>
-              <tr><td data-i18n="td-riesgo-cred">Riesgo Crédito</td><td class="tc-num">6</td><td class="tc-num">18</td><td class="tc-ok" data-i18n="td-dynamic">Dinámicos</td></tr>
-              <tr><td data-i18n="td-liquidez">Liquidez COREP</td><td class="tc-num">3</td><td class="tc-num">8</td><td class="tc-ok" data-i18n="td-dynamic">Dinámicos</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="detail-text">
-          <div class="detail-step"><div class="detail-step-num">04</div><span data-i18n="pbi-d4-step">Paso 04 · Diseño</span></div>
-          <div class="detail-title-text" data-i18n="pbi-d4-title">Diseño de Informes — UX Bancario</div>
-          <div class="detail-tech-tag">Power BI · KPI Design · UX · Data Storytelling</div>
-          <div class="detail-desc" data-i18n="pbi-d4-desc">Diseño orientado a la toma de decisiones: jerarquía visual, filtros dinámicos y navegación intuitiva. Los dashboards no son solo datos, son conversaciones con el negocio. Cada visual justifica su presencia o no existe.</div>
-        </div>
-      </div>
-
-      <div class="phase-detail" id="pbi-detail-5">
-        <div class="detail-visual">
-          <div class="detail-header">
-            <span class="detail-header-title">output_dashboards · En producción · Live</span>
-            <span class="detail-badge" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);color:var(--accent)" data-i18n="badge-delivered">✓ Entregado</span>
-          </div>
-          <div class="consolidation-visual">
-            <div class="cons-from" id="cons-mini-reports-result"></div>
-            <div class="cons-arrow">↓</div>
-            <div class="cons-to">
-              <div class="cons-dashboard" data-i18n="dash-capital">Capital Reg.</div>
-              <div class="cons-dashboard" data-i18n="dash-riesgo">Riesgo Créd.</div>
-              <div class="cons-dashboard" data-i18n="dash-liquidez">Liquidez</div>
-              <div class="cons-dashboard" data-i18n="dash-finrep">FINREP</div>
-              <div class="cons-dashboard" data-i18n="dash-macro">Macro KPIs</div>
-              <div class="cons-dashboard" data-i18n="dash-mgmt">Mgmt</div>
+          <div class="phase-tooltip">
+            <div class="tt-header"><div class="tt-num">01</div><div><div class="tt-title" data-i18n="pbi-d1-title">Inventario de Informes</div><div class="tt-tech">Análisis · Auditoría · Catalogación</div></div></div>
+            <div class="tt-body">
+              <div class="tt-visual"><div class="file-icons-grid" id="file-icons-inv"></div></div>
+              <div class="tt-desc" data-i18n="pbi-d1-desc">Identificación y catalogación de más de 100 informes existentes. Evaluación del coste operativo, frecuencia y prioridad.</div>
             </div>
           </div>
-          <div class="detail-kpi-row">
-            <div class="detail-kpi"><span data-i18n="kpi-reports">Informes</span><span class="kv">100+ → 6</span></div>
-            <div class="detail-kpi"><span data-i18n="kpi-load">Carga usuarios</span><span class="kv">−90%</span></div>
+        </div>
+
+        <div class="phase-node">
+          <div class="phase-dot">02</div>
+          <div class="phase-node-title" data-i18n="pbi-phase2-title">Requerimientos</div>
+          <div class="phase-node-tech" data-i18n="pbi-phase2-tech">Análisis funcional · KPIs</div>
+          <div class="phase-tooltip">
+            <div class="tt-header"><div class="tt-num">02</div><div><div class="tt-title" data-i18n="pbi-d2-title">Recolección con Usuarios</div><div class="tt-tech">Entrevistas · Priorización</div></div></div>
+            <div class="tt-body">
+              <div class="tt-visual">
+                <div class="req-visual">
+                  <div class="req-row"><div class="req-icon-wrap"><span class="req-team-icon">🏦</span><div class="req-avatar">CR</div></div><span class="req-name" data-i18n="td-risk-committee">Comité Riesgo</span><span class="req-kpi">RWA/CET1</span><span class="req-prio high" data-i18n="td-high">Alta</span></div>
+                  <div class="req-row"><div class="req-icon-wrap"><span class="req-team-icon">📋</span><div class="req-avatar green">RG</div></div><span class="req-name" data-i18n="td-regulatory">Regulatorio EBA</span><span class="req-kpi">C02/C07</span><span class="req-prio high" data-i18n="td-high">Alta</span></div>
+                  <div class="req-row"><div class="req-icon-wrap"><span class="req-team-icon">📊</span><div class="req-avatar warn">DI</div></div><span class="req-name" data-i18n="td-mgmt">Dirección</span><span class="req-kpi">NPL·LCR</span><span class="req-prio med" data-i18n="td-mid">Media</span></div>
+                </div>
+              </div>
+              <div class="tt-desc" data-i18n="pbi-d2-desc">Trabajo directo con usuarios finales. Definición de KPIs críticos, granularidad y frecuencia de actualización.</div>
+            </div>
           </div>
         </div>
-        <div class="detail-text">
-          <div class="detail-step"><div class="detail-step-num">05</div><span data-i18n="pbi-d5-step">Paso 05 · Resultado</span></div>
-          <div class="detail-title-text" data-i18n="pbi-d5-title">6 Dashboards · 90% Carga Eliminada</div>
-          <div class="detail-tech-tag">Power BI · DAX · Automatización · Impacto real</div>
-          <div class="detail-desc" data-i18n="pbi-d5-desc">100+ informes manuales consolidados en 6 dashboards Power BI automatizados. La carga operativa recurrente de los usuarios se redujo un 90%. De horas de trabajo manual a un clic. Esto es lo que significa impacto real en datos.</div>
+
+        <div class="phase-node">
+          <div class="phase-dot">03</div>
+          <div class="phase-node-title" data-i18n="pbi-phase3-title">ETL & Modelado</div>
+          <div class="phase-node-tech" data-i18n="pbi-phase3-tech">Power Query · Star Schema</div>
+          <div class="phase-tooltip">
+            <div class="tt-header"><div class="tt-num">03</div><div><div class="tt-title" data-i18n="pbi-d3-title">Modelado Semántico</div><div class="tt-tech">Power Query · DAX · Star Schema</div></div></div>
+            <div class="tt-body">
+              <div class="tt-visual" style="justify-content:center;min-height:110px">
+                <div class="star-schema">
+                  <div class="ss-line h" style="top:50%;left:10%;width:80%"></div>
+                  <div class="ss-line v" style="left:50%;top:10%;height:80%"></div>
+                  <div class="ss-center">fact_rwa<br>128K</div>
+                  <div class="ss-dim" style="top:4%;left:50%;transform:translateX(-50%)">dim_fecha</div>
+                  <div class="ss-dim" style="bottom:4%;left:50%;transform:translateX(-50%)">agg_cet1</div>
+                  <div class="ss-dim" style="left:0%;top:50%;transform:translateY(-50%)">dim_contrato</div>
+                  <div class="ss-dim" style="right:0%;top:50%;transform:translateY(-50%)">dim_prod</div>
+                </div>
+              </div>
+              <div class="tt-desc" data-i18n="pbi-d3-desc">Esquema en estrella, transformaciones Power Query y medidas DAX sobre el datamart bancario.</div>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <div class="phase-node">
+          <div class="phase-dot">04</div>
+          <div class="phase-node-title" data-i18n="pbi-phase4-title">Diseño UX</div>
+          <div class="phase-node-tech" data-i18n="pbi-phase4-tech">KPI Design · Data Storytelling</div>
+          <div class="phase-tooltip">
+            <div class="tt-header"><div class="tt-num">04</div><div><div class="tt-title" data-i18n="pbi-d4-title">Diseño UX Bancario</div><div class="tt-tech">Power BI · KPI Design · UX</div></div></div>
+            <div class="tt-body">
+              <div class="tt-visual" style="padding:10px">
+                <div class="dash-mockup">
+                  <div class="dash-topbar">
+                    <div class="dash-logo"></div>
+                    <span class="dash-title-txt">RISK DASHBOARD · CAPITAL REG.</span>
+                    <div class="dash-tab on">Capital</div>
+                    <div class="dash-tab">Riesgo</div>
+                    <div class="dash-tab">LCR</div>
+                  </div>
+                  <div class="dash-kpi-row">
+                    <div class="dash-kpi"><span class="dash-kpi-v">12.4%</span><span class="dash-kpi-l">CET1</span><span class="dash-kpi-delta">↑ +0.3%</span></div>
+                    <div class="dash-kpi"><span class="dash-kpi-v">8.2%</span><span class="dash-kpi-l">RWA</span><span class="dash-kpi-delta" style="color:var(--warn)">→ 0%</span></div>
+                    <div class="dash-kpi"><span class="dash-kpi-v">142%</span><span class="dash-kpi-l">LCR</span><span class="dash-kpi-delta">↑ +2%</span></div>
+                    <div class="dash-kpi"><span class="dash-kpi-v">2.1%</span><span class="dash-kpi-l">NPL</span><span class="dash-kpi-delta" style="color:rgba(255,85,119,.8)">↓ -0.1%</span></div>
+                  </div>
+                  <div class="dash-chart-row">
+                    <div class="dash-bar-chart">
+                      <div class="dash-bar" style="height:55%;width:12%"></div>
+                      <div class="dash-bar accent" style="height:75%;width:12%"></div>
+                      <div class="dash-bar" style="height:45%;width:12%"></div>
+                      <div class="dash-bar accent" style="height:85%;width:12%"></div>
+                      <div class="dash-bar warn" style="height:65%;width:12%"></div>
+                      <div class="dash-bar accent" style="height:90%;width:12%"></div>
+                    </div>
+                    <div class="dash-line-chart">
+                      <svg viewBox="0 0 80 40" preserveAspectRatio="none"><polyline points="0,35 15,28 30,30 45,18 60,22 80,10" fill="none" stroke="rgba(0,229,160,.6)" stroke-width="1.5"/><polyline points="0,40 80,40" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="1"/></svg>
+                    </div>
+                  </div>
+                  <div class="dash-mini-table" style="margin-top:6px">
+                    <div class="dash-mini-tr"><span class="dash-mini-td hd">Entidad</span><span class="dash-mini-td hd">CET1</span><span class="dash-mini-td hd">RWA</span><span class="dash-mini-td hd">Estado</span></div>
+                    <div class="dash-mini-tr"><span class="dash-mini-td">COREP C02</span><span class="dash-mini-td accent">12.4%</span><span class="dash-mini-td">8.2%</span><span class="dash-mini-td ok">✓ OK</span></div>
+                    <div class="dash-mini-tr"><span class="dash-mini-td">FINREP F01</span><span class="dash-mini-td accent">11.8%</span><span class="dash-mini-td">9.1%</span><span class="dash-mini-td ok">✓ OK</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="tt-desc" data-i18n="pbi-d4-desc">Jerarquía visual, filtros dinámicos y navegación intuitiva. Cada visual justifica su presencia o no existe.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase-node">
+          <div class="phase-dot result">✓</div>
+          <div class="phase-node-title" data-i18n="pbi-phase5-title">Impacto Real</div>
+          <div class="phase-node-tech" data-i18n="pbi-phase5-tech">Automatización · −90% carga</div>
+          <div class="phase-tooltip">
+            <div class="tt-header"><div class="tt-num green">✓</div><div><div class="tt-title" data-i18n="pbi-d5-title">6 Dashboards · −90%</div><div class="tt-tech">Power BI · Automatización</div></div></div>
+            <div class="tt-body">
+              <div class="tt-visual" style="flex-direction:column;gap:10px;padding:14px 16px">
+                <!-- Before: 100+ reports -->
+                <div style="width:100%">
+                  <div style="font-family:var(--font-m);font-size:.48rem;letter-spacing:1px;text-transform:uppercase;color:rgba(255,85,119,.6);margin-bottom:6px;text-align:center">ANTES · 100+ informes manuales</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:2px;justify-content:center" id="result-from-icons2"></div>
+                </div>
+                <!-- Arrow -->
+                <div style="display:flex;align-items:center;justify-content:center;gap:8px">
+                  <div style="flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(0,212,255,.4))"></div>
+                  <span style="font-family:var(--font-m);font-size:.7rem;color:var(--accent);font-weight:700">→ −94% →</span>
+                  <div style="flex:1;height:1px;background:linear-gradient(to left,transparent,rgba(0,212,255,.4))"></div>
+                </div>
+                <!-- After: 6 dashboards -->
+                <div style="width:100%">
+                  <div style="font-family:var(--font-m);font-size:.48rem;letter-spacing:1px;text-transform:uppercase;color:rgba(0,229,160,.6);margin-bottom:6px;text-align:center">AHORA · 6 dashboards automáticos</div>
+                  <div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap">
+                    <div class="result-dash" data-i18n="dash-capital">Capital Reg.</div>
+                    <div class="result-dash" data-i18n="dash-riesgo">Riesgo</div>
+                    <div class="result-dash" data-i18n="dash-liquidez">Liquidez</div>
+                    <div class="result-dash">FINREP</div>
+                    <div class="result-dash" data-i18n="dash-macro">Macro KPIs</div>
+                    <div class="result-dash" data-i18n="dash-mgmt">Mgmt</div>
+                  </div>
+                </div>
+              </div>
+              <div class="tt-desc" data-i18n="pbi-d5-desc">100+ informes manuales consolidados en 6 dashboards Power BI. Carga operativa reducida un 90%.</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end phases-track pbi -->
 
     </div><!-- end wl-infographic -->
   </div><!-- end wl-powerbi -->
@@ -617,168 +750,97 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
         </div>
       </div>
 
-      <!-- Phase nodes -->
-      <div class="phases-track reveal" id="etl-phases">
-        <div class="phase-node" onclick="openPhase('etl',1)">
-          <div class="phase-dot" id="etl-dot-1">01</div>
+      <!-- ETL Phase nodes with hover tooltips -->
+      <div class="phases-track etl-track reveal" id="etl-phases">
+
+        <div class="phase-node">
+          <div class="phase-dot">01</div>
           <div class="phase-node-title" data-i18n="etl-phase1-title">Diagnóstico</div>
           <div class="phase-node-tech" data-i18n="etl-phase1-tech">Profiling · Benchmark</div>
+          <div class="phase-tooltip">
+            <div class="tt-header"><div class="tt-num">01</div><div><div class="tt-title" data-i18n="etl-d1-title">Análisis ETL Críticos</div><div class="tt-tech">SAS · Profiling · Benchmarking</div></div></div>
+            <div class="tt-body">
+              <div class="tt-visual">
+                <div class="etl-diag">
+                  <div class="etl-proc-row"><span class="etl-proc-name">COREP_C02</span><div class="etl-proc-track"><div class="etl-proc-fill bad" style="width:62%">82 min ⚠</div></div></div>
+                  <div class="etl-proc-row"><span class="etl-proc-name">RWA_irb</span><div class="etl-proc-track"><div class="etl-proc-fill bad" style="width:41%">55 min ⚠</div></div></div>
+                  <div class="etl-proc-row"><span class="etl-proc-name">CET1_monthly</span><div class="etl-proc-track"><div class="etl-proc-fill bad" style="width:100%">134 min 🔴</div></div></div>
+                </div>
+              </div>
+              <div class="tt-desc" data-i18n="etl-d1-desc">Identificación de los procesos ETL con mayor coste. Los cuellos de botella regulatorios impactan directamente en los plazos de entrega.</div>
+            </div>
+          </div>
         </div>
-        <div class="phase-node" onclick="openPhase('etl',2)">
-          <div class="phase-dot" id="etl-dot-2">02</div>
+
+        <div class="phase-node">
+          <div class="phase-dot">02</div>
           <div class="phase-node-title" data-i18n="etl-phase2-title">SQL Avanzado</div>
           <div class="phase-node-tech" data-i18n="etl-phase2-tech">Window Fn · CTEs · Índices</div>
+          <div class="phase-tooltip">
+            <div class="tt-header"><div class="tt-num">02</div><div><div class="tt-title" data-i18n="etl-d2-title">Optimización SQL</div><div class="tt-tech">PROC SQL · Window Functions · CTEs</div></div></div>
+            <div class="tt-body">
+              <div class="tt-visual">
+                <div class="sql-visual">
+                  <div class="sql-tech"><span class="sql-tech-name">Window Functions</span><div class="sql-bar-wrap"><div class="sql-bar-fill" style="width:76%"></div></div><span class="sql-gain">+38%</span></div>
+                  <div class="sql-tech"><span class="sql-tech-name">CTEs anidadas</span><div class="sql-bar-wrap"><div class="sql-bar-fill" style="width:50%"></div></div><span class="sql-gain">+25%</span></div>
+                  <div class="sql-tech"><span class="sql-tech-name" data-i18n="td-adaptive-idx">Índices adaptativos</span><div class="sql-bar-wrap"><div class="sql-bar-fill" style="width:84%"></div></div><span class="sql-gain">+42%</span></div>
+                  <div class="sql-tech"><span class="sql-tech-name">PROC SQL optim.</span><div class="sql-bar-wrap"><div class="sql-bar-fill" style="width:62%"></div></div><span class="sql-gain">+31%</span></div>
+                </div>
+              </div>
+              <div class="tt-desc" data-i18n="etl-d2-desc">Reescritura de queries críticas: window functions, CTEs e índices adaptativos en tablas de gran volumen.</div>
+            </div>
+          </div>
         </div>
-        <div class="phase-node" onclick="openPhase('etl',3)">
-          <div class="phase-dot" id="etl-dot-3">03</div>
+
+        <div class="phase-node">
+          <div class="phase-dot">03</div>
           <div class="phase-node-title" data-i18n="etl-phase3-title">Hash Objects</div>
           <div class="phase-node-tech" data-i18n="etl-phase3-tech">SAS · In-memory · Single-pass</div>
+          <div class="phase-tooltip">
+            <div class="tt-header"><div class="tt-num">03</div><div><div class="tt-title" data-i18n="etl-d3-title">Hash SAS In-Memory</div><div class="tt-tech">SAS Hash Objects · DOW Loop · Single-pass</div></div></div>
+            <div class="tt-body">
+              <div class="tt-visual">
+                <div class="hash-vis">
+                  <div class="hash-col">
+                    <div class="hash-col-lbl bad" data-i18n="hash-before">Antes</div>
+                    <div class="hash-item bad">MERGE sort<br>Multi-pass I/O</div>
+                    <div class="hash-item bad">JOIN iterativo<br>Lento · Disco</div>
+                    <div class="hash-item bad">Multi-pass scan<br>CPU alto</div>
+                  </div>
+                  <div class="hash-arrow-col"><div class="hash-arr">→</div><div class="hash-arr">→</div><div class="hash-arr">→</div></div>
+                  <div class="hash-col">
+                    <div class="hash-col-lbl good">Hash SAS</div>
+                    <div class="hash-item good">dim_contrato 45K<br>In-memory ⚡</div>
+                    <div class="hash-item good">param_pd 12K<br>Single-pass ⚡</div>
+                    <div class="hash-item good">mapeo_corep 8.5K<br>Milisegundos ⚡</div>
+                  </div>
+                </div>
+              </div>
+              <div class="tt-desc" data-i18n="etl-d3-desc">Sustitución de merges por Hash Objects SAS. Single-pass en memoria en lugar de múltiples pasadas sobre disco.</div>
+            </div>
+          </div>
         </div>
-        <div class="phase-node" onclick="openPhase('etl',4)">
-          <div class="phase-dot result" id="etl-dot-4">✓</div>
+
+        <div class="phase-node">
+          <div class="phase-dot result">✓</div>
           <div class="phase-node-title" data-i18n="etl-phase4-title">Resultado</div>
           <div class="phase-node-tech" data-i18n="etl-phase4-tech">−50%+ · Validado</div>
+          <div class="phase-tooltip">
+            <div class="tt-header"><div class="tt-num green">✓</div><div><div class="tt-title" data-i18n="etl-d4-title">50%+ Mejora</div><div class="tt-tech">Validación · Reconciliación · Audit Trail</div></div></div>
+            <div class="tt-body">
+              <div class="tt-visual">
+                <div class="result-bars">
+                  <div class="rb-row"><div class="rb-label">COREP_C02_load</div><div class="rb-track"><div class="rb-fill-bad" style="width:61%"><span class="rb-txt bad">82m</span></div><div class="rb-fill-good" style="width:28%"><span class="rb-txt ok">38m −54%</span></div></div></div>
+                  <div class="rb-row"><div class="rb-label">RWA_calc_irb</div><div class="rb-track"><div class="rb-fill-bad" style="width:41%"><span class="rb-txt bad">55m</span></div><div class="rb-fill-good" style="width:18%"><span class="rb-txt ok">24m −56%</span></div></div></div>
+                  <div class="rb-row"><div class="rb-label">CET1_monthly</div><div class="rb-track"><div class="rb-fill-bad" style="width:100%"><span class="rb-txt bad">134m</span></div><div class="rb-fill-good" style="width:45%"><span class="rb-txt ok">61m −54%</span></div></div></div>
+                </div>
+              </div>
+              <div class="tt-desc" data-i18n="etl-d4-desc">Más de un 50% de reducción en tiempos de ejecución. Integridad de datos preservada al 100%. Cierre regulatorio en plazo.</div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- ETL detail panels -->
-      <div class="phase-detail" id="etl-detail-1">
-        <div class="detail-visual">
-          <div class="detail-header">
-            <span class="detail-header-title">etl_benchmark · Diagnóstico inicial</span>
-            <span class="detail-badge" style="background:rgba(255,180,0,.1);border:1px solid rgba(255,180,0,.3);color:#ffb800" data-i18n="badge-slow">⚠ Ineficiente</span>
-          </div>
-          <div class="compare-bar">
-            <div class="compare-row">
-              <div class="compare-label">COREP_C02_load</div>
-              <div class="compare-bars">
-                <div class="bar-before" style="width:82px"></div>
-                <div class="bar-val-before">82 min</div>
-              </div>
-            </div>
-            <div class="compare-row">
-              <div class="compare-label">RWA_calc_irb</div>
-              <div class="compare-bars">
-                <div class="bar-before" style="width:55px"></div>
-                <div class="bar-val-before">55 min</div>
-              </div>
-            </div>
-            <div class="compare-row">
-              <div class="compare-label">CET1_monthly</div>
-              <div class="compare-bars">
-                <div class="bar-before" style="width:134px"></div>
-                <div class="bar-val-before" style="color:#ff5577">134 min ⚠</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="detail-text">
-          <div class="detail-step"><div class="detail-step-num">01</div><span data-i18n="etl-d1-step">Paso 01 · Diagnóstico</span></div>
-          <div class="detail-title-text" data-i18n="etl-d1-title">Análisis de Procesos ETL Críticos</div>
-          <div class="detail-tech-tag">SAS · Profiling · Benchmarking · ETL Audit</div>
-          <div class="detail-desc" data-i18n="etl-d1-desc">Identificación de los procesos ETL con mayor coste en tiempo de ejecución. Profiling de consumo de CPU y memoria en los pipelines de cierre mensual. Los cuellos de botella regulatorios impactan directamente en los plazos de entrega al supervisor.</div>
-        </div>
-      </div>
-
-      <div class="phase-detail" id="etl-detail-2">
-        <div class="detail-visual">
-          <div class="detail-header">
-            <span class="detail-header-title">sql_optimization · Técnicas especializadas</span>
-            <span class="detail-badge" style="background:rgba(100,120,255,.1);border:1px solid rgba(100,120,255,.3);color:#7eb8ff" data-i18n="badge-sql">SQL Avanzado</span>
-          </div>
-          <table class="etl-table">
-            <thead><tr><th data-i18n="th-technique">Técnica SQL</th><th data-i18n="th-application">Aplicación</th><th data-i18n="th-gain">Ganancia</th></tr></thead>
-            <tbody>
-              <tr><td>Window Functions</td><td>RWA Rolling</td><td class="tc-ok">+38%</td></tr>
-              <tr><td>CTEs anidadas</td><td data-i18n="td-reconciliation">Reconciliación</td><td class="tc-ok">+25%</td></tr>
-              <tr><td data-i18n="td-adaptive-idx">Índices adaptativos</td><td>Joins masivos</td><td class="tc-ok">+42%</td></tr>
-              <tr><td>PROC SQL optim.</td><td>COREP loads</td><td class="tc-ok">+31%</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="detail-text">
-          <div class="detail-step"><div class="detail-step-num">02</div><span data-i18n="etl-d2-step">Paso 02 · SQL Especializado</span></div>
-          <div class="detail-title-text" data-i18n="etl-d2-title">Optimización con SQL Avanzado</div>
-          <div class="detail-tech-tag">PROC SQL · Window Functions · CTEs · SAS Base</div>
-          <div class="detail-desc" data-i18n="etl-d2-desc">Reescritura de queries críticas con técnicas especializadas: window functions para cálculos acumulados, CTEs para legibilidad y rendimiento, e índices adaptativos en tablas de gran volumen. SQL bien escrito es la diferencia entre minutos y horas.</div>
-        </div>
-      </div>
-
-      <div class="phase-detail" id="etl-detail-3">
-        <div class="detail-visual">
-          <div class="detail-header">
-            <span class="detail-header-title">sas_hash_objects · Lookup en memoria</span>
-            <span class="detail-badge" style="background:rgba(100,120,255,.1);border:1px solid rgba(100,120,255,.3);color:#7eb8ff" data-i18n="badge-hash">Hash SAS</span>
-          </div>
-          <div class="hash-visual">
-            <div class="hash-comparison">
-              <div class="hash-col">
-                <div class="hash-col-label" data-i18n="hash-before">Antes</div>
-                <div class="hash-block old">MERGE sort<br><span class="hash-time">Multi-pass I/O</span></div>
-                <div class="hash-block old">JOIN iterativo<br><span class="hash-time">Lento · Disco</span></div>
-                <div class="hash-block old">Multi-pass scan<br><span class="hash-time">CPU alto</span></div>
-              </div>
-              <div class="hash-col">
-                <div class="hash-col-label" data-i18n="hash-after">Hash SAS</div>
-                <div class="hash-block new">dim_contrato 45K<br><span class="hash-time">In-memory ⚡</span></div>
-                <div class="hash-block new">param_pd_lgd 12K<br><span class="hash-time">Single-pass ⚡</span></div>
-                <div class="hash-block new">mapeo_corep 8.5K<br><span class="hash-time">Milisegundos ⚡</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="detail-text">
-          <div class="detail-step"><div class="detail-step-num">03</div><span data-i18n="etl-d3-step">Paso 03 · Hash Objects</span></div>
-          <div class="detail-title-text" data-i18n="etl-d3-title">Hash Objects SAS — Lookup en Memoria</div>
-          <div class="detail-tech-tag">SAS Hash Objects · DOW Loop · Data Step · Single-pass</div>
-          <div class="detail-desc" data-i18n="etl-d3-desc">Sustitución de merges secuenciales por estructuras Hash de SAS para lookups en memoria. Eliminación de múltiples pasadas sobre disco. Una técnica específica de SAS que convierte operaciones de minutos en milisegundos a escala de millones de registros.</div>
-        </div>
-      </div>
-
-      <div class="phase-detail" id="etl-detail-4">
-        <div class="detail-visual">
-          <div class="detail-header">
-            <span class="detail-header-title">framework_validation · Resultados verificados</span>
-            <span class="detail-badge" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);color:var(--accent)" data-i18n="badge-validated2">✓ Validado</span>
-          </div>
-          <div class="compare-bar">
-            <div class="compare-row">
-              <div class="compare-label">COREP_C02_load</div>
-              <div class="compare-bars">
-                <div class="bar-before" style="width:82px"></div>
-                <div class="bar-after" style="width:38px" data-width="38"></div>
-                <div class="bar-val">38 min (−54%)</div>
-              </div>
-            </div>
-            <div class="compare-row">
-              <div class="compare-label">RWA_calc_irb</div>
-              <div class="compare-bars">
-                <div class="bar-before" style="width:55px"></div>
-                <div class="bar-after" style="width:24px" data-width="24"></div>
-                <div class="bar-val">24 min (−56%)</div>
-              </div>
-            </div>
-            <div class="compare-row">
-              <div class="compare-label">CET1_monthly</div>
-              <div class="compare-bars">
-                <div class="bar-before" style="width:134px"></div>
-                <div class="bar-after" style="width:61px" data-width="61"></div>
-                <div class="bar-val">61 min (−54%)</div>
-              </div>
-            </div>
-          </div>
-          <div class="detail-kpi-row">
-            <div class="detail-kpi"><span data-i18n="kpi-avg-reduction">Reducción media</span><span class="kv">−50%+</span></div>
-            <div class="detail-kpi"><span data-i18n="kpi-close">Cierre mensual</span><span class="kv" data-i18n="kpi-ontime">En plazo</span></div>
-          </div>
-        </div>
-        <div class="detail-text">
-          <div class="detail-step"><div class="detail-step-num">04</div><span data-i18n="etl-d4-step">Paso 04 · Resultado</span></div>
-          <div class="detail-title-text" data-i18n="etl-d4-title">50%+ Mejora en Tiempos de Ejecución</div>
-          <div class="detail-tech-tag">Validación · Reconciliación · Testing · Audit Trail</div>
-          <div class="detail-desc" data-i18n="etl-d4-desc">Validación del framework mediante reconciliación de resultados contra la versión anterior. Integridad de datos preservada al 100%. Más de un 50% de reducción en tiempos de ejecución en procesos críticos de cierre regulatorio. Cada segundo importa en producción.</div>
-        </div>
-      </div>
+      </div><!-- end phases-track etl -->
 
     </div><!-- end wl-infographic etl -->
   </div><!-- end wl-etl -->
@@ -928,7 +990,11 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
         <div class="timeline-role">Data Engineer – Risk & Regulatory Data</div>
         <div class="timeline-org">Management Solutions</div>
         <div class="timeline-desc" data-i18n="tl-job1-desc">Diseño y optimización de pipelines ETL críticos en SAS/SQL para carteras de riesgo de crédito (+50% eficiencia). Automatización de reportes COREP para G-SIB internacional. Frameworks de validación de parámetros RWA, CET1 y provisiones.</div>
-        <div class="timeline-tags"><span class="tag">SAS</span><span class="tag">SQL</span><span class="tag">COREP</span><span class="tag">RWA/CET1</span><span class="tag">EBA/BCE</span><span class="tag">ETL</span></div>
+        <div class="timeline-tags"><span class="tag">SAS</span><span class="tag">SQL</span><span class="tag">COREP</span><span class="tag">RWA/CET1</span><span class="tag">EBA/BCE</span><span class="tag">ETL</span><span class="tag">Python</span></div>
+        <div class="timeline-logo-panel">
+          <img class="tl-logo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/MS_logo_2020.svg/512px-MS_logo_2020.svg.png" alt="Management Solutions" onerror="this.style.display='none'">
+          <div class="tl-logo-name">Management<br>Solutions</div>
+        </div>
       </div>
       <div class="timeline-item">
         <div class="timeline-dot"></div>
@@ -936,7 +1002,11 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
         <div class="timeline-role">Data Analyst – BI & Risk Reporting</div>
         <div class="timeline-org">Management Solutions</div>
         <div class="timeline-desc" data-i18n="tl-job2-desc">Consolidación de 100+ informes en 6 dashboards Power BI (–90% carga operativa). Modelo semántico centralizado sobre datamart bancario. Desarrollo end-to-end del ecosistema BI.</div>
-        <div class="timeline-tags"><span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">Power Query</span><span class="tag">Data Modeling</span></div>
+        <div class="timeline-tags"><span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">Power Query</span><span class="tag">Data Modeling</span><span class="tag">Star Schema</span></div>
+        <div class="timeline-logo-panel">
+          <img class="tl-logo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/MS_logo_2020.svg/512px-MS_logo_2020.svg.png" alt="Management Solutions" onerror="this.style.display='none'">
+          <div class="tl-logo-name">Management<br>Solutions</div>
+        </div>
       </div>
     </div>
   </div>
@@ -949,6 +1019,10 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
         <div class="timeline-org" data-i18n="tl-edu1-org">Universidad Pontificia de Comillas – ICADE · Data Science</div>
         <div class="timeline-desc" data-i18n="tl-edu1-desc">Regulación financiera, core bancario, BI e IA aplicada a negocios. Visión estratégica integrada con capacidad analítica.</div>
         <div class="timeline-tags"><span class="tag" data-i18n="tag-banking-core">Core Bancario</span><span class="tag" data-i18n="tag-fin-reg">Regulación Financiera</span><span class="tag">BI</span><span class="tag" data-i18n="tag-ai-biz">IA en Negocios</span><span class="tag">PM</span></div>
+        <div class="timeline-logo-panel">
+          <div style="width:64px;height:64px;background:rgba(0,60,140,.15);border:1px solid rgba(0,60,140,.3);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.5rem;font-weight:700;color:rgba(100,150,255,.7);text-align:center;line-height:1.3">ICADE<br>COMILLAS</div>
+          <div class="tl-logo-name">Comillas<br>ICADE</div>
+        </div>
       </div>
       <div class="timeline-item">
         <div class="timeline-dot"></div>
@@ -957,6 +1031,10 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
         <div class="timeline-org" data-i18n="tl-edu2-org">Universidad Miguel Hernández · Tecnologías de la Información</div>
         <div class="timeline-desc" data-i18n="tl-edu2-desc">Fundamentos en modelado de datos, POO, R, NLP y programación paralela. Aquí nació la pasión por la ingeniería de datos.</div>
         <div class="timeline-tags"><span class="tag">SQL</span><span class="tag">POO</span><span class="tag">R Studio</span><span class="tag">NLP</span><span class="tag" data-i18n="tag-db-modeling">Modelado BD</span></div>
+        <div class="timeline-logo-panel">
+          <div style="width:64px;height:64px;background:rgba(180,20,20,.1);border:1px solid rgba(180,20,20,.25);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:.48rem;font-weight:700;color:rgba(255,100,100,.6);text-align:center;line-height:1.3">UMH<br>ELCHE</div>
+          <div class="tl-logo-name">Univ. Miguel<br>Hernández</div>
+        </div>
       </div>
     </div>
   </div>
@@ -970,8 +1048,9 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
   </div>
   <div class="projects-grid">
     <div class="project-card reveal">
-      <img class="proj-img" src="https://drive.google.com/thumbnail?id=1fxneeEHQ2Mfj14ivzweZoSG1knQ-2KKr&sz=s4000" alt="Dashboard Macro" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="proj-placeholder" style="display:none;background:linear-gradient(135deg,#0a0e1a,#0d1f3c)">Power BI · Macro Dashboard</div>
+      <div style="width:100%;height:180px;overflow:hidden">
+        <img class="proj-img" src="https://drive.google.com/thumbnail?id=1fxneeEHQ2Mfj14ivzweZoSG1knQ-2KKr&sz=s4000" alt="Dashboard Macro" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='linear-gradient(135deg,#0a0e1a,#0d1f3c)';this.style.display='none'">
+      </div>
       <div class="proj-body">
         <span class="proj-badge badge-live">Power BI</span>
         <div class="proj-title" data-i18n="proj1-title">Dashboard Macroeconómico</div>
@@ -980,20 +1059,30 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
       </div>
     </div>
     <div class="project-card reveal" style="transition-delay:.15s">
-      <img class="proj-img" src="https://drive.google.com/thumbnail?id=1h9aQl0UvC5juXaKjGEgM2vcY2FqCO0Ku&sz=s4000" alt="Dashboard Macro" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div style="width:100%;height:180px;overflow:hidden">
+        <img src="https://drive.google.com/thumbnail?id=1h9aQl0UvC5juXaKjGEgM2vcY2FqCO0Ku&sz=s4000" alt="ExoEDA" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='linear-gradient(135deg,#020612,#060d1e)';this.style.display='none'">
+      </div>
       <div class="proj-body">
         <span class="proj-badge badge-ds" data-i18n="proj2-badge">Análisis Exploratorio de Datos (EDA)</span>
         <div class="proj-title">ExoEDA — NASA Exoplanet Archive</div>
         <p class="proj-desc" data-i18n="proj2-desc">Análisis exploratorio del catálogo NASA. Métodos de detección, distribución orbital y correlaciones astrofísicas con visualizaciones interactivas.</p>
-        <a href="https://exoplanetaryeda.github.io/" class="proj-link" data-i18n="proj2-link">Ver análisis →</a>
+        <a href="https://exoplanetaryeda.github.io/" target="_blank" class="proj-link" data-i18n="proj2-link">Ver análisis →</a>
       </div>
     </div>
     <div class="project-card reveal" style="transition-delay:.3s">
-      <div class="proj-placeholder" style="background:linear-gradient(135deg,#000000,#000000); font-size:15px ">3+ Power BI Dashboards <br> 4+ Excel Dashboards <br> 2+ Automated Reporting <br> 10+ ETL pipelines optimized </div>
+      <div class="proj-confidential-bg">
+        <div class="proj-lock-icon">🔒</div>
+        <div class="proj-conf-stats">
+          <div class="proj-conf-stat"><span class="proj-conf-num">3+</span><span class="proj-conf-lbl">Power BI</span></div>
+          <div class="proj-conf-stat"><span class="proj-conf-num">4+</span><span class="proj-conf-lbl">Excel Dash</span></div>
+          <div class="proj-conf-stat"><span class="proj-conf-num">10+</span><span class="proj-conf-lbl">ETL Pipelines</span></div>
+          <div class="proj-conf-stat"><span class="proj-conf-num">2+</span><span class="proj-conf-lbl">Auto Reports</span></div>
+        </div>
+      </div>
       <div class="proj-body">
-        <span class="proj-badge badge-risk">CONFIDENTIAL</span>
+        <span class="proj-badge badge-risk">Confidencial — Banca</span>
         <div class="proj-title" data-i18n="proj3-title">Framework Regulatorio ETL</div>
-        <p class="proj-desc" data-i18n="proj3-desc">Tareas realizadas en entorno bancario durante mi carrera profesional. Por motivos de confidencialidad no pueden mostrarse.</p>
+        <p class="proj-desc" data-i18n="proj3-desc">Proyectos desarrollados en entorno bancario profesional. Los activos no pueden mostrarse por acuerdos de confidencialidad, pero los resultados y técnicas están documentados en el portfolio.</p>
       </div>
     </div>
   </div>
@@ -1023,7 +1112,7 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:20px 6%;display:flex;j
       <a href="/cdn-cgi/l/email-protection#30515c555a515e54425f5c5f4a515e5f405143445f4270575d51595c1e535f5d" class="contact-link">
         <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>Email
       </a>
-      <a href="https://www.linkedin.com/in/alejandro-lozano-pastor-52437a251/" target="_blank" class="contact-link">
+      <a href="https://www.linkedin.com/in/alejandro-lozano-pastor" target="_blank" class="contact-link">
         <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>LinkedIn
       </a>
       <a href="tel:+34647075077" class="contact-link">
@@ -1172,11 +1261,12 @@ document.querySelectorAll('.wl-btn').forEach(btn=>{
     document.querySelectorAll('.wl-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.wl-content').forEach(c=>c.classList.remove('active'));
     btn.classList.add('active');
-    const target=document.getElementById('wl-'+wl);
-    target.classList.add('active');
-    // auto open first phase of the selected line
-    if(wl==='powerbi'){currentOpenPbi=null; openPhase('pbi',1);}
-    else if(wl==='etl'){currentOpenEtl=null; openPhase('etl',1);}
+    document.getElementById('wl-'+wl).classList.add('active');
+    // auto-activate first phase of selected line
+    setTimeout(()=>{
+      if(wl==='powerbi') setActivePhase('pbi',0);
+      else if(wl==='etl') setActivePhase('etl',0);
+    },100);
   });
 });
 
@@ -1206,63 +1296,85 @@ setTimeout(()=>{
 },2000);
 
 /* ══════════════════════════════════════════
-   PHASE INFOGRAPHIC INTERACTION
+   FILE ICONS GENERATOR (Phase 01 tooltip)
 ══════════════════════════════════════════ */
-let currentOpenPbi = null;
-let currentOpenEtl = null;
-
-function openPhase(line, num) {
-  const isEtl = line === 'etl';
-  const total = isEtl ? 4 : 5;
-  const current = isEtl ? currentOpenEtl : currentOpenPbi;
-
-  // highlight dot
-  for (let i = 1; i <= total; i++) {
-    const dot = document.getElementById(line + '-dot-' + i);
-    if (dot) dot.style.boxShadow = '';
-  }
-  const activeDot = document.getElementById(line + '-dot-' + num);
-  if (activeDot) activeDot.style.boxShadow = '0 0 0 3px rgba(0,212,255,.25), 0 0 20px rgba(0,212,255,.3)';
-
-  if (current === num) {
-    // close
-    const det = document.getElementById(line + '-detail-' + num);
-    if (det) det.classList.remove('open');
-    if (activeDot) activeDot.style.boxShadow = '';
-    if (isEtl) currentOpenEtl = null; else currentOpenPbi = null;
-    return;
-  }
-
-  // close previous
-  if (current) {
-    const prev = document.getElementById(line + '-detail-' + current);
-    if (prev) prev.classList.remove('open');
-  }
-
-  // open new
-  const det = document.getElementById(line + '-detail-' + num);
-  if (det) {
-    det.classList.add('open');
-    setTimeout(() => det.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
-  }
-  if (isEtl) currentOpenEtl = num; else currentOpenPbi = num;
-}
-
-// Generate mini report icons
-function genMiniReports(containerId, total, highlighted) {
+function buildFileIcons(containerId) {
   const c = document.getElementById(containerId);
   if (!c) return;
-  for (let i = 0; i < total; i++) {
+  const types = [
+    {cls:'fi-xl',lbl:'XLS'},  {cls:'fi-wd',lbl:'DOC'},  {cls:'fi-pp',lbl:'PPT'},
+    {cls:'fi-ac',lbl:'MDB'},  {cls:'fi-pdf',lbl:'PDF'}, {cls:'fi-em',lbl:'MSG'},
+    {cls:'fi-txt',lbl:'TXT'}, {cls:'fi-csv',lbl:'CSV'}, {cls:'fi-xl',lbl:'XLSM'},
+    {cls:'fi-wd',lbl:'DOCX'}, {cls:'fi-pp',lbl:'PPTX'}, {cls:'fi-ac',lbl:'ACCDB'},
+    {cls:'fi-pdf',lbl:'PDF'}, {cls:'fi-xl',lbl:'XLS'},  {cls:'fi-em',lbl:'MSG'},
+    {cls:'fi-csv',lbl:'CSV'}, {cls:'fi-txt',lbl:'TXT'}, {cls:'fi-pp',lbl:'PPT'},
+  ];
+  types.forEach(t => {
+    const wrap = document.createElement('div');
+    wrap.className = 'fi fi-sm';
+    wrap.innerHTML = `<div class="fi-body ${t.cls}">${t.lbl.slice(0,2)}</div><span class="fi-label">${t.lbl}</span>`;
+    c.appendChild(wrap);
+  });
+}
+buildFileIcons('file-icons-inv');
+
+/* Build result-from report icons for phase 5 */
+function buildResultIcons2(containerId) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  for (let i = 0; i < 35; i++) {
     const d = document.createElement('div');
-    d.className = 'cons-mini-rpt' + (i < highlighted ? ' active' : '');
+    d.style.cssText = 'width:10px;height:13px;border-radius:1px;background:rgba(255,85,119,.15);border:1px solid rgba(255,85,119,.3);display:inline-block;margin:1px';
     c.appendChild(d);
   }
 }
-genMiniReports('cons-mini-reports', 30, 5);
-genMiniReports('cons-mini-reports-result', 30, 30);
+buildResultIcons2('result-from-icons2');
 
-/* Auto-open first phase after a short delay */
-setTimeout(() => { openPhase('pbi', 1); }, 600);
+/* ══════════════════════════════════════════
+   PERSISTENT ACTIVE PHASE STATE
+══════════════════════════════════════════ */
+let activePbiPhase = null;
+let activeEtlPhase = null;
+
+function setActivePhase(track, idx) {
+  const nodes = document.querySelectorAll(`#${track === 'pbi' ? 'pbi-phases' : 'etl-phases'} .phase-node`);
+  nodes.forEach((n,i) => {
+    if (i === idx) n.classList.add('active-phase');
+    else n.classList.remove('active-phase');
+  });
+  if (track === 'pbi') activePbiPhase = idx;
+  else activeEtlPhase = idx;
+}
+
+// Click to lock/unlock active phase
+document.querySelectorAll('#pbi-phases .phase-node').forEach((node, i) => {
+  node.addEventListener('click', () => {
+    if (activePbiPhase === i) { node.classList.remove('active-phase'); activePbiPhase = null; }
+    else setActivePhase('pbi', i);
+  });
+});
+document.querySelectorAll('#etl-phases .phase-node').forEach((node, i) => {
+  node.addEventListener('click', () => {
+    if (activeEtlPhase === i) { node.classList.remove('active-phase'); activeEtlPhase = null; }
+    else setActivePhase('etl', i);
+  });
+});
+
+/* Auto-activate first phase when line becomes visible */
+function activateFirstPhase(lineId, track) {
+  const el = document.getElementById(lineId);
+  if (!el) return;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && (track === 'pbi' ? activePbiPhase : activeEtlPhase) === null) {
+        setActivePhase(track, 0);
+      }
+    });
+  }, {threshold: 0.3});
+  obs.observe(el);
+}
+activateFirstPhase('pbi-phases', 'pbi');
+activateFirstPhase('etl-phases', 'etl');
 
 /* ══════════════════════════════════════════
    LANG SYSTEM
