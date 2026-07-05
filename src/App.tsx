@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowDown, ArrowUpRight, Menu, X } from "lucide-react";
+import { ScrollConstellation } from "@/components/scroll-constellation";
 
 const VIDEO_URL =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4";
@@ -80,6 +81,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-night text-white">
+      <ScrollConstellation />
       <a href="#content" className="skip-link">
         Skip to content
       </a>
@@ -166,7 +168,7 @@ function App() {
           </video>
           <div className="video-shade absolute inset-0" aria-hidden="true" />
 
-          <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-6 pt-20 text-center">
+          <div className="hero-copy relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-6 pt-20 text-center">
             <p className="animate-fade-rise text-xs font-medium uppercase tracking-[0.22em] text-white/62 sm:text-sm">
               Product Manager · Technical background
             </p>
@@ -190,13 +192,13 @@ function App() {
         </section>
 
         <div className="continuation">
-          <section id="profile" className="shell section-y">
+          <section id="profile" className="shell section-y" data-cosmic-section>
             <div className="grid gap-14 lg:grid-cols-[0.42fr_1fr] lg:gap-24">
               <p className="section-label" data-reveal>
                 Profile
               </p>
               <div data-reveal>
-                <h2 className="max-w-4xl font-display text-[clamp(2.8rem,5.8vw,6rem)] leading-[0.96] tracking-[-0.04em]">
+                <h2 className="max-w-4xl font-display text-[clamp(2.8rem,5.8vw,6rem)] leading-[0.96] tracking-[-0.04em]" data-cosmic-title>
                   I work between the product decision and the system that has to deliver it.
                 </h2>
                 <div className="mt-12 grid gap-8 border-t border-white/12 pt-8 sm:grid-cols-2">
@@ -229,12 +231,12 @@ function App() {
             </div>
           </section>
 
-          <section id="experience" className="shell section-y">
+          <section id="experience" className="shell section-y" data-cosmic-section>
             <div className="grid gap-14 lg:grid-cols-[0.42fr_1fr] lg:gap-24">
               <p className="section-label" data-reveal>
                 Experience
               </p>
-              <div className="border-t border-white/12" data-reveal>
+              <div className="border-t border-white/12" data-reveal data-cosmic-title>
                 {experience.map((item) => (
                   <article
                     key={item.period}
@@ -252,13 +254,13 @@ function App() {
             </div>
           </section>
 
-          <section id="projects" className="border-y border-white/10 bg-white/[0.025]">
+          <section id="projects" className="border-y border-white/10 bg-white/[0.025]" data-cosmic-section>
             <div className="shell section-y">
               <div className="grid gap-14 lg:grid-cols-[0.42fr_1fr] lg:gap-24">
                 <p className="section-label" data-reveal>
                   Personal projects
                 </p>
-                <div data-reveal>
+                <div data-reveal data-cosmic-title>
                   <p className="mb-8 max-w-xl text-sm leading-7 text-white/48">
                     Side projects are where I explore product decisions without inherited constraints:
                     from framing the problem to shipping the final experience.
@@ -317,12 +319,12 @@ function App() {
             </div>
           </section>
 
-          <section className="shell section-y">
+          <section id="skills" className="shell section-y" data-cosmic-section>
             <div className="grid gap-14 lg:grid-cols-[0.42fr_1fr] lg:gap-24">
               <p className="section-label" data-reveal>
                 How I work
               </p>
-              <div className="border-t border-white/12" data-reveal>
+              <div className="border-t border-white/12" data-reveal data-cosmic-title>
                 {capabilities.map(([title, body]) => (
                   <div
                     key={title}
@@ -336,10 +338,10 @@ function App() {
             </div>
           </section>
 
-          <section id="contact" className="shell pb-10 pt-20 sm:pt-28 lg:pt-36">
+          <section id="contact" className="shell pb-10 pt-20 sm:pt-28 lg:pt-36" data-cosmic-section>
             <div className="border-t border-white/12 pb-16 pt-12 sm:pb-24 sm:pt-16" data-reveal>
               <p className="section-label">Contact</p>
-              <div className="mt-8 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+              <div className="mt-8 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between" data-cosmic-title>
                 <h2 className="max-w-4xl font-display text-[clamp(3rem,7vw,7.5rem)] leading-[0.9] tracking-[-0.045em]">
                   Let&apos;s build something
                   <br />
