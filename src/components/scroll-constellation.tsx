@@ -5,10 +5,10 @@ type Point = {
   y: number;
 };
 
-const DESKTOP_X = [1415 / 1440, 0.34, 0.3, 0.35, 0.31, 0.42];
-const MOBILE_X = [0.9, 0.07, 0.09, 0.07, 0.09, 0.14];
-const STAR_VIEWPORT_OFFSET = 0.4;
-const TRAIL_LENGTH = 120;
+const DESKTOP_X = [0.36, 0.34, 0.62, 0.31, 0.66, 0.3, 0.58, 0.33, 0.64, 0.36, 0.5];
+const MOBILE_X = [0.22, 0.08, 0.1, 0.08, 0.11, 0.08, 0.12, 0.08, 0.1, 0.08, 0.16];
+const STAR_VIEWPORT_OFFSET = 0.56;
+const TRAIL_LENGTH = 150;
 const GLOW_STRENGTH = 0.42;
 
 function createPath(points: Point[]) {
@@ -82,7 +82,7 @@ export function ScrollConstellation() {
           x: compact
             ? width * xPattern[0]
             : Math.min(width - 25, width * xPattern[0]),
-          y: compact ? Math.min(190, window.innerHeight * 0.24) : 292,
+          y: compact ? Math.min(150, window.innerHeight * 0.18) : Math.min(190, window.innerHeight * 0.2),
         },
       ];
 
@@ -137,8 +137,8 @@ export function ScrollConstellation() {
         window.scrollY > 3
           ? window.scrollY + window.innerHeight * STAR_VIEWPORT_OFFSET
           : window.innerWidth < 768
-            ? Math.min(190, window.innerHeight * 0.24)
-            : 292;
+            ? Math.min(150, window.innerHeight * 0.18)
+            : Math.min(190, window.innerHeight * 0.2);
       const pauseRadius = window.innerHeight * 0.075;
       const closestStop = sectionStopsRef.current.reduce<number | null>(
         (closest, stop) => {

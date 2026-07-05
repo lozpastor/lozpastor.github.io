@@ -1,5 +1,17 @@
 import { useEffect, useState } from "react";
-import { ArrowDown, ArrowUpRight, Menu, X } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUpRight,
+  BarChart3,
+  Blocks,
+  BriefcaseBusiness,
+  Database,
+  Menu,
+  Network,
+  PanelsTopLeft,
+  Target,
+  X,
+} from "lucide-react";
 import { ScrollConstellation } from "@/components/scroll-constellation";
 
 const VIDEO_URL =
@@ -12,27 +24,125 @@ const navItems = [
   ["Contact", "#contact"],
 ];
 
-const experience = [
+const evolution = [
   {
-    period: "2025 — Now",
-    role: "Product Management Office",
-    focus: "Recoveries & Underwriting",
-    body: "I coordinate product delivery across business, technology, risk and operations in core banking domains. My work connects roadmap, backlog, functional definition, UAT and stakeholder decisions.",
+    title: "Data",
+    icon: Database,
+    body: "I learned to separate signal from noise: SQL, SAS, reporting logic, data quality and the operational truth behind every KPI.",
   },
   {
-    period: "2023 — 2025",
-    role: "Data Engineer",
-    focus: "Risk & Regulatory Data",
-    body: "I built analytics and regulatory data products with SQL, SAS and Power BI—turning complex reporting processes into reliable systems used by risk teams and decision-makers.",
+    title: "Business",
+    icon: BriefcaseBusiness,
+    body: "Banking taught me that a useful solution is not the most elegant one; it is the one that survives risk, priorities and real stakeholders.",
+  },
+  {
+    title: "Technology",
+    icon: Network,
+    body: "My engineering background helps me translate ambiguity into systems, dependencies, acceptance criteria and delivery constraints.",
+  },
+  {
+    title: "Product",
+    icon: PanelsTopLeft,
+    body: "Today I use that mix to shape product decisions: what to build, why it matters, how it ships and how success is measured.",
   },
 ];
 
 const capabilities = [
-  ["Product direction", "Discovery, prioritisation and roadmaps"],
-  ["Delivery", "Backlogs, user stories, UAT and release readiness"],
-  ["Data", "SQL, KPIs, Power BI, SAS and ETL"],
-  ["Alignment", "Business, engineering, risk and operations"],
+  {
+    title: "Business Thinking",
+    icon: Target,
+    items: ["Product Strategy", "Product Performance", "Stakeholder Management", "Banking Knowledge", "KPI Definition"],
+  },
+  {
+    title: "Technical Foundation",
+    icon: Blocks,
+    items: ["SQL", "Power BI", "SAS", "Jira", "Confluence", "ETL", "APIs"],
+  },
+  {
+    title: "Product Execution",
+    icon: PanelsTopLeft,
+    items: ["Backlog Management", "User Stories", "Roadmaps", "Agile", "Scrum", "UAT", "Cross-functional Collaboration"],
+  },
+  {
+    title: "Data-driven Decisions",
+    icon: BarChart3,
+    items: ["Dashboards", "Analytics", "Reporting", "Data Modelling", "Metrics", "Decision Making"],
+  },
 ];
+
+const experience = [
+  {
+    company: "Banco Sabadell",
+    role: "Product Management Office · Recoveries & Underwriting",
+    period: "2025 — Present",
+    context: "A regulated banking environment where product decisions must balance business value, operational reality, risk and technical feasibility.",
+    mission: "Create alignment across business, technology, risk and operations so product delivery moves with clearer scope, stronger sequencing and fewer surprises.",
+    contribution:
+      "I connect roadmap intent with backlog structure, user stories, UAT criteria and stakeholder decisions—turning complex requirements into work teams can actually ship.",
+    impact: ["Stronger delivery alignment", "Clearer decision-making", "Reduced ambiguity across teams"],
+    tools: ["Jira", "Confluence", "UAT", "Roadmaps", "Stakeholders"],
+  },
+  {
+    company: "Management Solutions",
+    role: "Data Engineer · Risk & Regulatory Data",
+    period: "2023 — 2025",
+    context: "Risk and regulatory reporting processes with fragmented outputs, repeated manual effort and high dependency on data reliability.",
+    mission: "Transform reporting complexity into dependable analytics systems for teams that needed faster, cleaner and more auditable decisions.",
+    contribution:
+      "I consolidated legacy reports, built SQL/SAS logic, modelled data flows and created Power BI dashboards that made reporting easier to understand and maintain.",
+    impact: ["100+ reports consolidated", "90%+ reporting effort reduced", "50%+ efficiency improvement"],
+    tools: ["SQL", "SAS", "Power BI", "ETL", "Data Quality"],
+  },
+];
+
+const mindset = [
+  ["Business Value", "Does this move a relevant outcome?"],
+  ["User Needs", "Who changes behaviour because this exists?"],
+  ["Technology", "What constraints shape the right solution?"],
+  ["Data", "How will we know if it worked?"],
+];
+
+const projects = [
+  {
+    title: "Macroeconomic Dashboard",
+    problem: "Economic data is often powerful but hard to navigate: scattered indicators, weak hierarchy and too much friction before insight.",
+    role: "Product owner, UX structure and frontend implementation.",
+    process:
+      "I reframed the dashboard as a web product: clearer navigation, sharper metric hierarchy, responsive behaviour and a more intentional reading flow.",
+    result: "A live analytical product that makes multi-country macroeconomic comparison faster, cleaner and easier to present.",
+    tools: ["React", "Data Visualisation", "UX", "KPIs"],
+    impact: "From report to product experience",
+    href: "https://lozpastor.github.io/Macroeconomic-Dashboard/",
+  },
+  {
+    title: "Portfolio System",
+    problem: "A recruiter has seconds to understand positioning, credibility and fit. A static CV cannot carry that narrative well enough.",
+    role: "Product strategy, information architecture and interface direction.",
+    process:
+      "I treated the portfolio as a product surface: first impression, reading path, proof of impact, technical signal and conversion to conversation.",
+    result: "A focused PM narrative that communicates business, technology and data without becoming a CV online.",
+    tools: ["React", "TypeScript", "Storytelling", "SEO"],
+    impact: "Positioning designed for PM recruiters",
+    href: "#contact",
+  },
+];
+
+const achievements = [
+  ["100+", "Legacy reports consolidated into more manageable reporting flows"],
+  ["90%+", "Reduction in manual reporting effort through automation and data structure"],
+  ["50%+", "Improvement in operational efficiency across recurring analytical processes"],
+  ["XFN", "Business, technology, risk and operations aligned around delivery decisions"],
+];
+
+const toolbox = [
+  ["Business", "Banking knowledge, stakeholder alignment, KPI definition, product performance"],
+  ["Product", "Roadmaps, backlog, user stories, UAT, discovery-to-delivery thinking"],
+  ["Data", "SQL, SAS, Power BI, dashboards, reporting, analytics, data modelling"],
+  ["Technology", "ETL logic, technical feasibility, APIs, systems thinking, implementation trade-offs"],
+  ["Collaboration", "Jira, Confluence, agile rituals, cross-functional communication, decision records"],
+];
+
+const beyond = ["Continuous learning", "Artificial Intelligence", "Data visualisation", "Product design", "English & Spanish", "Technology trends"];
 
 function useReveal() {
   useEffect(() => {
@@ -51,7 +161,7 @@ function useReveal() {
           }
         });
       },
-      { threshold: 0.14, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.08, rootMargin: "0px 0px -2% 0px" },
     );
 
     nodes.forEach((node) => observer.observe(node));
@@ -196,86 +306,144 @@ function App() {
             <span className="chapter-ghost" aria-hidden="true">01</span>
             <div className="chapter-grid">
               <div className="chapter-meta" data-reveal>
-                <span>01 / 05</span>
-                <p>Profile</p>
-                <small>Barcelona · 41.38° N</small>
+                <span>01 / 10</span>
+                <p>From Data to Product</p>
+                <small>Not a biography. A trajectory.</small>
               </div>
               <div className="chapter-body" data-reveal data-cosmic-title>
-                <p className="chapter-intro">A product perspective shaped from inside the system.</p>
+                <p className="chapter-intro">The through-line: turning complexity into product clarity.</p>
                 <h2 className="editorial-title">
-                  I work between the
+                  My path started with data,
                   <br />
-                  <em>decision</em> and the thing
+                  moved through business,
                   <br />
-                  that has to deliver it.
+                  and now points to <em>product.</em>
                 </h2>
-                <div className="profile-notes">
-                  <p>
-                    Computer engineering taught me to see dependencies, question metrics and look
-                    beneath the interface.
-                  </p>
-                  <p>
-                    Product work lets me use that depth to align teams, clarify scope and move
-                    complex banking products forward.
-                  </p>
-                  <aside>
-                    Business <i>×</i> Technology <i>×</i> Data <i>×</i> Users
-                  </aside>
+                <div className="evolution-map" aria-label="Professional evolution from data to product">
+                  {evolution.map((item, index) => {
+                    const Icon = item.icon;
+                    return (
+                      <article className="evolution-card" key={item.title}>
+                        <span className="evolution-index">0{index + 1}</span>
+                        <Icon className="size-4" aria-hidden="true" />
+                        <h3>{item.title}</h3>
+                        <p>{item.body}</p>
+                      </article>
+                    );
+                  })}
                 </div>
               </div>
             </div>
           </section>
 
-          <section className="signal-strip" aria-label="Selected impact">
-            <div className="shell">
-              <p className="signal-caption">Selected signals / not vanity metrics</p>
-              <div className="signal-line">
-                {[
-                  ["3+", "years in banking transformation"],
-                  ["100+", "reports consolidated"],
-                  ["90%+", "reporting effort reduced"],
-                  ["50%+", "process efficiency gained"],
-                ].map(([value, label], index) => (
-                  <div key={value} className="signal">
-                    <span className="signal-index">0{index + 1}</span>
-                    <strong>{value}</strong>
-                    <p>{label}</p>
-                  </div>
-                ))}
+          <section className="capabilities-chapter shell" data-cosmic-section>
+            <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">02</span>
+            <div className="chapter-grid">
+              <div className="chapter-meta" data-reveal>
+                <span>02 / 10</span>
+                <p>What I Bring</p>
+                <small>Four capabilities. One operating model.</small>
+              </div>
+              <div className="chapter-body" data-reveal data-cosmic-title>
+                <p className="chapter-intro">A PM profile built at the intersection of outcomes, systems and evidence.</p>
+                <h2 className="editorial-title">
+                  I can speak strategy
+                  <br />
+                  without losing the thread
+                  <br />
+                  of <em>implementation.</em>
+                </h2>
+                <div className="capability-grid">
+                  {capabilities.map((capability) => {
+                    const Icon = capability.icon;
+                    return (
+                      <article className="premium-card capability-card" key={capability.title}>
+                        <div className="card-kicker"><Icon className="size-4" />Capability</div>
+                        <h3>{capability.title}</h3>
+                        <div className="tag-cloud">
+                          {capability.items.map((item) => <span key={item}>{item}</span>)}
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </section>
 
           <section id="experience" className="chapter shell" data-cosmic-section>
-            <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">02</span>
+            <span className="chapter-ghost" aria-hidden="true">03</span>
             <div className="chapter-grid">
               <div className="chapter-meta" data-reveal>
-                <span>02 / 05</span>
-                <p>Experience</p>
-                <small>From infrastructure to intent</small>
+                <span>03 / 10</span>
+                <p>Professional Experience</p>
+                <small>Case studies, not job descriptions.</small>
               </div>
               <div className="chapter-body" data-reveal data-cosmic-title>
-                <p className="chapter-intro">Two roles. One continuous line of thought.</p>
+                <p className="chapter-intro">The work is less about tasks and more about removing friction from decisions.</p>
                 <h2 className="editorial-title">
-                  Close enough to the data
+                  Experience shaped by
                   <br />
-                  to know when a product
+                  regulated products,
                   <br />
-                  <em>story is true.</em>
+                  data systems and <em>delivery.</em>
                 </h2>
-
-                <div className="experience-ledger">
+                <div className="case-stack">
                   {experience.map((item, index) => (
-                    <article key={item.period} className="experience-note">
-                      <div className="experience-heading">
+                    <article className="experience-case" key={item.company + item.period}>
+                      <div className="case-topline">
                         <span>0{index + 1}</span>
                         <p>{item.period}</p>
                       </div>
-                      <div>
-                        <h3>{item.role}</h3>
-                        <p className="experience-focus">{item.focus}</p>
+                      <div className="case-main">
+                        <div>
+                          <p className="case-company">{item.company}</p>
+                          <h3>{item.role}</h3>
+                        </div>
+                        <div className="case-copy-grid">
+                          <div><span>Context</span><p>{item.context}</p></div>
+                          <div><span>Mission</span><p>{item.mission}</p></div>
+                          <div><span>Contribution</span><p>{item.contribution}</p></div>
+                        </div>
                       </div>
-                      <p className="experience-copy">{item.body}</p>
+                      <div className="case-footer">
+                        <div className="impact-pills">
+                          {item.impact.map((impact) => <span key={impact}>{impact}</span>)}
+                        </div>
+                        <div className="tool-row">
+                          {item.tools.map((tool) => <span key={tool}>{tool}</span>)}
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="mindset-chapter shell" data-cosmic-section>
+            <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">04</span>
+            <div className="chapter-grid">
+              <div className="chapter-meta" data-reveal>
+                <span>04 / 10</span>
+                <p>Product Mindset</p>
+                <small>How I frame decisions.</small>
+              </div>
+              <div className="chapter-body" data-reveal data-cosmic-title>
+                <p className="chapter-intro">Good product work is a tension system, not a checklist.</p>
+                <h2 className="editorial-title">
+                  I look for the point
+                  <br />
+                  where value, need,
+                  <br />
+                  data and tech <em>agree.</em>
+                </h2>
+                <div className="mindset-system" aria-label="Product mindset diagram">
+                  <div className="mindset-center">Product<br />Judgement</div>
+                  {mindset.map(([title, body], index) => (
+                    <article className={`mindset-node node-${index + 1}`} key={title}>
+                      <h3>{title}</h3>
+                      <p>{body}</p>
                     </article>
                   ))}
                 </div>
@@ -287,103 +455,167 @@ function App() {
             <div className="shell">
               <div className="project-heading" data-reveal>
                 <div className="chapter-meta">
-                  <span>03 / 05</span>
-                  <p>Personal project</p>
-                  <small>Independent product practice</small>
+                  <span>05 / 10</span>
+                  <p>Featured Projects</p>
+                  <small>Personal product practice</small>
                 </div>
                 <div data-cosmic-title>
-                  <p className="chapter-intro">A product built without inherited constraints.</p>
+                  <p className="chapter-intro">Projects where I can own the problem, the structure and the experience.</p>
                   <h2 className="editorial-title">
-                    From BI report
+                    Small products,
                     <br />
-                    to <em>web product.</em>
+                    built to show how
+                    <br />
+                    I <em>think.</em>
                   </h2>
                 </div>
               </div>
 
-              <a
-                href="https://lozpastor.github.io/Macroeconomic-Dashboard/"
-                target="_blank"
-                rel="noreferrer"
-                className="project-piece group"
-                data-reveal
-              >
-                <div className="project-art" aria-hidden="true">
-                  <span className="art-coordinate">40.4168° N / 3.7038° W</span>
-                  <span className="art-year">2025</span>
-                  <div className="project-orbit" />
-                  <div className="project-browser">
-                    <div className="project-browser-bar"><span /><span /><span /></div>
-                    <div className="project-screen">
-                      <div className="project-chart">
-                        {[38, 62, 45, 78, 68, 88, 73, 94].map((height, index) => (
-                          <span key={index} style={{ height: `${height}%` }} />
-                        ))}
+              <div className="project-case-grid">
+                {projects.map((project, index) => (
+                  <a href={project.href} target={project.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="project-case-card group" data-reveal key={project.title}>
+                    <div className="project-case-visual" aria-hidden="true">
+                      <span className="project-number">0{index + 1}</span>
+                      <div className="project-orbit" />
+                      <div className="project-browser compact-browser">
+                        <div className="project-browser-bar"><span /><span /><span /></div>
+                        <div className="project-screen">
+                          <div className="project-chart">
+                            {[38, 62, 45, 78, 68, 88, 73, 94].map((height, barIndex) => (
+                              <span key={barIndex} style={{ height: `${height}%` }} />
+                            ))}
+                          </div>
+                          <div className="project-lines"><span /><span /><span /></div>
+                        </div>
                       </div>
-                      <div className="project-lines"><span /><span /><span /></div>
                     </div>
-                  </div>
-                </div>
+                    <div className="project-case-content">
+                      <div className="project-title-row">
+                        <h3>{project.title}</h3>
+                        <span>View more <ArrowUpRight className="size-4" /></span>
+                      </div>
+                      <dl>
+                        <div><dt>Problem</dt><dd>{project.problem}</dd></div>
+                        <div><dt>My role</dt><dd>{project.role}</dd></div>
+                        <div><dt>Process</dt><dd>{project.process}</dd></div>
+                        <div><dt>Result</dt><dd>{project.result}</dd></div>
+                      </dl>
+                      <div className="case-footer project-footer">
+                        <div className="impact-pills"><span>{project.impact}</span></div>
+                        <div className="tool-row">{project.tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </section>
 
-                <div className="project-caption">
-                  <div>
-                    <span className="project-number">01</span>
-                    <h3>Macroeconomic Dashboard</h3>
+          <section className="signal-strip achievements-strip" aria-label="Selected achievements" data-cosmic-section>
+            <div className="shell" data-reveal data-cosmic-title>
+              <p className="signal-caption">06 / 10 · Selected achievements</p>
+              <div className="signal-line">
+                {achievements.map(([value, label], index) => (
+                  <div key={value} className="signal">
+                    <span className="signal-index">0{index + 1}</span>
+                    <strong>{value}</strong>
+                    <p>{label}</p>
                   </div>
-                  <p>
-                    A responsive product for reading economic KPIs, time-series and multi-country
-                    comparisons—reframed around navigation, hierarchy and reach.
-                  </p>
-                  <span className="project-launch">
-                    View live <ArrowUpRight className="size-4" />
-                  </span>
-                </div>
-              </a>
+                ))}
+              </div>
             </div>
           </section>
 
           <section id="skills" className="chapter shell" data-cosmic-section>
-            <span className="chapter-ghost" aria-hidden="true">04</span>
+            <span className="chapter-ghost" aria-hidden="true">07</span>
             <div className="chapter-grid">
               <div className="chapter-meta" data-reveal>
-                <span>04 / 05</span>
-                <p>Practice</p>
-                <small>How the work moves</small>
+                <span>07 / 10</span>
+                <p>Toolbox</p>
+                <small>Organised by use, not by noise.</small>
               </div>
               <div className="chapter-body" data-reveal data-cosmic-title>
-                <p className="chapter-intro">Tools change. The operating model compounds.</p>
+                <p className="chapter-intro">Tools matter when they help a team make better decisions faster.</p>
                 <h2 className="editorial-title">
-                  Clarity before velocity.
+                  A practical toolkit
                   <br />
-                  <em>Evidence before theatre.</em>
+                  for moving from insight
+                  <br />
+                  to <em>execution.</em>
                 </h2>
-                <ol className="practice-list">
-                  {capabilities.map(([title, body], index) => (
-                    <li key={title}>
+                <div className="toolbox-grid">
+                  {toolbox.map(([title, body], index) => (
+                    <article className="toolbox-card" key={title}>
                       <span>0{index + 1}</span>
                       <h3>{title}</h3>
                       <p>{body}</p>
-                    </li>
+                    </article>
                   ))}
-                </ol>
-                <div className="education-note">
-                  <p>Computer Engineering</p>
-                  <span>→</span>
-                  <p>Business Consulting & Data Science</p>
-                  <span>→</span>
-                  <p>Product Management</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="why-chapter shell" data-cosmic-section>
+            <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">08</span>
+            <div className="chapter-grid">
+              <div className="chapter-meta" data-reveal>
+                <span>08 / 10</span>
+                <p>Why Product?</p>
+                <small>The direction was already inside the work.</small>
+              </div>
+              <div className="chapter-body" data-reveal data-cosmic-title>
+                <p className="chapter-intro">I moved toward product because the most interesting questions were no longer only technical.</p>
+                <h2 className="editorial-title">
+                  I want to build the thing
+                  <br />
+                  behind the dashboard,
+                  <br />
+                  not only measure <em>afterwards.</em>
+                </h2>
+                <div className="why-panel">
+                  <p>
+                    Data work taught me how decisions are made once a product exists. Product work lets me move earlier: framing the problem, choosing the trade-offs, aligning the stakeholders and defining what success should mean before delivery starts.
+                  </p>
+                  <p>
+                    That is where my background becomes useful: I can sit with business ambiguity, understand technical constraints and still keep the conversation anchored in outcomes for users and teams.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="beyond-chapter shell" data-cosmic-section>
+            <span className="chapter-ghost" aria-hidden="true">09</span>
+            <div className="chapter-grid">
+              <div className="chapter-meta" data-reveal>
+                <span>09 / 10</span>
+                <p>Beyond Work</p>
+                <small>Signals of curiosity.</small>
+              </div>
+              <div className="chapter-body" data-reveal data-cosmic-title>
+                <p className="chapter-intro">A lighter layer: what keeps sharpening the way I think.</p>
+                <h2 className="editorial-title">
+                  I keep studying the edges
+                  <br />
+                  where products become
+                  <br />
+                  more <em>intelligent.</em>
+                </h2>
+                <div className="beyond-grid">
+                  {beyond.map((item) => <span key={item}>{item}</span>)}
                 </div>
               </div>
             </div>
           </section>
 
           <section id="contact" className="contact-chapter shell" data-cosmic-section>
-            <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">05</span>
+            <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">10</span>
             <div data-reveal data-cosmic-title>
               <div className="chapter-meta">
-                <span>05 / 05</span>
+                <span>10 / 10</span>
                 <p>Contact</p>
-                <small>Open to the right conversation</small>
+                <small>Open to the right product conversation</small>
               </div>
               <h2>
                 Let&apos;s make complex
@@ -392,22 +624,13 @@ function App() {
               </h2>
               <div className="contact-row">
                 <p>Product Management · Technical Product · Product Operations</p>
-                <div className="flex gap-3">
-                  <a
-                    href="mailto:lozpastor@gmail.com?subject=Product%20opportunity"
-                    className="glass-button"
-                  >
-                    Start a conversation <ArrowUpRight className="ml-2 size-4" />
+                <div className="contact-actions">
+                  <a href="mailto:lozpastor@gmail.com?subject=Product%20opportunity" className="glass-button">
+                    Email <ArrowUpRight className="ml-2 size-4" />
                   </a>
-                  <a
-                    href="https://www.linkedin.com/in/alejandro-lozano-pastor-52437a251/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="circle-link"
-                    aria-label="Alejandro Lozano on LinkedIn"
-                  >
-                    <ArrowUpRight className="size-5" />
-                  </a>
+                  <a href="https://www.linkedin.com/in/alejandro-lozano-pastor-52437a251/" target="_blank" rel="noreferrer" className="circle-link" aria-label="Alejandro Lozano on LinkedIn">in</a>
+                  <a href="https://github.com/lozpastor" target="_blank" rel="noreferrer" className="circle-link" aria-label="Alejandro Lozano on GitHub">gh</a>
+                  <a href="/CV%20-%20Alejandro%20Lozano%20-%20PM%20Banking.html" className="circle-link" aria-label="Open CV">cv</a>
                 </div>
               </div>
             </div>
