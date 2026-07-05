@@ -1,0 +1,15 @@
+{
+  "name": "Alejandro Lozano — Product Manager",
+  "short_name": "Alejandro Lozano",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#061a24",
+  "theme_color": "#061a24",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -385,7 +385,7 @@
 
 @media (max-width: 639px) {
   .hero-copy {
-    transform: translateY(-8vh);
+    transform: translateY(-13vh);
   }
 
   .video-shade {

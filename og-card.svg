@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#061a24"/>
+  <circle cx="1080" cy="80" r="420" fill="none" stroke="#ffffff" stroke-opacity=".08"/>
+  <circle cx="1080" cy="80" r="290" fill="none" stroke="#ffffff" stroke-opacity=".07"/>
+  <circle cx="1080" cy="80" r="160" fill="#b7efcf" fill-opacity=".12"/>
+  <text x="72" y="92" fill="#b7efcf" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">TECHNICAL PRODUCT MANAGER</text>
+  <text x="72" y="270" fill="#f4f2ed" font-family="Georgia, serif" font-size="92">Alejandro Lozano</text>
+  <text x="72" y="380" fill="#f4f2ed" fill-opacity=".55" font-family="Georgia, serif" font-size="70">Business · Technology · Data · Users</text>
+  <line x1="72" y1="500" x2="1128" y2="500" stroke="#ffffff" stroke-opacity=".18"/>
+  <text x="72" y="552" fill="#ffffff" fill-opacity=".55" font-family="Arial, sans-serif" font-size="20">Product thinking grounded in measurable impact.</text>
+</svg>
