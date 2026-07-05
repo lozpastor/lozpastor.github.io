@@ -20,6 +20,14 @@ export default {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: "hsl(var(--accent))",
+        ink: {
+          DEFAULT: "#0d2028",
+          muted: "#5e686c",
+          faint: "#98a0a1",
+        },
+        deep: "#0b4052",
+        canvas: "#f4f2ed",
+        line: "#d8d8d3",
       },
       fontFamily: {
         display: ["Instrument Serif", "serif"],
