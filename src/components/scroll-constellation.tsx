@@ -5,9 +5,9 @@ type Point = {
   y: number;
 };
 
-const DESKTOP_X = [0.5, 0.34, 0.31, 0.35, 0.32, 0.42];
-const MOBILE_X = [0.76, 0.07, 0.09, 0.07, 0.09, 0.14];
-const STAR_VIEWPORT_OFFSET = 0.16;
+const DESKTOP_X = [1415 / 1440, 0.34, 0.3, 0.35, 0.31, 0.42];
+const MOBILE_X = [0.9, 0.07, 0.09, 0.07, 0.09, 0.14];
+const STAR_VIEWPORT_OFFSET = 0.4;
 const TRAIL_LENGTH = 120;
 const GLOW_STRENGTH = 0.42;
 
@@ -79,8 +79,10 @@ export function ScrollConstellation() {
 
       const points: Point[] = [
         {
-          x: width * xPattern[0],
-          y: Math.max(72, window.innerHeight * 0.1),
+          x: compact
+            ? width * xPattern[0]
+            : Math.min(width - 25, width * xPattern[0]),
+          y: compact ? Math.min(190, window.innerHeight * 0.24) : 292,
         },
       ];
 
@@ -122,7 +124,10 @@ export function ScrollConstellation() {
 
     const scheduleGeometry = () => {
       if (geometryFrameRef.current) cancelAnimationFrame(geometryFrameRef.current);
-      geometryFrameRef.current = requestAnimationFrame(updateGeometry);
+      geometryFrameRef.current = requestAnimationFrame(() => {
+        updateGeometry();
+        setScrollTarget();
+      });
     };
 
     const setScrollTarget = () => {
@@ -131,7 +136,9 @@ export function ScrollConstellation() {
       const rawY =
         window.scrollY > 3
           ? window.scrollY + window.innerHeight * STAR_VIEWPORT_OFFSET
-          : Math.max(72, window.innerHeight * 0.1);
+          : window.innerWidth < 768
+            ? Math.min(190, window.innerHeight * 0.24)
+            : 292;
       const pauseRadius = window.innerHeight * 0.075;
       const closestStop = sectionStopsRef.current.reduce<number | null>(
         (closest, stop) => {
@@ -151,6 +158,10 @@ export function ScrollConstellation() {
         pathLengthRef.current,
         findLengthAtY(basePath, desiredY, pathLengthRef.current),
       );
+
+      if (!frameRef.current) {
+        frameRef.current = requestAnimationFrame(animate);
+      }
     };
 
     const animate = () => {
@@ -213,7 +224,14 @@ export function ScrollConstellation() {
         }
       }
 
-      frameRef.current = requestAnimationFrame(animate);
+      if (
+        !reducedMotionRef.current &&
+        Math.abs(targetLengthRef.current - currentLengthRef.current) >= 0.08
+      ) {
+        frameRef.current = requestAnimationFrame(animate);
+      } else {
+        frameRef.current = undefined;
+      }
     };
 
     const handleMotionPreference = (event: MediaQueryListEvent) => {
@@ -224,7 +242,6 @@ export function ScrollConstellation() {
 
     updateGeometry();
     setScrollTarget();
-    frameRef.current = requestAnimationFrame(animate);
 
     window.addEventListener("scroll", setScrollTarget, { passive: true });
     window.addEventListener("resize", scheduleGeometry, { passive: true });
