@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Product judgement system</title>
+  <desc id="desc">Product judgement connects business value, user needs, technology and data.</desc>
+  <defs>
+    <radialGradient id="core">
+      <stop stop-color="#BDE8D2" stop-opacity="0.16"/>
+      <stop offset="0.48" stop-color="#BDE8D2" stop-opacity="0.045"/>
+      <stop offset="1" stop-color="#BDE8D2" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="spine" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#FFFFFF" stop-opacity="0.08"/>
+      <stop offset="0.5" stop-color="#BDE8D2" stop-opacity="0.62"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.08"/>
+    </linearGradient>
+    <filter id="soft" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g fill="none">
+    <ellipse cx="600" cy="360" rx="402" ry="220" transform="rotate(-8 600 360)" stroke="#FFFFFF" stroke-opacity="0.075"/>
+    <ellipse cx="600" cy="360" rx="284" ry="340" transform="rotate(34 600 360)" stroke="#FFFFFF" stroke-opacity="0.05"/>
+    <path d="M278 206 L922 514 M922 206 L278 514" stroke="url(#spine)" stroke-width="1.5"/>
+    <circle cx="600" cy="360" r="170" fill="url(#core)" stroke="#BDE8D2" stroke-opacity="0.16"/>
+    <circle cx="600" cy="360" r="5" fill="#FFFFFF" filter="url(#soft)"/>
+  </g>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="600" y="340" fill="#FFFFFF" fill-opacity="0.92" font-size="18" letter-spacing="4" text-anchor="middle">PRODUCT</text>
+    <text x="600" y="382" fill="#FFFFFF" font-size="46" text-anchor="middle">Judgement</text>
+    <g transform="translate(264 194)">
+      <circle r="9" fill="#BDE8D2" fill-opacity="0.8"/>
+      <text x="0" y="-32" fill="#FFFFFF" fill-opacity="0.9" font-size="28" text-anchor="middle">Business value</text>
+      <text x="0" y="42" fill="#FFFFFF" fill-opacity="0.38" font-size="13" letter-spacing="2" text-anchor="middle">VIABILITY</text>
+    </g>
+    <g transform="translate(936 194)">
+      <circle r="9" fill="#BDE8D2" fill-opacity="0.8"/>
+      <text x="0" y="-32" fill="#FFFFFF" fill-opacity="0.9" font-size="28" text-anchor="middle">User needs</text>
+      <text x="0" y="42" fill="#FFFFFF" fill-opacity="0.38" font-size="13" letter-spacing="2" text-anchor="middle">DESIRABILITY</text>
+    </g>
+    <g transform="translate(264 526)">
+      <circle r="9" fill="#BDE8D2" fill-opacity="0.8"/>
+      <text x="0" y="-32" fill="#FFFFFF" fill-opacity="0.9" font-size="28" text-anchor="middle">Technology</text>
+      <text x="0" y="42" fill="#FFFFFF" fill-opacity="0.38" font-size="13" letter-spacing="2" text-anchor="middle">FEASIBILITY</text>
+    </g>
+    <g transform="translate(936 526)">
+      <circle r="9" fill="#BDE8D2" fill-opacity="0.8"/>
+      <text x="0" y="-32" fill="#FFFFFF" fill-opacity="0.9" font-size="28" text-anchor="middle">Data</text>
+      <text x="0" y="42" fill="#FFFFFF" fill-opacity="0.38" font-size="13" letter-spacing="2" text-anchor="middle">EVIDENCE</text>
+    </g>
+  </g>
+</svg>

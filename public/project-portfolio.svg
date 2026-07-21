@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 980" role="img" aria-labelledby="title desc">
+  <title id="title">Portfolio narrative system</title>
+  <desc id="desc">A visual content architecture guiding a recruiter from positioning to proof and contact.</desc>
+  <defs>
+    <linearGradient id="path" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#FFFFFF" stop-opacity="0.92"/><stop offset="0.48" stop-color="#BDE8D2" stop-opacity="0.62"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0.12"/>
+    </linearGradient>
+    <radialGradient id="halo"><stop stop-color="#BDE8D2" stop-opacity="0.14"/><stop offset="1" stop-color="#BDE8D2" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="900" height="980" fill="#071820"/>
+  <g transform="translate(74 84)">
+    <text fill="#FFFFFF" fill-opacity="0.38" font-family="Inter,Arial,sans-serif" font-size="13" letter-spacing="3">PORTFOLIO SYSTEM</text>
+    <text y="68" fill="#FFFFFF" font-family="Georgia,serif" font-size="52">A recruiter journey,</text>
+    <text y="122" fill="#FFFFFF" fill-opacity="0.46" font-family="Georgia,serif" font-size="52">designed as a product.</text>
+  </g>
+  <g transform="translate(450 520)">
+    <ellipse rx="310" ry="280" fill="url(#halo)"/>
+    <path d="M-230 -240 C-110 -200 -178 -90 -40 -65 C110 -38 12 85 148 118 C230 138 180 222 250 254" fill="none" stroke="url(#path)" stroke-width="2"/>
+    <g font-family="Inter,Arial,sans-serif">
+      <g transform="translate(-230 -240)"><circle r="8" fill="#FFFFFF"/><circle r="34" fill="none" stroke="#FFFFFF" stroke-opacity="0.12"/><text x="30" y="6" fill="#FFFFFF" font-size="23">Positioning</text><text x="30" y="28" fill="#FFFFFF" fill-opacity="0.34" font-size="10" letter-spacing="2">WHO / WHY</text></g>
+      <g transform="translate(-40 -65)"><circle r="7" fill="#BDE8D2"/><circle r="30" fill="none" stroke="#BDE8D2" stroke-opacity="0.12"/><text x="30" y="6" fill="#FFFFFF" font-size="23">Evidence</text><text x="30" y="28" fill="#FFFFFF" fill-opacity="0.34" font-size="10" letter-spacing="2">IMPACT / SCALE</text></g>
+      <g transform="translate(148 118)"><circle r="7" fill="#BDE8D2"/><circle r="30" fill="none" stroke="#BDE8D2" stroke-opacity="0.12"/><text x="-30" y="6" fill="#FFFFFF" font-size="23" text-anchor="end">Product thinking</text><text x="-30" y="28" fill="#FFFFFF" fill-opacity="0.34" font-size="10" letter-spacing="2" text-anchor="end">DECISIONS / TRADE-OFFS</text></g>
+      <g transform="translate(250 254)"><circle r="9" fill="#FFFFFF"/><circle r="38" fill="none" stroke="#FFFFFF" stroke-opacity="0.14"/><text x="-34" y="6" fill="#FFFFFF" font-size="23" text-anchor="end">Conversation</text><text x="-34" y="28" fill="#BDE8D2" fill-opacity="0.58" font-size="10" letter-spacing="2" text-anchor="end">THE OUTCOME</text></g>
+    </g>
+  </g>
+  <g transform="translate(74 886)" font-family="Inter,Arial,sans-serif">
+    <path d="M0 0H752" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    <text y="34" fill="#FFFFFF" fill-opacity="0.3" font-size="11" letter-spacing="2">CLARITY · PROOF · MOMENTUM</text>
+    <text x="752" y="34" fill="#BDE8D2" fill-opacity="0.65" font-size="11" letter-spacing="2" text-anchor="end">08 CHAPTERS</text>
+  </g>
+</svg>

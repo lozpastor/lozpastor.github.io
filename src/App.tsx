@@ -4,10 +4,7 @@ import {
   ArrowUpRight,
   BarChart3,
   Blocks,
-  BriefcaseBusiness,
-  Database,
   Menu,
-  Network,
   PanelsTopLeft,
   Target,
   X,
@@ -27,22 +24,18 @@ const navItems = [
 const evolution = [
   {
     title: "Data",
-    icon: Database,
     body: "I learned to separate signal from noise: SQL, SAS, reporting logic, data quality and the operational truth behind every KPI.",
   },
   {
     title: "Business",
-    icon: BriefcaseBusiness,
     body: "Banking taught me that a useful solution is not the most elegant one; it is the one that survives risk, priorities and real stakeholders.",
   },
   {
     title: "Technology",
-    icon: Network,
     body: "My engineering background helps me translate ambiguity into systems, dependencies, acceptance criteria and delivery constraints.",
   },
   {
     title: "Product",
-    icon: PanelsTopLeft,
     body: "Today I use that mix to shape product decisions: what to build, why it matters, how it ships and how success is measured.",
   },
 ];
@@ -95,13 +88,6 @@ const experience = [
   },
 ];
 
-const mindset = [
-  ["Business Value", "Does this move a relevant outcome?"],
-  ["User Needs", "Who changes behaviour because this exists?"],
-  ["Technology", "What constraints shape the right solution?"],
-  ["Data", "How will we know if it worked?"],
-];
-
 const projects = [
   {
     title: "Macroeconomic Dashboard",
@@ -113,6 +99,8 @@ const projects = [
     tools: ["React", "Data Visualisation", "UX", "KPIs"],
     impact: "From report to product experience",
     href: "https://lozpastor.github.io/Macroeconomic-Dashboard/",
+    image: "/project-atlas.svg",
+    imageAlt: "Editorial preview of the Macroeconomic Atlas dashboard",
   },
   {
     title: "Portfolio System",
@@ -124,6 +112,8 @@ const projects = [
     tools: ["React", "TypeScript", "Storytelling", "SEO"],
     impact: "Positioning designed for PM recruiters",
     href: "#contact",
+    image: "/project-portfolio.svg",
+    imageAlt: "Information architecture of the portfolio narrative",
   },
 ];
 
@@ -133,16 +123,6 @@ const achievements = [
   ["50%+", "Improvement in operational efficiency across recurring analytical processes"],
   ["XFN", "Business, technology, risk and operations aligned around delivery decisions"],
 ];
-
-const toolbox = [
-  ["Business", "Banking knowledge, stakeholder alignment, KPI definition, product performance"],
-  ["Product", "Roadmaps, backlog, user stories, UAT, discovery-to-delivery thinking"],
-  ["Data", "SQL, SAS, Power BI, dashboards, reporting, analytics, data modelling"],
-  ["Technology", "ETL logic, technical feasibility, APIs, systems thinking, implementation trade-offs"],
-  ["Collaboration", "Jira, Confluence, agile rituals, cross-functional communication, decision records"],
-];
-
-const beyond = ["Continuous learning", "Artificial Intelligence", "Data visualisation", "Product design", "English & Spanish", "Technology trends"];
 
 function useReveal() {
   useEffect(() => {
@@ -306,7 +286,7 @@ function App() {
             <span className="chapter-ghost" aria-hidden="true">01</span>
             <div className="chapter-grid">
               <div className="chapter-meta" data-reveal>
-                <span>01 / 10</span>
+                <span>01 / 08</span>
                 <p>From Data to Product</p>
                 <small>Not a biography. A trajectory.</small>
               </div>
@@ -319,19 +299,24 @@ function App() {
                   <br />
                   and now points to <em>product.</em>
                 </h2>
-                <div className="evolution-map" aria-label="Professional evolution from data to product">
-                  {evolution.map((item, index) => {
-                    const Icon = item.icon;
-                    return (
-                      <article className="evolution-card" key={item.title}>
-                        <span className="evolution-index">0{index + 1}</span>
-                        <Icon className="size-4" aria-hidden="true" />
-                        <h3>{item.title}</h3>
-                        <p>{item.body}</p>
-                      </article>
-                    );
-                  })}
-                </div>
+                <figure className="story-figure">
+                  <img
+                    src="/career-trajectory.svg"
+                    alt="A continuous path connecting Data, Business, Technology and Product"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>One trajectory, four complementary lenses.</figcaption>
+                </figure>
+                <ol className="evolution-ledger" aria-label="Professional evolution from data to product">
+                  {evolution.map((item, index) => (
+                    <li key={item.title}>
+                      <span>0{index + 1}</span>
+                      <h3>{item.title}</h3>
+                      <p>{item.body}</p>
+                    </li>
+                  ))}
+                </ol>
               </div>
             </div>
           </section>
@@ -340,7 +325,7 @@ function App() {
             <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">02</span>
             <div className="chapter-grid">
               <div className="chapter-meta" data-reveal>
-                <span>02 / 10</span>
+                <span>02 / 08</span>
                 <p>What I Bring</p>
                 <small>Four capabilities. One operating model.</small>
               </div>
@@ -353,16 +338,14 @@ function App() {
                   <br />
                   of <em>implementation.</em>
                 </h2>
-                <div className="capability-grid">
+                <div className="capability-index">
                   {capabilities.map((capability) => {
                     const Icon = capability.icon;
                     return (
-                      <article className="premium-card capability-card" key={capability.title}>
-                        <div className="card-kicker"><Icon className="size-4" />Capability</div>
+                      <article className="capability-row" key={capability.title}>
+                        <Icon className="capability-icon" aria-hidden="true" />
                         <h3>{capability.title}</h3>
-                        <div className="tag-cloud">
-                          {capability.items.map((item) => <span key={item}>{item}</span>)}
-                        </div>
+                        <p>{capability.items.join(" · ")}</p>
                       </article>
                     );
                   })}
@@ -375,7 +358,7 @@ function App() {
             <span className="chapter-ghost" aria-hidden="true">03</span>
             <div className="chapter-grid">
               <div className="chapter-meta" data-reveal>
-                <span>03 / 10</span>
+                <span>03 / 08</span>
                 <p>Professional Experience</p>
                 <small>Case studies, not job descriptions.</small>
               </div>
@@ -425,7 +408,7 @@ function App() {
             <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">04</span>
             <div className="chapter-grid">
               <div className="chapter-meta" data-reveal>
-                <span>04 / 10</span>
+                <span>04 / 08</span>
                 <p>Product Mindset</p>
                 <small>How I frame decisions.</small>
               </div>
@@ -438,15 +421,17 @@ function App() {
                   <br />
                   data and tech <em>agree.</em>
                 </h2>
-                <div className="mindset-system" aria-label="Product mindset diagram">
-                  <div className="mindset-center">Product<br />Judgement</div>
-                  {mindset.map(([title, body], index) => (
-                    <article className={`mindset-node node-${index + 1}`} key={title}>
-                      <h3>{title}</h3>
-                      <p>{body}</p>
-                    </article>
-                  ))}
-                </div>
+                <figure className="mindset-figure">
+                  <img
+                    src="/product-judgement.svg"
+                    alt="Product judgement at the intersection of business value, user needs, technology and data"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption>
+                    A decision is ready when value, desirability, feasibility and evidence can coexist.
+                  </figcaption>
+                </figure>
               </div>
             </div>
           </section>
@@ -455,7 +440,7 @@ function App() {
             <div className="shell">
               <div className="project-heading" data-reveal>
                 <div className="chapter-meta">
-                  <span>05 / 10</span>
+                  <span>05 / 08</span>
                   <p>Featured Projects</p>
                   <small>Personal product practice</small>
                 </div>
@@ -474,20 +459,9 @@ function App() {
               <div className="project-case-grid">
                 {projects.map((project, index) => (
                   <a href={project.href} target={project.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="project-case-card group" data-reveal key={project.title}>
-                    <div className="project-case-visual" aria-hidden="true">
+                    <div className="project-case-visual">
                       <span className="project-number">0{index + 1}</span>
-                      <div className="project-orbit" />
-                      <div className="project-browser compact-browser">
-                        <div className="project-browser-bar"><span /><span /><span /></div>
-                        <div className="project-screen">
-                          <div className="project-chart">
-                            {[38, 62, 45, 78, 68, 88, 73, 94].map((height, barIndex) => (
-                              <span key={barIndex} style={{ height: `${height}%` }} />
-                            ))}
-                          </div>
-                          <div className="project-lines"><span /><span /><span /></div>
-                        </div>
-                      </div>
+                      <img src={project.image} alt={project.imageAlt} loading="lazy" decoding="async" />
                     </div>
                     <div className="project-case-content">
                       <div className="project-title-row">
@@ -513,7 +487,7 @@ function App() {
 
           <section className="signal-strip achievements-strip" aria-label="Selected achievements" data-cosmic-section>
             <div className="shell" data-reveal data-cosmic-title>
-              <p className="signal-caption">06 / 10 · Selected achievements</p>
+              <p className="signal-caption">06 / 08 · Selected achievements</p>
               <div className="signal-line">
                 {achievements.map(([value, label], index) => (
                   <div key={value} className="signal">
@@ -526,41 +500,11 @@ function App() {
             </div>
           </section>
 
-          <section id="skills" className="chapter shell" data-cosmic-section>
-            <span className="chapter-ghost" aria-hidden="true">07</span>
-            <div className="chapter-grid">
-              <div className="chapter-meta" data-reveal>
-                <span>07 / 10</span>
-                <p>Toolbox</p>
-                <small>Organised by use, not by noise.</small>
-              </div>
-              <div className="chapter-body" data-reveal data-cosmic-title>
-                <p className="chapter-intro">Tools matter when they help a team make better decisions faster.</p>
-                <h2 className="editorial-title">
-                  A practical toolkit
-                  <br />
-                  for moving from insight
-                  <br />
-                  to <em>execution.</em>
-                </h2>
-                <div className="toolbox-grid">
-                  {toolbox.map(([title, body], index) => (
-                    <article className="toolbox-card" key={title}>
-                      <span>0{index + 1}</span>
-                      <h3>{title}</h3>
-                      <p>{body}</p>
-                    </article>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
           <section className="why-chapter shell" data-cosmic-section>
-            <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">08</span>
+            <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">07</span>
             <div className="chapter-grid">
               <div className="chapter-meta" data-reveal>
-                <span>08 / 10</span>
+                <span>07 / 08</span>
                 <p>Why Product?</p>
                 <small>The direction was already inside the work.</small>
               </div>
@@ -573,7 +517,7 @@ function App() {
                   <br />
                   not only measure <em>afterwards.</em>
                 </h2>
-                <div className="why-panel">
+                <div className="why-editorial">
                   <p>
                     Data work taught me how decisions are made once a product exists. Product work lets me move earlier: framing the problem, choosing the trade-offs, aligning the stakeholders and defining what success should mean before delivery starts.
                   </p>
@@ -585,35 +529,11 @@ function App() {
             </div>
           </section>
 
-          <section className="beyond-chapter shell" data-cosmic-section>
-            <span className="chapter-ghost" aria-hidden="true">09</span>
-            <div className="chapter-grid">
-              <div className="chapter-meta" data-reveal>
-                <span>09 / 10</span>
-                <p>Beyond Work</p>
-                <small>Signals of curiosity.</small>
-              </div>
-              <div className="chapter-body" data-reveal data-cosmic-title>
-                <p className="chapter-intro">A lighter layer: what keeps sharpening the way I think.</p>
-                <h2 className="editorial-title">
-                  I keep studying the edges
-                  <br />
-                  where products become
-                  <br />
-                  more <em>intelligent.</em>
-                </h2>
-                <div className="beyond-grid">
-                  {beyond.map((item) => <span key={item}>{item}</span>)}
-                </div>
-              </div>
-            </div>
-          </section>
-
           <section id="contact" className="contact-chapter shell" data-cosmic-section>
-            <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">10</span>
+            <span className="chapter-ghost chapter-ghost-right" aria-hidden="true">08</span>
             <div data-reveal data-cosmic-title>
               <div className="chapter-meta">
-                <span>10 / 10</span>
+                <span>08 / 08</span>
                 <p>Contact</p>
                 <small>Open to the right product conversation</small>
               </div>

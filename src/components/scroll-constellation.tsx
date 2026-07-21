@@ -5,11 +5,11 @@ type Point = {
   y: number;
 };
 
-const DESKTOP_X = [0.36, 0.34, 0.62, 0.31, 0.66, 0.3, 0.58, 0.33, 0.64, 0.36, 0.5];
-const MOBILE_X = [0.22, 0.08, 0.1, 0.08, 0.11, 0.08, 0.12, 0.08, 0.1, 0.08, 0.16];
-const STAR_VIEWPORT_OFFSET = 0.56;
-const TRAIL_LENGTH = 150;
-const GLOW_STRENGTH = 0.42;
+const DESKTOP_X = [0.3, 0.34, 0.62, 0.31, 0.66, 0.3, 0.58, 0.36, 0.5];
+const MOBILE_X = [0.24, 0.08, 0.1, 0.08, 0.11, 0.08, 0.12, 0.1, 0.16];
+const STAR_VIEWPORT_OFFSET = 0.66;
+const TRAIL_LENGTH = 230;
+const GLOW_STRENGTH = 0.66;
 
 function createPath(points: Point[]) {
   if (!points.length) return "";
@@ -47,6 +47,7 @@ export function ScrollConstellation() {
   const progressPathRef = useRef<SVGPathElement>(null);
   const trailPathRef = useRef<SVGPathElement>(null);
   const starRef = useRef<SVGGElement>(null);
+  const launchRef = useRef<SVGGElement>(null);
   const pathLengthRef = useRef(0);
   const currentLengthRef = useRef(0);
   const targetLengthRef = useRef(0);
@@ -55,6 +56,8 @@ export function ScrollConstellation() {
   const sectionStopsRef = useRef<Array<{ element: HTMLElement; y: number }>>([]);
   const activeStopRef = useRef<HTMLElement | null>(null);
   const reducedMotionRef = useRef(false);
+  const hasLaunchedRef = useRef(false);
+  const launchTimeoutRef = useRef<number>();
 
   useEffect(() => {
     const svg = svgRef.current;
@@ -62,8 +65,9 @@ export function ScrollConstellation() {
     const progressPath = progressPathRef.current;
     const trailPath = trailPathRef.current;
     const star = starRef.current;
+    const launch = launchRef.current;
 
-    if (!svg || !basePath || !progressPath || !trailPath || !star) return;
+    if (!svg || !basePath || !progressPath || !trailPath || !star || !launch) return;
 
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     reducedMotionRef.current = motionQuery.matches;
@@ -82,7 +86,7 @@ export function ScrollConstellation() {
           x: compact
             ? width * xPattern[0]
             : Math.min(width - 25, width * xPattern[0]),
-          y: compact ? Math.min(150, window.innerHeight * 0.18) : Math.min(190, window.innerHeight * 0.2),
+          y: compact ? Math.min(112, window.innerHeight * 0.13) : Math.min(118, window.innerHeight * 0.12),
         },
       ];
 
@@ -108,6 +112,7 @@ export function ScrollConstellation() {
       pathLengthRef.current = totalLength;
       progressPath.style.strokeDasharray = `${totalLength}`;
       trailPath.style.strokeDasharray = `${TRAIL_LENGTH} ${totalLength + TRAIL_LENGTH}`;
+      launch.setAttribute("transform", `translate(${points[0].x} ${points[0].y})`);
 
       sectionStopsRef.current = sections.map((section, index) => ({
         element: section,
@@ -137,8 +142,18 @@ export function ScrollConstellation() {
         window.scrollY > 3
           ? window.scrollY + window.innerHeight * STAR_VIEWPORT_OFFSET
           : window.innerWidth < 768
-            ? Math.min(150, window.innerHeight * 0.18)
-            : Math.min(190, window.innerHeight * 0.2);
+            ? Math.min(112, window.innerHeight * 0.13)
+            : Math.min(118, window.innerHeight * 0.12);
+
+      if (window.scrollY > 3 && !hasLaunchedRef.current) {
+        hasLaunchedRef.current = true;
+        launch.classList.add("is-visible");
+        star.classList.add("is-launching");
+        launchTimeoutRef.current = window.setTimeout(() => {
+          launch.classList.remove("is-visible");
+          star.classList.remove("is-launching");
+        }, 1050);
+      }
       const pauseRadius = window.innerHeight * 0.075;
       const closestStop = sectionStopsRef.current.reduce<number | null>(
         (closest, stop) => {
@@ -167,7 +182,7 @@ export function ScrollConstellation() {
     const animate = () => {
       if (!reducedMotionRef.current && pathLengthRef.current) {
         const difference = targetLengthRef.current - currentLengthRef.current;
-        currentLengthRef.current += difference * 0.105;
+        currentLengthRef.current += difference * 0.085;
 
         if (Math.abs(difference) < 0.08) {
           currentLengthRef.current = targetLengthRef.current;
@@ -258,6 +273,7 @@ export function ScrollConstellation() {
       resizeObserver.disconnect();
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
       if (geometryFrameRef.current) cancelAnimationFrame(geometryFrameRef.current);
+      if (launchTimeoutRef.current) window.clearTimeout(launchTimeoutRef.current);
     };
   }, []);
 
@@ -275,22 +291,35 @@ export function ScrollConstellation() {
             <stop offset="1" stopColor="#ffffff" stopOpacity="0.72" />
           </linearGradient>
           <filter id="star-glow" x="-300%" y="-300%" width="600%" height="600%">
-            <feGaussianBlur stdDeviation="3.2" result="blur" />
+            <feGaussianBlur stdDeviation="4.8" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          <radialGradient id="launch-flare">
+            <stop offset="0" stopColor="#ffffff" stopOpacity="0.95" />
+            <stop offset="0.2" stopColor="#dff8eb" stopOpacity="0.54" />
+            <stop offset="1" stopColor="#bde8d2" stopOpacity="0" />
+          </radialGradient>
         </defs>
 
         <path ref={basePathRef} className="cosmic-path cosmic-path-base" />
         <path ref={progressPathRef} className="cosmic-path cosmic-path-progress" />
         <path ref={trailPathRef} className="cosmic-path cosmic-path-trail" />
 
+        <g ref={launchRef} className="cosmic-launch-flare">
+          <circle r="54" fill="url(#launch-flare)" />
+          <circle r="8" fill="#ffffff" filter="url(#star-glow)" />
+          <line x1="-44" y1="0" x2="44" y2="0" />
+          <line x1="0" y1="-44" x2="0" y2="44" />
+        </g>
+
         <g ref={starRef} className="cosmic-star">
-          <line x1="-18" y1="0" x2="-4" y2="0" />
-          <circle r="2.4" filter="url(#star-glow)" />
-          <circle r="0.9" className="cosmic-star-core" />
+          <line className="cosmic-star-tail cosmic-star-tail-wide" x1="-44" y1="0" x2="-5" y2="0" />
+          <line className="cosmic-star-tail" x1="-26" y1="0" x2="-4" y2="0" />
+          <circle r="4.2" filter="url(#star-glow)" />
+          <circle r="1.35" className="cosmic-star-core" />
         </g>
       </svg>
     </div>
