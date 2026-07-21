@@ -5,8 +5,8 @@ type Point = {
   y: number;
 };
 
-const DESKTOP_X = [0.3, 0.34, 0.62, 0.31, 0.66, 0.3, 0.58, 0.36, 0.5];
-const MOBILE_X = [0.24, 0.08, 0.1, 0.08, 0.11, 0.08, 0.12, 0.1, 0.16];
+const DESKTOP_X = [0.29, 0.022, 0.018, 0.024, 0.019, 0.025, 0.018, 0.023, 0.02];
+const MOBILE_X = [0.18, 0.018, 0.012, 0.02, 0.014, 0.022, 0.012, 0.019, 0.015];
 const STAR_VIEWPORT_OFFSET = 0.66;
 const TRAIL_LENGTH = 230;
 const GLOW_STRENGTH = 0.66;
@@ -203,7 +203,8 @@ export function ScrollConstellation() {
         );
 
         const hasStarted = window.scrollY > 3;
-        star.style.opacity = hasStarted ? "1" : "0";
+        star.style.opacity = "1";
+        star.classList.toggle("is-idle", !hasStarted);
         trailPath.style.opacity = hasStarted ? `${GLOW_STRENGTH}` : "0";
 
         const nearest = sectionStopsRef.current.reduce<{
@@ -318,6 +319,7 @@ export function ScrollConstellation() {
         <g ref={starRef} className="cosmic-star">
           <line className="cosmic-star-tail cosmic-star-tail-wide" x1="-44" y1="0" x2="-5" y2="0" />
           <line className="cosmic-star-tail" x1="-26" y1="0" x2="-4" y2="0" />
+          <path className="cosmic-star-glint" d="M0 -10 L1.8 -1.8 L10 0 L1.8 1.8 L0 10 L-1.8 1.8 L-10 0 L-1.8 -1.8 Z" />
           <circle r="4.2" filter="url(#star-glow)" />
           <circle r="1.35" className="cosmic-star-core" />
         </g>

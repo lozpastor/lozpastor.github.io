@@ -13,6 +13,8 @@ import { ScrollConstellation } from "@/components/scroll-constellation";
 
 const VIDEO_URL =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4";
+const LINKEDIN_MESSAGE_URL =
+  "https://www.linkedin.com/messaging/compose/?recipient=alejandro-lozano-pastor-52437a251";
 
 const navItems = [
   ["Profile", "#profile"],
@@ -88,34 +90,20 @@ const experience = [
   },
 ];
 
-const projects = [
-  {
-    title: "Macroeconomic Dashboard",
-    problem: "Economic data is often powerful but hard to navigate: scattered indicators, weak hierarchy and too much friction before insight.",
-    role: "Product owner, UX structure and frontend implementation.",
-    process:
-      "I reframed the dashboard as a web product: clearer navigation, sharper metric hierarchy, responsive behaviour and a more intentional reading flow.",
-    result: "A live analytical product that makes multi-country macroeconomic comparison faster, cleaner and easier to present.",
-    tools: ["React", "Data Visualisation", "UX", "KPIs"],
-    impact: "From report to product experience",
-    href: "https://lozpastor.github.io/Macroeconomic-Dashboard/",
-    image: "/project-atlas.svg",
-    imageAlt: "Editorial preview of the Macroeconomic Atlas dashboard",
-  },
-  {
-    title: "Portfolio System",
-    problem: "A recruiter has seconds to understand positioning, credibility and fit. A static CV cannot carry that narrative well enough.",
-    role: "Product strategy, information architecture and interface direction.",
-    process:
-      "I treated the portfolio as a product surface: first impression, reading path, proof of impact, technical signal and conversion to conversation.",
-    result: "A focused PM narrative that communicates business, technology and data without becoming a CV online.",
-    tools: ["React", "TypeScript", "Storytelling", "SEO"],
-    impact: "Positioning designed for PM recruiters",
-    href: "#contact",
-    image: "/project-portfolio.svg",
-    imageAlt: "Information architecture of the portfolio narrative",
-  },
-];
+const featuredProject = {
+  title: "Macroeconomic Dashboard",
+  summary:
+    "A global intelligence workspace for exploring indicators, comparing countries and turning complex time series into readable economic signals.",
+  features: [
+    "212-country comparison",
+    "Multi-source temporal data",
+    "Automatic economic insights",
+  ],
+  role: "Product direction · Data experience · Frontend implementation",
+  href: "https://lozpastor.github.io/Macroeconomic-Dashboard/",
+  image: "/project-atlas.svg",
+  imageAlt: "A luminous macroeconomic data globe with live signals and an orbital path",
+};
 
 const achievements = [
   ["100+", "Legacy reports consolidated into more manageable reporting flows"],
@@ -195,7 +183,9 @@ function App() {
           </div>
 
           <a
-            href="mailto:lozpastor@gmail.com?subject=Product%20opportunity"
+            href={LINKEDIN_MESSAGE_URL}
+            target="_blank"
+            rel="noreferrer"
             className="glass-button hidden sm:inline-flex"
           >
             Let&apos;s talk
@@ -233,11 +223,13 @@ function App() {
             </a>
           ))}
           <a
-            href="mailto:lozpastor@gmail.com?subject=Product%20opportunity"
+            href={LINKEDIN_MESSAGE_URL}
+            target="_blank"
+            rel="noreferrer"
             tabIndex={menuOpen ? 0 : -1}
             className="mt-auto flex items-center justify-between border-t border-white/10 pt-6 text-sm text-white/70"
           >
-            lozpastor@gmail.com
+            Message me on LinkedIn
             <ArrowUpRight className="size-4" />
           </a>
         </div>
@@ -447,41 +439,42 @@ function App() {
                 <div data-cosmic-title>
                   <p className="chapter-intro">Projects where I can own the problem, the structure and the experience.</p>
                   <h2 className="editorial-title">
-                    Small products,
+                    One product,
                     <br />
-                    built to show how
+                    built to turn complexity
                     <br />
-                    I <em>think.</em>
+                    into <em>signal.</em>
                   </h2>
                 </div>
               </div>
 
-              <div className="project-case-grid">
-                {projects.map((project, index) => (
-                  <a href={project.href} target={project.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="project-case-card group" data-reveal key={project.title}>
-                    <div className="project-case-visual">
-                      <span className="project-number">0{index + 1}</span>
-                      <img src={project.image} alt={project.imageAlt} loading="lazy" decoding="async" />
-                    </div>
-                    <div className="project-case-content">
-                      <div className="project-title-row">
-                        <h3>{project.title}</h3>
-                        <span>View more <ArrowUpRight className="size-4" /></span>
-                      </div>
-                      <dl>
-                        <div><dt>Problem</dt><dd>{project.problem}</dd></div>
-                        <div><dt>My role</dt><dd>{project.role}</dd></div>
-                        <div><dt>Process</dt><dd>{project.process}</dd></div>
-                        <div><dt>Result</dt><dd>{project.result}</dd></div>
-                      </dl>
-                      <div className="case-footer project-footer">
-                        <div className="impact-pills"><span>{project.impact}</span></div>
-                        <div className="tool-row">{project.tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
-                      </div>
-                    </div>
+              <article className="macro-feature" data-reveal>
+                <div className="macro-feature-copy">
+                  <p className="macro-feature-kicker">01 / Macroeconomic intelligence</p>
+                  <h3>{featuredProject.title}</h3>
+                  <p className="macro-feature-summary">{featuredProject.summary}</p>
+                  <ul className="macro-feature-signals">
+                    {featuredProject.features.map((feature) => <li key={feature}>{feature}</li>)}
+                  </ul>
+                  <p className="macro-feature-role">{featuredProject.role}</p>
+                  <a
+                    href={featuredProject.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="macro-feature-link"
+                  >
+                    Open live project <ArrowUpRight className="size-4" aria-hidden="true" />
                   </a>
-                ))}
-              </div>
+                </div>
+                <div className="macro-feature-visual">
+                  <img
+                    src={featuredProject.image}
+                    alt={featuredProject.imageAlt}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              </article>
             </div>
           </section>
 

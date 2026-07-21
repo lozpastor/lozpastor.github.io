@@ -1,51 +1,85 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 980" role="img" aria-labelledby="title desc">
-  <title id="title">Macroeconomic Atlas interface</title>
-  <desc id="desc">An editorial dashboard composition combining macroeconomic signals, countries and trends.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Macroeconomic Atlas live data globe</title>
+  <desc id="desc">A luminous dotted globe connected to verified macroeconomic signals and a subtle orbital path.</desc>
   <defs>
-    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
-      <stop stop-color="#11313D"/><stop offset="1" stop-color="#071820"/>
+    <pattern id="dot-field" width="14" height="14" patternUnits="userSpaceOnUse">
+      <circle cx="2.6" cy="2.6" r="1.55" fill="#BDE8D2" fill-opacity="0.78"/>
+    </pattern>
+    <radialGradient id="sphere-light" cx="38%" cy="30%" r="72%">
+      <stop stop-color="#BDE8D2" stop-opacity="0.2"/>
+      <stop offset="0.48" stop-color="#68D5B1" stop-opacity="0.07"/>
+      <stop offset="1" stop-color="#061A24" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="edge-fade">
+      <stop offset="0.68" stop-color="#fff"/>
+      <stop offset="0.96" stop-color="#fff" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="orbit" x1="850" y1="0" x2="580" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.12"/>
+      <stop offset="0.46" stop-color="#BDE8D2" stop-opacity="0.62"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.2"/>
     </linearGradient>
-    <linearGradient id="chart" x1="0" y1="1" x2="0" y2="0">
-      <stop stop-color="#BDE8D2" stop-opacity="0.04"/><stop offset="1" stop-color="#BDE8D2" stop-opacity="0.54"/>
-    </linearGradient>
+    <filter id="soft-glow" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="wide-glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <clipPath id="sphere-clip"><circle cx="426" cy="430" r="278"/></clipPath>
+    <mask id="sphere-mask"><circle cx="426" cy="430" r="278" fill="url(#edge-fade)"/></mask>
   </defs>
-  <rect width="900" height="980" fill="#071820"/>
-  <circle cx="720" cy="190" r="310" fill="#BDE8D2" fill-opacity="0.035"/>
-  <g transform="translate(74 84)">
-    <text fill="#FFFFFF" fill-opacity="0.38" font-family="Inter,Arial,sans-serif" font-size="13" letter-spacing="3">MACROECONOMIC ATLAS</text>
-    <text y="68" fill="#FFFFFF" font-family="Georgia,serif" font-size="52">Reading economies</text>
-    <text y="122" fill="#FFFFFF" fill-opacity="0.46" font-family="Georgia,serif" font-size="52">as connected systems.</text>
-  </g>
-  <g transform="translate(74 278)">
-    <rect width="752" height="518" rx="18" fill="url(#panel)" stroke="#FFFFFF" stroke-opacity="0.12"/>
-    <path d="M0 64H752" stroke="#FFFFFF" stroke-opacity="0.08"/>
-    <circle cx="28" cy="32" r="4" fill="#FFFFFF" fill-opacity="0.25"/><circle cx="44" cy="32" r="4" fill="#FFFFFF" fill-opacity="0.18"/><circle cx="60" cy="32" r="4" fill="#FFFFFF" fill-opacity="0.12"/>
-    <text x="690" y="37" fill="#FFFFFF" fill-opacity="0.3" font-family="Inter,Arial,sans-serif" font-size="10" text-anchor="end">GLOBAL VIEW</text>
-    <g transform="translate(34 104)" font-family="Inter,Arial,sans-serif">
-      <text fill="#FFFFFF" fill-opacity="0.36" font-size="10" letter-spacing="2">GDP GROWTH</text>
-      <text y="56" fill="#FFFFFF" font-family="Georgia,serif" font-size="48">2.8%</text>
-      <text y="82" fill="#BDE8D2" fill-opacity="0.7" font-size="11">+0.3 pp · annual</text>
+
+  <circle cx="426" cy="430" r="326" fill="#BDE8D2" fill-opacity="0.035"/>
+  <circle cx="426" cy="430" r="285" fill="none" stroke="#BDE8D2" stroke-opacity="0.13"/>
+  <circle cx="426" cy="430" r="278" fill="url(#sphere-light)"/>
+
+  <g clip-path="url(#sphere-clip)" mask="url(#sphere-mask)">
+    <rect x="135" y="140" width="582" height="582" fill="url(#dot-field)"/>
+    <g fill="#061A24" fill-opacity="0.82">
+      <path d="M222 259 C267 216 338 190 402 201 C431 206 449 223 470 230 C506 243 533 228 558 249 C536 267 509 275 495 299 C475 332 448 321 421 303 C392 283 371 293 349 312 C330 329 296 334 270 315 C253 302 245 281 222 259Z"/>
+      <path d="M351 341 C389 325 425 342 442 370 C454 391 447 414 462 434 C481 459 468 486 452 510 C436 535 435 565 416 589 C393 619 368 603 362 573 C357 544 343 526 326 505 C306 480 310 448 327 424 C345 399 330 369 351 341Z"/>
+      <path d="M518 330 C552 308 596 319 618 348 C632 366 659 368 670 391 C650 410 622 413 607 434 C591 456 565 456 547 440 C529 424 514 398 493 386 C478 377 484 349 518 330Z"/>
+      <path d="M561 483 C596 465 636 481 646 511 C655 539 626 553 607 568 C585 586 552 571 546 542 C541 519 543 494 561 483Z"/>
     </g>
-    <g transform="translate(276 104)" font-family="Inter,Arial,sans-serif">
-      <text fill="#FFFFFF" fill-opacity="0.36" font-size="10" letter-spacing="2">INFLATION</text>
-      <text y="56" fill="#FFFFFF" font-family="Georgia,serif" font-size="48">3.1%</text>
-      <text y="82" fill="#FFFFFF" fill-opacity="0.35" font-size="11">-0.4 pp · annual</text>
-    </g>
-    <g transform="translate(510 104)" font-family="Inter,Arial,sans-serif">
-      <text fill="#FFFFFF" fill-opacity="0.36" font-size="10" letter-spacing="2">UNEMPLOYMENT</text>
-      <text y="56" fill="#FFFFFF" font-family="Georgia,serif" font-size="48">5.2%</text>
-      <text y="82" fill="#FFFFFF" fill-opacity="0.35" font-size="11">stable · quarterly</text>
-    </g>
-    <path d="M34 226H718" stroke="#FFFFFF" stroke-opacity="0.08"/>
-    <g transform="translate(36 276)">
-      <path d="M0 142 C70 130 92 84 160 102 C235 123 269 53 344 71 C426 92 455 18 520 43 C578 65 625 18 680 6 L680 178 L0 178Z" fill="url(#chart)"/>
-      <path d="M0 142 C70 130 92 84 160 102 C235 123 269 53 344 71 C426 92 455 18 520 43 C578 65 625 18 680 6" fill="none" stroke="#BDE8D2" stroke-opacity="0.72" stroke-width="2"/>
-      <path d="M0 178H680 M0 118H680 M0 58H680" stroke="#FFFFFF" stroke-opacity="0.055"/>
-      <g fill="#BDE8D2"><circle cx="160" cy="102" r="4"/><circle cx="344" cy="71" r="4"/><circle cx="520" cy="43" r="4"/><circle cx="680" cy="6" r="4"/></g>
+    <g fill="none" stroke="#BDE8D2" stroke-opacity="0.12">
+      <ellipse cx="426" cy="430" rx="278" ry="82"/>
+      <ellipse cx="426" cy="430" rx="278" ry="178"/>
+      <ellipse cx="426" cy="430" rx="110" ry="278"/>
+      <ellipse cx="426" cy="430" rx="205" ry="278"/>
     </g>
   </g>
-  <g transform="translate(74 846)" font-family="Inter,Arial,sans-serif">
-    <text fill="#FFFFFF" fill-opacity="0.3" font-size="11" letter-spacing="2">EUROPE · AMERICAS · ASIA</text>
-    <text x="752" fill="#BDE8D2" fill-opacity="0.65" font-size="11" letter-spacing="2" text-anchor="end">LIVE PRODUCT</text>
+
+  <ellipse cx="426" cy="430" rx="332" ry="118" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" transform="rotate(-8 426 430)"/>
+  <path d="M700 -24 C836 90 886 231 853 405 C826 549 736 697 584 902" fill="none" stroke="#BDE8D2" stroke-opacity="0.12" stroke-width="10" filter="url(#wide-glow)"/>
+  <path d="M700 -24 C836 90 886 231 853 405 C826 549 736 697 584 902" fill="none" stroke="url(#orbit)" stroke-width="2"/>
+
+  <g transform="translate(610 262)">
+    <path d="M0 0 L92 -42" stroke="#BDE8D2" stroke-opacity="0.45"/>
+    <circle r="13" fill="none" stroke="#BDE8D2" stroke-opacity="0.7"/>
+    <circle r="4" fill="#FFFFFF" filter="url(#soft-glow)"/>
+    <g transform="translate(90 -82)">
+      <rect width="170" height="74" rx="12" fill="#071D27" fill-opacity="0.92" stroke="#BDE8D2" stroke-opacity="0.18"/>
+      <text x="18" y="28" fill="#BDE8D2" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="600" letter-spacing="1.4">GLOBAL COVERAGE</text>
+      <text x="18" y="53" fill="#FFFFFF" font-family="Georgia,serif" font-size="22">212 countries</text>
+    </g>
+  </g>
+
+  <g transform="translate(548 606)">
+    <circle r="5" fill="#FFFFFF" filter="url(#soft-glow)"/>
+    <path d="M0 0 L76 40" stroke="#BDE8D2" stroke-opacity="0.36"/>
+    <g transform="translate(70 20)">
+      <rect width="212" height="112" rx="14" fill="#071D27" fill-opacity="0.94" stroke="#BDE8D2" stroke-opacity="0.17"/>
+      <text x="18" y="28" fill="#BDE8D2" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="600" letter-spacing="1.5">LIVE MACRO SIGNAL</text>
+      <text x="18" y="58" fill="#FFFFFF" font-family="Georgia,serif" font-size="20">Evidence, not noise.</text>
+      <text x="18" y="82" fill="#FFFFFF" fill-opacity="0.44" font-family="Inter,Arial,sans-serif" font-size="11">Comparable indicators across</text>
+      <text x="18" y="99" fill="#FFFFFF" fill-opacity="0.44" font-family="Inter,Arial,sans-serif" font-size="11">countries, periods and sources.</text>
+    </g>
+  </g>
+
+  <g transform="translate(584 806)">
+    <circle r="20" fill="#BDE8D2" fill-opacity="0.13" filter="url(#soft-glow)"/>
+    <circle r="7" fill="#E8FFF4"/>
   </g>
 </svg>
