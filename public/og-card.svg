@@ -1,11 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Alejandro Lozano — Technical Product Manager</title>
+  <desc id="description">I own product roadmaps with a data pipeline view.</desc>
   <rect width="1200" height="630" fill="#061a24"/>
-  <circle cx="1080" cy="80" r="420" fill="none" stroke="#ffffff" stroke-opacity=".08"/>
-  <circle cx="1080" cy="80" r="290" fill="none" stroke="#ffffff" stroke-opacity=".07"/>
-  <circle cx="1080" cy="80" r="160" fill="#b7efcf" fill-opacity=".12"/>
-  <text x="72" y="92" fill="#b7efcf" font-family="Arial, sans-serif" font-size="18" letter-spacing="4">TECHNICAL PRODUCT MANAGER</text>
-  <text x="72" y="270" fill="#f4f2ed" font-family="Georgia, serif" font-size="92">Alejandro Lozano</text>
-  <text x="72" y="380" fill="#f4f2ed" fill-opacity=".55" font-family="Georgia, serif" font-size="70">Business · Technology · Data · Users</text>
-  <line x1="72" y1="500" x2="1128" y2="500" stroke="#ffffff" stroke-opacity=".18"/>
-  <text x="72" y="552" fill="#ffffff" fill-opacity=".55" font-family="Arial, sans-serif" font-size="20">Product thinking grounded in measurable impact.</text>
+  <line x1="72" y1="92" x2="1128" y2="92" stroke="#dceff1" stroke-opacity=".16"/>
+  <text x="72" y="64" fill="#7ee6d1" font-family="Arial, sans-serif" font-size="16" letter-spacing="3">ALEJANDRO LOZANO · BARCELONA</text>
+  <text x="72" y="246" fill="#f3f5f2" font-family="Georgia, serif" font-size="78">I own product roadmaps</text>
+  <text x="72" y="340" fill="#9eacb0" font-family="Georgia, serif" font-size="78">with a data pipeline view.</text>
+  <text x="72" y="494" fill="#9eacb0" font-family="Arial, sans-serif" font-size="24">Technical Product Manager · Banking · Data &amp; BI</text>
+  <circle cx="1088" cy="546" r="9" fill="#7ee6d1"/>
+  <line x1="72" y1="546" x2="1052" y2="546" stroke="#dceff1" stroke-opacity=".16"/>
 </svg>
