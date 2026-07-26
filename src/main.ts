@@ -2,6 +2,10 @@ import "./index.css";
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
+if (prefersReducedMotion.matches) {
+  document.querySelector<HTMLVideoElement>(".hero-video")?.pause();
+}
+
 if (!prefersReducedMotion.matches && "IntersectionObserver" in window) {
   const observer = new IntersectionObserver(
     (entries) => {
