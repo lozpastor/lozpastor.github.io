@@ -1031,8 +1031,16 @@ main {
 .collaboration-visual__area--compliance { right: 3%; bottom: 24%; }
 
 /* Capabilities */
+.capabilities {
+  padding-top: clamp(4rem, 7vw, 6rem);
+}
+
+.capabilities::before {
+  display: none;
+}
+
 .capability-grid {
-  margin-top: clamp(4rem, 8vw, 7rem);
+  margin-top: clamp(2.75rem, 5vw, 4.5rem);
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   border-block: 1px solid var(--hairline);
@@ -1340,6 +1348,21 @@ main {
 .dashboard-loader {
   position: absolute;
   inset: 0;
+}
+
+.adopt-hover-sensor {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+}
+
+.dashboard-mount.is-ready ~ .adopt-hover-sensor {
+  pointer-events: auto;
+}
+
+.live-project--adopt.is-interactive .adopt-hover-sensor {
+  pointer-events: none;
 }
 
 .dashboard-mount {

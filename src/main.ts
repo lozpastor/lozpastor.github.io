@@ -589,6 +589,8 @@ const initAdoptEmbed = () => {
   const fallback = project?.querySelector<HTMLElement>("[data-project-fallback]");
   const fallbackCopy = project?.querySelector<HTMLElement>("[data-project-fallback-copy]");
   const status = project?.querySelector<HTMLElement>("[data-project-status]");
+  const hoverSensor =
+    project?.querySelector<HTMLElement>("[data-adopt-hover-sensor]");
   const interactionButton =
     project?.querySelector<HTMLButtonElement>("[data-adopt-interact]");
   const fullscreenButton =
@@ -614,6 +616,9 @@ const initAdoptEmbed = () => {
   let started = false;
   let isVisible = false;
   let isInteractive = false;
+  let hoverInteractive = false;
+  let manualInteractive = false;
+  let frameFocused = false;
   let panAnimation: Animation | null = null;
 
   const stopAutoScroll = () => {
@@ -655,8 +660,13 @@ const initAdoptEmbed = () => {
     );
   };
 
-  const setInteractiveMode = (enabled: boolean) => {
-    if (!frame || enabled === isInteractive) return;
+  const setInteractiveMode = (enabled: boolean, focusFrame = false) => {
+    if (!frame) return;
+    if (enabled === isInteractive) {
+      if (enabled && focusFrame) window.requestAnimationFrame(() => frame?.focus());
+      return;
+    }
+
     isInteractive = enabled;
     stopAutoScroll();
     project.classList.toggle("is-interactive", enabled);
@@ -664,20 +674,24 @@ const initAdoptEmbed = () => {
       "--project-source-height",
       `${enabled ? viewportHeight : contentHeight}px`,
     );
-    interactionButton?.setAttribute("aria-pressed", String(enabled));
 
     if (enabled) {
       frame.removeAttribute("scrolling");
-      if (interactionButton) interactionButton.textContent = "Resume preview";
       status.textContent =
         "Interactive AdoptAI mode enabled. The automatic preview is paused.";
-      window.requestAnimationFrame(() => frame?.focus());
+      if (focusFrame) window.requestAnimationFrame(() => frame?.focus());
     } else {
       frame.setAttribute("scrolling", "no");
-      if (interactionButton) interactionButton.textContent = "Explore";
       status.textContent = "Automatic AdoptAI preview resumed.";
       window.requestAnimationFrame(syncAutoScroll);
     }
+  };
+
+  const syncInteractiveMode = (focusFrame = false) => {
+    setInteractiveMode(
+      hoverInteractive || manualInteractive || frameFocused,
+      focusFrame,
+    );
   };
 
   const syncScale = () => {
@@ -714,6 +728,9 @@ const initAdoptEmbed = () => {
     stopAutoScroll();
     project.classList.remove("is-interactive");
     isInteractive = false;
+    hoverInteractive = false;
+    manualInteractive = false;
+    frameFocused = false;
     if (interactionButton) interactionButton.disabled = true;
     fallbackCopy.textContent = message;
     status.textContent = "Static AdoptAI preview shown. A direct link is available.";
@@ -732,7 +749,12 @@ const initAdoptEmbed = () => {
       interactionButton.setAttribute("aria-pressed", "false");
     }
     status.textContent = "Live AdoptAI product loaded. The page preview scrolls automatically.";
-    syncAutoScroll();
+    hoverInteractive = stage.matches(":hover");
+    if (hoverInteractive) {
+      syncInteractiveMode();
+    } else {
+      syncAutoScroll();
+    }
   };
 
   const loadProject = () => {
@@ -801,12 +823,44 @@ const initAdoptEmbed = () => {
   }
 
   interactionButton?.addEventListener("click", () => {
-    setInteractiveMode(!isInteractive);
+    manualInteractive = !manualInteractive;
+    interactionButton.textContent = manualInteractive ? "Resume preview" : "Explore";
+    interactionButton.setAttribute("aria-pressed", String(manualInteractive));
+    syncInteractiveMode(manualInteractive);
   });
+
+  hoverSensor?.addEventListener("pointerenter", () => {
+    if (!frame || !mount.classList.contains("is-ready")) return;
+    hoverInteractive = true;
+    syncInteractiveMode();
+  });
+
+  document.addEventListener("pointermove", (event) => {
+    if (!hoverInteractive || manualInteractive) return;
+    const bounds = stage.getBoundingClientRect();
+    const pointerIsInside =
+      event.clientX >= bounds.left &&
+      event.clientX <= bounds.right &&
+      event.clientY >= bounds.top &&
+      event.clientY <= bounds.bottom;
+    if (pointerIsInside) return;
+
+    hoverInteractive = false;
+    frameFocused = false;
+    syncInteractiveMode();
+  });
+
   window.addEventListener("blur", () => {
     window.setTimeout(() => {
-      if (frame && document.activeElement === frame) setInteractiveMode(true);
+      if (!frame || document.activeElement !== frame) return;
+      frameFocused = true;
+      syncInteractiveMode();
     }, 0);
+  });
+  document.addEventListener("focusin", (event) => {
+    if (!frameFocused || event.target === frame) return;
+    frameFocused = false;
+    syncInteractiveMode();
   });
 
   reducedMotion.addEventListener("change", syncAutoScroll);
