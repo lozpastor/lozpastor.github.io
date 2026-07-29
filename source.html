@@ -94,9 +94,18 @@
 
     <main id="main-content">
       <section class="video-hero" id="hero" aria-labelledby="hero-title">
-        <video class="hero-video" autoplay loop muted playsinline preload="metadata" aria-hidden="true">
+        <video
+          class="hero-video"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="none"
+          poster="/hero-poster.webp"
+          aria-hidden="true"
+        >
           <source
-            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4"
+            data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4"
             type="video/mp4"
           />
         </video>
@@ -311,30 +320,91 @@
 
       <section class="section build-log reveal" id="build-log" aria-labelledby="build-title">
         <div class="section-heading">
-          <p class="eyebrow">04 · Build log</p>
-          <h2 id="build-title">I still build, not only coordinate delivery.</h2>
+          <p class="eyebrow">Build log</p>
+          <h2 id="build-title">A side project with a production URL.</h2>
         </div>
 
-        <article class="project-feature">
-          <div class="project-copy">
-            <p class="project-date">Macroeconomic Dashboard · June 2025</p>
-            <h3>A deployed product for reading economic signals.</h3>
-            <p>I rebuilt a Power BI concept as a responsive web app for economic KPIs, time series and multi-country comparison.</p>
-            <p>HTML, CSS and JavaScript moved it from a local analysis into a product on GitHub Pages.</p>
-            <a class="button button-primary" href="https://lozpastor.github.io/Macroeconomic-Dashboard/" target="_blank" rel="noreferrer">
-              Open live project <span aria-hidden="true">↗</span>
-            </a>
+        <a
+          class="macro-launch"
+          href="https://lozpastor.github.io/Macroeconomic-Dashboard/"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-dashboard-open
+          aria-describedby="macro-summary"
+        >
+          <header class="macro-topline">
+            <span>Macroeconomic Dashboard</span>
+            <span>World Bank · NY.GDP.MKTP.KD.ZG</span>
+            <span>Live product · Jun 2025</span>
+          </header>
+
+          <div class="macro-tickers" aria-hidden="true">
+            <p><span>ESP</span><strong>2.82%</strong><small>GDP growth · 2025</small></p>
+            <p><span>USA</span><strong>2.16%</strong><small>GDP growth · 2025</small></p>
+            <p><span>Coverage</span><strong>212</strong><small>Economies</small></p>
+            <p><span>Refresh</span><strong>29.07</strong><small>2026 dataset</small></p>
           </div>
-          <a class="project-preview" href="https://lozpastor.github.io/Macroeconomic-Dashboard/" target="_blank" rel="noreferrer" aria-label="Open the Macroeconomic Dashboard">
-            <img
-              src="/project-atlas.svg"
-              width="960"
-              height="640"
-              loading="lazy"
-              alt="Preview of the Macroeconomic Dashboard with a global economic data visualisation"
-            />
-          </a>
-        </article>
+
+          <figure class="macro-chart">
+            <svg viewBox="0 0 1120 460" role="img" aria-labelledby="macro-chart-title macro-chart-desc">
+              <title id="macro-chart-title">GDP growth in Spain and the United States from 2019 to 2025</title>
+              <desc id="macro-chart-desc">
+                Spain fell to minus 10.94 percent in 2020, recovered to 6.68 percent in 2021 and reached 2.82 percent in 2025.
+                The United States reached 2.16 percent in 2025.
+              </desc>
+              <g class="chart-grid" aria-hidden="true">
+                <path d="M90 60H1030M90 188H1030M90 380H1030" />
+                <path d="M90 60V380M246.7 60V380M403.3 60V380M560 60V380M716.7 60V380M873.3 60V380M1030 60V380" />
+              </g>
+              <g class="chart-axis" aria-hidden="true">
+                <text x="36" y="66">+8</text>
+                <text x="48" y="194">0</text>
+                <text x="28" y="386">−12</text>
+                <text x="90" y="422">2019</text>
+                <text x="230" y="422">2020</text>
+                <text x="387" y="422">2021</text>
+                <text x="544" y="422">2022</text>
+                <text x="700" y="422">2023</text>
+                <text x="857" y="422">2024</text>
+                <text x="1000" y="422">2025</text>
+                <text x="90" y="36">GDP GROWTH · % YOY</text>
+              </g>
+              <path
+                class="chart-series chart-series--secondary"
+                d="M90 146.7L246.7 221.3L403.3 89.6L560 147.7L716.7 141.1L873.3 143.4L1030 153.4"
+                pathLength="1"
+              />
+              <path
+                class="chart-series chart-series--primary"
+                d="M90 156.6L246.7 363L403.3 81.1L560 86.1L716.7 148.6L873.3 132.6L1030 142.9"
+                pathLength="1"
+              />
+              <g class="chart-endpoints" aria-hidden="true">
+                <circle class="endpoint-primary" cx="1030" cy="142.9" r="6" />
+                <circle class="endpoint-secondary" cx="1030" cy="153.4" r="5" />
+                <text class="endpoint-label endpoint-label--primary" x="1050" y="137">ESP</text>
+                <text class="endpoint-label" x="1050" y="168">USA</text>
+              </g>
+              <g class="chart-crosshair" aria-hidden="true">
+                <path d="M873.3 60V380" />
+                <circle cx="873.3" cy="132.6" r="5" />
+                <text x="805" y="112">ESP · 3.46%</text>
+              </g>
+            </svg>
+            <figcaption id="macro-summary">
+              Annual GDP growth for Spain and the United States, 2019—2025. World Bank Open Data, refreshed 29 July 2026.
+            </figcaption>
+          </figure>
+
+          <div class="macro-intro">
+            <div>
+              <p class="project-date">Evidence that I ship, not only coordinate.</p>
+              <h3>Macroeconomic intelligence, rebuilt for the web.</h3>
+              <p>A responsive product for economic KPIs, time series and country comparison. Designed, coded and deployed end to end.</p>
+            </div>
+            <span class="macro-cta">Explore the live data <span aria-hidden="true">↗</span></span>
+          </div>
+        </a>
       </section>
 
       <section class="section about reveal" id="about" aria-labelledby="about-title">
@@ -375,6 +445,59 @@
         </footer>
       </section>
     </main>
+
+    <dialog
+      class="dashboard-dialog"
+      id="dashboard-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Interactive preview of the Macroeconomic Dashboard"
+      aria-describedby="dashboard-dialog-description"
+    >
+      <div class="dashboard-dialog__panel">
+        <header class="dashboard-dialog__header">
+          <div>
+            <span>Live product</span>
+            <strong>Macroeconomic Dashboard</strong>
+          </div>
+          <nav aria-label="Dashboard preview controls">
+            <a href="https://lozpastor.github.io/Macroeconomic-Dashboard/" target="_blank" rel="noopener noreferrer">
+              Open in a new tab <span aria-hidden="true">↗</span>
+            </a>
+            <button type="button" data-dashboard-close>Close <span aria-hidden="true">×</span></button>
+          </nav>
+        </header>
+        <p class="visually-hidden" id="dashboard-dialog-description">
+          A full-screen embedded preview of Alejandro Lozano’s Macroeconomic Dashboard.
+        </p>
+        <div class="dashboard-dialog__stage">
+          <p class="visually-hidden" role="status" aria-live="polite" data-dashboard-status>
+            Dashboard preview ready to load.
+          </p>
+          <div class="dashboard-loader" data-dashboard-loader>
+            <div aria-hidden="true"><span></span><span></span><span></span></div>
+            <p aria-hidden="true">Connecting to the live dataset…</p>
+          </div>
+          <div class="dashboard-mount" data-dashboard-mount></div>
+          <div class="dashboard-fallback" data-dashboard-fallback hidden>
+            <div class="fallback-chart" aria-hidden="true">
+              <span>GDP growth · % YoY · 2019—2025</span>
+              <svg viewBox="0 0 640 220">
+                <path class="fallback-axis" d="M30 110H610M30 30V190" />
+                <path class="fallback-secondary" d="M30 90L126 130L223 54L320 91L416 87L513 89L610 94" />
+                <path class="fallback-primary" d="M30 96L126 182L223 48L320 51L416 92L513 82L610 88" />
+              </svg>
+            </div>
+            <div>
+              <p data-dashboard-fallback-copy>The interactive dashboard is best used in a larger viewport.</p>
+              <a class="button button-primary" href="https://lozpastor.github.io/Macroeconomic-Dashboard/" target="_blank" rel="noopener noreferrer">
+                Open the full product <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </dialog>
 
     <script type="module" src="/src/main.ts"></script>
   </body>
