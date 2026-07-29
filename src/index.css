@@ -1042,6 +1042,10 @@ main {
   min-width: 0;
   padding: clamp(2rem, 4vw, 3.75rem);
   border-left: 1px solid var(--hairline);
+  transform-origin: center;
+  transition:
+    opacity 220ms ease,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .capability-grid > section:first-child {
@@ -1054,6 +1058,10 @@ main {
   height: 2.5rem;
   margin-bottom: 2rem;
   color: var(--telemetry);
+  transform-origin: center;
+  transition:
+    color 180ms ease,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .capability-grid__icon svg {
@@ -1090,6 +1098,9 @@ main {
   border-top: 1px solid rgba(167, 184, 186, 0.14);
   color: var(--mist);
   font-size: 0.9rem;
+  transition:
+    color 160ms ease,
+    padding-left 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .capability-grid li:last-child {
@@ -1105,6 +1116,27 @@ main {
   text-transform: uppercase;
 }
 
+@media (hover: hover) {
+  .capability-grid:has(> section:hover) > section:not(:hover) {
+    opacity: 0.42;
+    transform: scale(0.975);
+  }
+
+  .capability-grid > section:hover {
+    transform: translateY(-0.45rem) scale(1.025);
+  }
+
+  .capability-grid > section:hover .capability-grid__icon {
+    color: var(--salt);
+    transform: translateY(-0.2rem) rotate(-2deg);
+  }
+
+  .capability-grid > section:hover li:hover {
+    padding-left: 0.55rem;
+    color: var(--salt);
+  }
+}
+
 /* Live build: the actual shipped products are the visuals. */
 .project-scene {
   min-height: 100svh;
@@ -1118,7 +1150,7 @@ main {
 }
 
 .project-scene:first-of-type {
-  margin-top: clamp(4rem, 8vw, 7rem);
+  margin-top: clamp(8rem, 14vw, 12rem);
   border-top: 1px solid var(--hairline);
 }
 
@@ -1168,8 +1200,8 @@ main {
 
 .live-project {
   position: relative;
-  width: min(100%, 780px, calc((100svh - 15rem) * 1.44));
-  margin: 0 auto 1.5rem;
+  width: min(100%, 920px, calc((100svh - 14rem) * 1.78));
+  margin: 0 auto;
   padding: 0.7rem;
   border: 1px solid rgba(167, 184, 186, 0.32);
   border-radius: 1.15rem;
@@ -1179,27 +1211,7 @@ main {
 
 .live-project::before,
 .live-project::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-
-.live-project::before {
-  width: calc(100% + 5rem);
-  height: 0.75rem;
-  border-radius: 0 0 1.4rem 1.4rem;
-  background: linear-gradient(180deg, #9ba9ac 0%, #516166 42%, #26343a 100%);
-  clip-path: polygon(3% 0, 97% 0, 100% 100%, 0 100%);
-}
-
-.live-project::after {
-  width: 16%;
-  height: 0.22rem;
-  border-radius: 0 0 0.4rem 0.4rem;
-  background: rgba(4, 14, 18, 0.62);
+  display: none;
 }
 
 .live-project__bar {
@@ -1309,6 +1321,10 @@ main {
   background: #06141b;
 }
 
+.live-project:not(.live-project--adopt) .live-project__stage {
+  aspect-ratio: 16 / 9;
+}
+
 .dashboard-mount,
 .dashboard-fallback,
 .dashboard-loader {
@@ -1351,6 +1367,10 @@ main {
   height: 100%;
   object-fit: contain;
   object-position: top center;
+}
+
+.live-project:not(.live-project--adopt) .dashboard-fallback img {
+  object-fit: cover;
 }
 
 .dashboard-loader {
@@ -1466,6 +1486,10 @@ main {
   grid-template-columns: 1.25fr 2fr;
   gap: var(--column-gap);
   border-bottom: 1px solid var(--hairline);
+  transform-origin: left center;
+  transition:
+    opacity 220ms ease,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .facts h3 {
@@ -1479,6 +1503,9 @@ main {
   grid-column: 2;
   margin: 0 0 0.75rem;
   line-height: 1.45;
+  transition:
+    opacity 160ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .facts p:last-child {
@@ -1501,6 +1528,26 @@ main {
   color: var(--faint);
   font-family: var(--font-data);
   font-size: 0.62rem;
+}
+
+@media (hover: hover) {
+  .facts:has(> section:hover) > section:not(:hover) {
+    opacity: 0.4;
+    transform: scale(0.98);
+  }
+
+  .facts > section:hover {
+    transform: translateX(0.55rem) scale(1.025);
+  }
+
+  .facts > section:has(p:hover) p:not(:hover) {
+    opacity: 0.44;
+    transform: translateX(-0.2rem);
+  }
+
+  .facts > section p:hover {
+    transform: translateX(0.35rem);
+  }
 }
 
 .contact {
@@ -1874,6 +1921,18 @@ main {
   opacity: 0;
   pointer-events: none;
   transition: opacity 120ms ease;
+}
+
+.journey-fall.is-launching {
+  position: absolute;
+  inset: 0 0 auto;
+  height: var(--journey-launch-height, 100vh);
+}
+
+.journey-fall.is-arriving {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
 }
 
 .journey-fall.is-visible {
@@ -2259,16 +2318,12 @@ main {
   }
 
   .project-scene:first-of-type {
-    margin-top: 3rem;
+    margin-top: 5rem;
   }
 
   .journey-nav,
   .journey-fall {
     display: none;
-  }
-
-  .live-project::before {
-    width: calc(100% + 1.5rem);
   }
 
   .live-project__bar {

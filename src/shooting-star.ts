@@ -199,8 +199,10 @@ export const initShootingStar = (): (() => void) => {
     const startX = launchStart.x;
     const startY = launchStart.y;
     const endX = firstDotRect.left + firstDotRect.width / 2 + 12;
-    const endY = firstDotRect.top + firstDotRect.height / 2;
+    const heroEnd = hero.getBoundingClientRect().bottom + window.scrollY - 64;
+    const endY = heroEnd + firstDotRect.top + firstDotRect.height / 2;
     const fallDistance = Math.max(160, endY - startY);
+    const launchHeight = Math.ceil(endY + 48);
     const pathData = [
       `M ${startX.toFixed(2)} ${startY.toFixed(2)}`,
       `C ${(startX - 16).toFixed(2)} ${(startY + fallDistance * 0.38).toFixed(2)},`,
@@ -208,10 +210,17 @@ export const initShootingStar = (): (() => void) => {
       `${endX.toFixed(2)} ${endY.toFixed(2)}`,
     ].join(" ");
 
+    fallSvg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${launchHeight}`);
+    fallSvg.setAttribute("width", String(window.innerWidth));
+    fallSvg.setAttribute("height", String(launchHeight));
+    fallSvg.style.setProperty("--journey-launch-height", `${launchHeight}px`);
     paintJourneyPath(pathData, progress, 0.88);
   };
 
   const renderFall = (progress: number): void => {
+    fallSvg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
+    fallSvg.setAttribute("width", String(window.innerWidth));
+    fallSvg.setAttribute("height", String(window.innerHeight));
     const starRect = star.getBoundingClientRect();
     const titleRect = meaningfulTextRect(contactTitle);
     const contactRect = contact.getBoundingClientRect();

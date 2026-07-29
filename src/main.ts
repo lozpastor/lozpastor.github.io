@@ -596,25 +596,83 @@ const initAdoptEmbed = () => {
 
   const projectUrl = project.dataset.projectUrl;
   const sourceWidth = Number(project.dataset.projectWidth) || 1440;
-  const sourceHeight = Number(project.dataset.projectHeight) || 780;
+  const viewportHeight = Number(project.dataset.projectHeight) || 780;
+  const contentHeight =
+    Number(project.dataset.projectContentHeight) || viewportHeight;
   const compactViewport = window.matchMedia("(max-width: 760px)");
   const localPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
   if (!projectUrl) return;
 
-  stage.style.setProperty("--project-ratio", `${sourceWidth} / ${sourceHeight}`);
+  stage.style.setProperty("--project-ratio", `${sourceWidth} / ${viewportHeight}`);
   stage.style.setProperty("--project-source-width", `${sourceWidth}px`);
-  stage.style.setProperty("--project-source-height", `${sourceHeight}px`);
+  stage.style.setProperty("--project-source-height", `${contentHeight}px`);
 
   let frame: HTMLIFrameElement | null = null;
   let timeoutTimer: number | undefined;
   let started = false;
+  let isVisible = false;
+  let panAnimation: Animation | null = null;
+
+  const stopAutoScroll = () => {
+    panAnimation?.cancel();
+    panAnimation = null;
+    mount.style.removeProperty("transform");
+  };
+
+  const syncAutoScroll = () => {
+    stopAutoScroll();
+    if (
+      !frame ||
+      !mount.classList.contains("is-ready") ||
+      !isVisible ||
+      reducedMotion.matches ||
+      compactViewport.matches
+    ) {
+      return;
+    }
+
+    const scale = stage.clientWidth / sourceWidth;
+    const travel = Math.max(0, contentHeight * scale - stage.clientHeight);
+    if (travel < 12) return;
+
+    panAnimation = mount.animate(
+      [
+        { transform: "translate3d(0, 0, 0)", offset: 0 },
+        { transform: "translate3d(0, 0, 0)", offset: 0.14 },
+        { transform: `translate3d(0, ${(-travel).toFixed(2)}px, 0)`, offset: 0.86 },
+        { transform: `translate3d(0, ${(-travel).toFixed(2)}px, 0)`, offset: 1 },
+      ],
+      {
+        duration: 12_000,
+        easing: "cubic-bezier(0.65, 0, 0.35, 1)",
+        direction: "alternate",
+        iterations: Number.POSITIVE_INFINITY,
+      },
+    );
+  };
 
   const syncScale = () => {
     stage.style.setProperty("--project-scale", (stage.clientWidth / sourceWidth).toFixed(5));
+    if (mount.classList.contains("is-ready")) {
+      window.requestAnimationFrame(syncAutoScroll);
+    }
   };
   const stageObserver = new ResizeObserver(syncScale);
   stageObserver.observe(stage);
   syncScale();
+
+  const visibilityObserver = new IntersectionObserver(
+    ([entry]) => {
+      isVisible = Boolean(entry?.isIntersecting);
+      if (isVisible) {
+        syncAutoScroll();
+      } else {
+        panAnimation?.pause();
+      }
+    },
+    { rootMargin: "0px", threshold: 0.18 },
+  );
+  visibilityObserver.observe(project);
 
   const showFallback = (message: string) => {
     if (timeoutTimer !== undefined) window.clearTimeout(timeoutTimer);
@@ -624,6 +682,7 @@ const initAdoptEmbed = () => {
     fallback.classList.remove("is-hidden");
     loader.hidden = true;
     stage.setAttribute("aria-busy", "false");
+    stopAutoScroll();
     fallbackCopy.textContent = message;
     status.textContent = "Static AdoptAI preview shown. A direct link is available.";
   };
@@ -636,7 +695,8 @@ const initAdoptEmbed = () => {
     mount.classList.add("is-ready");
     stage.setAttribute("aria-busy", "false");
     frame.tabIndex = 0;
-    status.textContent = "Live AdoptAI product loaded.";
+    status.textContent = "Live AdoptAI product loaded. The page preview scrolls automatically.";
+    syncAutoScroll();
   };
 
   const loadProject = () => {
@@ -651,6 +711,7 @@ const initAdoptEmbed = () => {
     frame.title = project.dataset.projectTitle ?? "AdoptAI live product";
     frame.loading = "eager";
     frame.tabIndex = -1;
+    frame.setAttribute("scrolling", "no");
     frame.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
     mount.append(frame);
 
@@ -699,8 +760,12 @@ const initAdoptEmbed = () => {
       project.classList.toggle("is-fullscreen", isFullscreen);
       document.body.classList.toggle("is-dashboard-fullscreen", isFullscreen);
       fullscreenButton.textContent = isFullscreen ? "Exit full screen" : "Full screen";
+      window.requestAnimationFrame(syncAutoScroll);
     });
   }
+
+  reducedMotion.addEventListener("change", syncAutoScroll);
+  compactViewport.addEventListener("change", syncAutoScroll);
 };
 
 type PointerTrailPoint = {
