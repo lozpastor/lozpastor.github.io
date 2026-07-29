@@ -64,36 +64,32 @@ const initHeroVideo = () => {
 
 const initReveals = () => {
   const elements = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
-  if (elements.length === 0 || reducedMotion.matches || !("IntersectionObserver" in window)) {
-    elements.forEach((element) => element.classList.add("is-visible"));
-    return;
-  }
+  if (elements.length === 0 || reducedMotion.matches) return;
 
-  elements.forEach((element) => {
-    if (element.getBoundingClientRect().top > window.innerHeight * 0.78) {
-      element.classList.add("is-pending");
-    } else {
-      element.classList.add("is-visible");
-    }
-  });
   document.documentElement.classList.add("reveal-ready");
+  let animationFrame = 0;
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const element = entry.target as HTMLElement;
-        element.classList.remove("is-pending");
-        element.classList.add("is-visible");
-        observer.unobserve(element);
-      });
-    },
-    { rootMargin: "0px 0px -8% 0px", threshold: 0.04 },
-  );
+  const render = () => {
+    animationFrame = 0;
+    const start = window.innerHeight * 0.76;
+    const end = window.innerHeight * 0.54;
+    const range = Math.max(1, start - end);
 
-  elements
-    .filter((element) => element.classList.contains("is-pending"))
-    .forEach((element) => observer.observe(element));
+    elements.forEach((element) => {
+      const bounds = element.getBoundingClientRect();
+      const progress = clamp((start - bounds.top) / range);
+      element.style.setProperty("--reveal-progress", progress.toFixed(4));
+    });
+  };
+
+  const requestRender = () => {
+    if (animationFrame) return;
+    animationFrame = window.requestAnimationFrame(render);
+  };
+
+  window.addEventListener("scroll", requestRender, { passive: true });
+  window.addEventListener("resize", requestRender, { passive: true });
+  requestRender();
 };
 
 const initCareerTrajectory = () => {
@@ -109,13 +105,13 @@ const initCareerTrajectory = () => {
   const render = () => {
     animationFrame = 0;
     const bounds = trajectory.getBoundingClientRect();
-    const travel = Math.max(window.innerHeight * 0.62, bounds.height * 0.72);
-    const progress = clamp((window.innerHeight * 0.84 - bounds.top) / travel);
+    const travel = Math.max(window.innerHeight * 0.82, bounds.height * 1.7);
+    const progress = clamp((window.innerHeight * 0.72 - bounds.top) / travel);
 
     trajectory.style.setProperty("--trajectory-progress", progress.toFixed(4));
     steps.forEach((step, index) => {
-      const start = index * 0.23;
-      const stepProgress = clamp((progress - start) / 0.3);
+      const start = index * 0.31;
+      const stepProgress = clamp((progress - start) / 0.24);
       step.style.setProperty("--step-progress", stepProgress.toFixed(4));
     });
   };
@@ -135,6 +131,8 @@ type CanvasPoint = {
   fromY: number;
   toX: number;
   toY: number;
+  curve: number;
+  delay: number;
 };
 
 const initReconciliation = () => {
@@ -190,6 +188,8 @@ const initReconciliation = () => {
         fromY: pad + (row / 9) * sourceHeight + (random() - 0.5) * 8,
         toX: targetLeft + targetColumn * (groupWidth + gap) + withinX * groupWidth,
         toY: pad + targetRow * (groupHeight + gap) + withinY * groupHeight,
+        curve: (random() - 0.5) * Math.min(52, height * 0.14),
+        delay: random() * 0.09,
       };
     });
   };
@@ -224,10 +224,17 @@ const initReconciliation = () => {
       context.globalAlpha = 1;
     }
 
-    const eased = progress * progress * (3 - 2 * progress);
     points.forEach((point, index) => {
-      const x = point.fromX + (point.toX - point.fromX) * eased;
-      const y = point.fromY + (point.toY - point.fromY) * eased;
+      const localProgress = clamp((progress - point.delay) / 0.91);
+      const eased =
+        localProgress < 0.5
+          ? 4 * localProgress * localProgress * localProgress
+          : 1 - Math.pow(-2 * localProgress + 2, 3) / 2;
+      const inverse = 1 - eased;
+      const middleX = (point.fromX + point.toX) / 2;
+      const middleY = (point.fromY + point.toY) / 2 + point.curve;
+      const x = inverse * inverse * point.fromX + 2 * inverse * eased * middleX + eased * eased * point.toX;
+      const y = inverse * inverse * point.fromY + 2 * inverse * eased * middleY + eased * eased * point.toY;
       context.beginPath();
       context.fillStyle =
         index % 10 === 0 ? "rgba(242, 245, 243, 0.94)" : "rgba(126, 230, 209, 0.72)";
@@ -243,8 +250,8 @@ const initReconciliation = () => {
       return;
     }
     const bounds = figure.getBoundingClientRect();
-    const travel = Math.max(window.innerHeight * 0.5, bounds.height * 0.72);
-    const progress = clamp((window.innerHeight * 0.82 - bounds.top) / travel);
+    const travel = Math.max(window.innerHeight * 0.68, bounds.height * 1.32);
+    const progress = clamp((window.innerHeight * 0.78 - bounds.top) / travel);
     draw(progress);
   };
 
@@ -254,6 +261,38 @@ const initReconciliation = () => {
   });
   resizeObserver.observe(canvas);
   rebuild();
+  const requestRender = () => {
+    if (animationFrame) return;
+    animationFrame = window.requestAnimationFrame(render);
+  };
+
+  window.addEventListener("scroll", requestRender, { passive: true });
+  window.addEventListener("resize", requestRender, { passive: true });
+  requestRender();
+};
+
+const initWorkVisuals = () => {
+  const visuals = Array.from(document.querySelectorAll<HTMLElement>("[data-work-visual]"));
+  if (visuals.length === 0 || reducedMotion.matches) return;
+  let animationFrame = 0;
+
+  const render = () => {
+    animationFrame = 0;
+    visuals.forEach((visual) => {
+      const bounds = visual.getBoundingClientRect();
+      const travel = Math.max(window.innerHeight * 0.62, bounds.height * 1.28);
+      const progress = clamp((window.innerHeight * 0.78 - bounds.top) / travel);
+      visual.style.setProperty("--visual-progress", progress.toFixed(4));
+
+      if (visual.hasAttribute("data-performance-visual")) {
+        const runtime = 1 - progress * 0.5;
+        visual.style.setProperty("--runtime-width", `${(runtime * 100).toFixed(2)}%`);
+        const output = visual.querySelector<HTMLElement>("[data-runtime-output]");
+        if (output) output.textContent = `${runtime.toFixed(2)}×`;
+      }
+    });
+  };
+
   const requestRender = () => {
     if (animationFrame) return;
     animationFrame = window.requestAnimationFrame(render);
@@ -440,6 +479,128 @@ const initDashboardEmbed = () => {
   });
 };
 
+const initAdoptEmbed = () => {
+  const project = document.querySelector<HTMLElement>(".live-project--adopt[data-live-project]");
+  const stage = project?.querySelector<HTMLElement>("[data-project-stage]");
+  const loader = project?.querySelector<HTMLElement>("[data-project-loader]");
+  const mount = project?.querySelector<HTMLElement>("[data-project-mount]");
+  const fallback = project?.querySelector<HTMLElement>("[data-project-fallback]");
+  const fallbackCopy = project?.querySelector<HTMLElement>("[data-project-fallback-copy]");
+  const status = project?.querySelector<HTMLElement>("[data-project-status]");
+  const fullscreenButton =
+    project?.querySelector<HTMLButtonElement>("[data-dashboard-fullscreen]");
+
+  if (!project || !stage || !loader || !mount || !fallback || !fallbackCopy || !status) return;
+
+  const projectUrl = project.dataset.projectUrl;
+  const sourceWidth = Number(project.dataset.projectWidth) || 1440;
+  const sourceHeight = Number(project.dataset.projectHeight) || 780;
+  const compactViewport = window.matchMedia("(max-width: 760px)");
+  const localPreview = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+  if (!projectUrl) return;
+
+  stage.style.setProperty("--project-ratio", `${sourceWidth} / ${sourceHeight}`);
+  stage.style.setProperty("--project-source-width", `${sourceWidth}px`);
+  stage.style.setProperty("--project-source-height", `${sourceHeight}px`);
+
+  let frame: HTMLIFrameElement | null = null;
+  let timeoutTimer: number | undefined;
+  let started = false;
+
+  const syncScale = () => {
+    stage.style.setProperty("--project-scale", (stage.clientWidth / sourceWidth).toFixed(5));
+  };
+  const stageObserver = new ResizeObserver(syncScale);
+  stageObserver.observe(stage);
+  syncScale();
+
+  const showFallback = (message: string) => {
+    if (timeoutTimer !== undefined) window.clearTimeout(timeoutTimer);
+    frame?.remove();
+    frame = null;
+    mount.classList.remove("is-ready");
+    fallback.classList.remove("is-hidden");
+    loader.hidden = true;
+    stage.setAttribute("aria-busy", "false");
+    fallbackCopy.textContent = message;
+    status.textContent = "Static AdoptAI preview shown. A direct link is available.";
+  };
+
+  const markReady = () => {
+    if (!frame) return;
+    if (timeoutTimer !== undefined) window.clearTimeout(timeoutTimer);
+    loader.hidden = true;
+    fallback.classList.add("is-hidden");
+    mount.classList.add("is-ready");
+    stage.setAttribute("aria-busy", "false");
+    frame.tabIndex = 0;
+    status.textContent = "Live AdoptAI product loaded.";
+  };
+
+  const loadProject = () => {
+    if (started || compactViewport.matches || localPreview) return;
+    started = true;
+    loader.hidden = false;
+    stage.setAttribute("aria-busy", "true");
+    status.textContent = "Connecting to AdoptAI…";
+
+    frame = document.createElement("iframe");
+    frame.src = projectUrl;
+    frame.title = project.dataset.projectTitle ?? "AdoptAI live product";
+    frame.loading = "eager";
+    frame.tabIndex = -1;
+    frame.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+    mount.append(frame);
+
+    frame.addEventListener("load", markReady, { once: true });
+    frame.addEventListener(
+      "error",
+      () => showFallback("AdoptAI could not be embedded here. Use the direct link above."),
+      { once: true },
+    );
+    timeoutTimer = window.setTimeout(
+      () => showFallback("AdoptAI is taking longer than expected. Use the direct link above."),
+      20_000,
+    );
+  };
+
+  if (compactViewport.matches || localPreview) {
+    showFallback("A static capture is shown. AdoptAI opens in a new tab on this screen.");
+  } else if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        observer.disconnect();
+        loadProject();
+      },
+      { rootMargin: "700px 0px", threshold: 0.01 },
+    );
+    observer.observe(project);
+  } else {
+    loadProject();
+  }
+
+  if (fullscreenButton && typeof project.requestFullscreen === "function") {
+    fullscreenButton.hidden = compactViewport.matches;
+    fullscreenButton.addEventListener("click", () => {
+      if (document.fullscreenElement === project) {
+        void document.exitFullscreen();
+      } else {
+        loadProject();
+        void project.requestFullscreen().catch(() => {
+          status.textContent = "Full-screen mode is unavailable in this browser.";
+        });
+      }
+    });
+    document.addEventListener("fullscreenchange", () => {
+      const isFullscreen = document.fullscreenElement === project;
+      project.classList.toggle("is-fullscreen", isFullscreen);
+      document.body.classList.toggle("is-dashboard-fullscreen", isFullscreen);
+      fullscreenButton.textContent = isFullscreen ? "Exit full screen" : "Full screen";
+    });
+  }
+};
+
 const year = document.querySelector<HTMLElement>("[data-current-year]");
 if (year) year.textContent = String(new Date().getFullYear());
 
@@ -447,5 +608,7 @@ initHeroVideo();
 initReveals();
 initCareerTrajectory();
 initReconciliation();
+initWorkVisuals();
 initDashboardEmbed();
+initAdoptEmbed();
 initShootingStar();

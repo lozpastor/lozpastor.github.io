@@ -111,7 +111,6 @@ export const initShootingStar = (): (() => void) => {
   let totalLength = 1;
   let currentLength = 0;
   let targetLength = 0;
-  let furthestLengthRatio = 0;
   let hasPositionedComet = false;
   let hasLaunched = false;
   let latestScrollY = window.scrollY;
@@ -202,8 +201,11 @@ export const initShootingStar = (): (() => void) => {
       const sectionSafeRight = Math.max(10, sectionShell.left - (compact ? 6 : 12));
       const offset = Math.sin(index * 1.71 + 0.5) * variation;
 
+      const touchesTargetEdge = section.dataset.starAnchor === "edge";
       points.push({
-        x: Math.min(sectionSafeRight, sectionRail + offset),
+        x: touchesTargetEdge
+          ? clamp(titleBox.left - 18, sectionShell.left, titleBox.left)
+          : Math.min(sectionSafeRight, sectionRail + offset),
         y: titleBox.top + documentTop + clamp(titleBox.height * 0.34, 18, 54),
       });
       stopsWithoutLengths.push({ section, title });
@@ -260,6 +262,7 @@ export const initShootingStar = (): (() => void) => {
 
     renderPaths(0);
     guide.classList.add("is-ready");
+    document.documentElement.classList.add("star-ready");
   };
 
   const scrollProgress = (): number => {
@@ -316,11 +319,12 @@ export const initShootingStar = (): (() => void) => {
     section.classList.add("is-star-active");
     title.classList.add("is-star-pulsing");
 
+    const pulseDuration = section.matches(".contact") ? 1900 : 1120;
     const timer = window.setTimeout(() => {
       section.classList.remove("is-star-active");
       title.classList.remove("is-star-pulsing");
       titleTimers.delete(timer);
-    }, 960);
+    }, pulseDuration);
     titleTimers.add(timer);
   };
 
@@ -331,6 +335,8 @@ export const initShootingStar = (): (() => void) => {
 
     sectionStops.forEach((stop, index) => {
       const distance = Math.abs(currentLength - stop.length);
+      const hasBeenInvoked = currentLength >= stop.length - arrivalRadius;
+      stop.section.classList.toggle("is-star-invoked", hasBeenInvoked);
 
       if (distance < nearestDistance) {
         nearestDistance = distance;
@@ -360,9 +366,7 @@ export const initShootingStar = (): (() => void) => {
       `translate(${point.x.toFixed(2)} ${point.y.toFixed(2)})`,
     );
 
-    const permanentLength = reducedMotionQuery.matches
-      ? totalLength
-      : Math.max(currentLength, totalLength * furthestLengthRatio);
+    const permanentLength = reducedMotionQuery.matches ? totalLength : currentLength;
     drawnPath.style.strokeDashoffset = `${Math.max(0, totalLength - permanentLength)}`;
 
     if (!hasLaunched || reducedMotionQuery.matches) {
@@ -400,7 +404,6 @@ export const initShootingStar = (): (() => void) => {
     }
 
     if (reducedMotionQuery.matches) {
-      furthestLengthRatio = 1;
       currentLength = targetLength;
       renderPaths(0);
       return;
@@ -416,7 +419,6 @@ export const initShootingStar = (): (() => void) => {
       currentLength = targetLength;
     }
 
-    furthestLengthRatio = Math.max(furthestLengthRatio, currentLength / totalLength);
     renderPaths(currentLength - previousLength);
 
     if (Math.abs(targetLength - currentLength) > 0.08) {
@@ -485,7 +487,7 @@ export const initShootingStar = (): (() => void) => {
       titleAnimations.forEach((animation) => animation.cancel());
       titleAnimations.clear();
       sectionStops.forEach(({ section, title }) => {
-        section.classList.remove("is-star-active");
+        section.classList.remove("is-star-active", "is-star-invoked");
         title.classList.remove("is-star-pulsing");
       });
       activeStopIndex = -1;
@@ -530,11 +532,12 @@ export const initShootingStar = (): (() => void) => {
     titleAnimations.forEach((animation) => animation.cancel());
     titleAnimations.clear();
     sectionStops.forEach(({ section, title }) => {
-      section.classList.remove("is-star-active");
+      section.classList.remove("is-star-active", "is-star-invoked");
       title.classList.remove("is-star-pulsing");
     });
 
     guide.classList.remove("is-ready", "is-launched", "is-reduced-motion");
+    document.documentElement.classList.remove("star-ready");
     comet.style.display = "";
     trailPath.style.display = "";
     launchFlare.style.display = "";

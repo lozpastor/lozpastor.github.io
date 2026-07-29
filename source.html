@@ -210,7 +210,6 @@
               aria-label="Career progression from engineering to product"
               data-career-trajectory
               data-trajectory-line
-              data-reveal
             >
               <li data-trajectory-step>
                 <span class="career-path__node" aria-hidden="true">01</span>
@@ -229,7 +228,7 @@
                 <time datetime="2025-09">2025—Now</time>
                 <h3>Product</h3>
                 <p>Backlog and delivery decisions for life-insurance products.</p>
-                <strong>Current focus</strong>
+                <strong><span aria-hidden="true"></span> Current focus</strong>
               </li>
             </ol>
           </div>
@@ -262,7 +261,7 @@
               </div>
               <p class="case__outcome"><b>−90%</b><span>reporting workload</span></p>
 
-              <figure class="reconcile" data-reconcile>
+              <figure class="case-visual reconcile" data-reconcile>
                 <canvas data-reconcile-canvas aria-hidden="true"></canvas>
                 <figcaption>
                   <span><b>100+</b> recurring reports</span>
@@ -291,7 +290,7 @@
               </div>
             </article>
 
-            <article class="case" data-reveal>
+            <article class="case case--regulatory" data-reveal>
               <p class="case__index">Regulatory · COREP</p>
               <div class="case__summary">
                 <h3>Regulatory reporting without recurring manual load.</h3>
@@ -301,6 +300,30 @@
                 </p>
               </div>
               <p class="case__outcome"><b>&gt;50%</b><span>efficiency gain</span></p>
+
+              <figure
+                class="case-visual performance-visual"
+                data-work-visual
+                data-performance-visual
+                aria-label="SAS pipeline runtime reduced by more than 50 percent"
+              >
+                <div class="performance-visual__scale" aria-hidden="true">
+                  <span>0</span><span>25</span><span>50</span><span>75</span><span>100 runtime</span>
+                </div>
+                <div class="performance-track performance-track--before">
+                  <header><span>Before optimisation</span><b>1.00×</b></header>
+                  <div aria-hidden="true">
+                    <i></i><i></i><i></i><i></i>
+                  </div>
+                </div>
+                <div class="performance-track performance-track--after">
+                  <header><span>Controlled SAS / SQL pipeline</span><b data-runtime-output>0.50×</b></header>
+                  <div aria-hidden="true">
+                    <i></i><i></i><i></i><i></i>
+                  </div>
+                </div>
+                <figcaption><strong>&gt;50% faster</strong> from source data to validated regulatory output</figcaption>
+              </figure>
 
               <div class="case__depth" data-case-depth>
                 <div>
@@ -322,7 +345,7 @@
               </div>
             </article>
 
-            <article class="case" data-reveal>
+            <article class="case case--product" data-reveal>
               <p class="case__index">Life insurance · Product delivery</p>
               <div class="case__summary">
                 <h3>Turning product change into release-ready work.</h3>
@@ -332,6 +355,29 @@
                 </p>
               </div>
               <p class="case__outcome case__outcome--words"><b>One view</b><span>for release decisions</span></p>
+
+              <figure
+                class="case-visual collaboration-visual"
+                data-work-visual
+                data-collaboration-visual
+                aria-label="Product management connecting business, technology, operations and compliance"
+              >
+                <svg viewBox="0 0 640 360" aria-hidden="true">
+                  <path pathLength="1" d="M320 180 C230 180 215 82 122 82" />
+                  <path pathLength="1" d="M320 180 C410 180 425 82 518 82" />
+                  <path pathLength="1" d="M320 180 C230 180 215 278 122 278" />
+                  <path pathLength="1" d="M320 180 C410 180 425 278 518 278" />
+                </svg>
+                <div class="collaboration-visual__core">
+                  <span>Product</span>
+                  <strong>Release decision</strong>
+                </div>
+                <span class="collaboration-visual__area collaboration-visual__area--business">Business</span>
+                <span class="collaboration-visual__area collaboration-visual__area--technology">Technology</span>
+                <span class="collaboration-visual__area collaboration-visual__area--operations">Operations</span>
+                <span class="collaboration-visual__area collaboration-visual__area--compliance">Compliance</span>
+                <figcaption>One backlog turns four specialist perspectives into release-ready work.</figcaption>
+              </figure>
 
               <div class="case__depth" data-case-depth>
                 <div>
@@ -440,15 +486,32 @@
           <div class="chapter__head" data-reveal>
             <p class="chapter__index">04 · Build log</p>
             <h2 class="chapter__title" id="build-title" data-star-title>
-              A product I designed, coded and deployed.
+              Products I designed, coded and deployed.
             </h2>
           </div>
-          <p class="build-log__lede" data-reveal>
-            The Macroeconomic Dashboard started as a Power BI concept and became a responsive web
-            product for indicators, time series and multi-country comparison.
-          </p>
 
-          <article class="live-project" aria-labelledby="build-title" data-dashboard-embed data-reveal>
+          <div class="project-intro" data-reveal>
+            <p>01 · Data product</p>
+            <div>
+              <h3>Macroeconomic Dashboard</h3>
+              <p>
+                A Power BI concept rebuilt as a responsive web product for indicators, time series
+                and multi-country comparison.
+              </p>
+            </div>
+          </div>
+
+          <article
+            class="live-project"
+            aria-label="Live preview of the Macroeconomic Dashboard"
+            data-live-project
+            data-project-url="https://lozpastor.github.io/Macroeconomic-Dashboard/"
+            data-project-width="1440"
+            data-project-height="1000"
+            data-project-title="Alejandro Lozano’s live Macroeconomic Dashboard"
+            data-dashboard-embed
+            data-reveal
+          >
             <header class="live-project__bar">
               <div class="live-project__identity">
                 <span aria-hidden="true"><i></i><i></i><i></i></span>
@@ -464,16 +527,16 @@
               <span class="live-project__camera" aria-hidden="true"></span>
             </header>
 
-            <div class="live-project__stage" aria-busy="false" data-dashboard-stage>
-              <p class="visually-hidden" role="status" aria-live="polite" data-dashboard-status>
+            <div class="live-project__stage" aria-busy="false" data-project-stage data-dashboard-stage>
+              <p class="visually-hidden" role="status" aria-live="polite" data-project-status data-dashboard-status>
                 Dashboard ready to load.
               </p>
-              <div class="dashboard-loader" data-dashboard-loader hidden>
+              <div class="dashboard-loader" data-project-loader data-dashboard-loader hidden>
                 <div aria-hidden="true"><span></span><span></span><span></span></div>
                 <p aria-hidden="true">Connecting to the live product…</p>
               </div>
-              <div class="dashboard-mount" data-dashboard-mount></div>
-              <div class="dashboard-fallback" data-dashboard-fallback>
+              <div class="dashboard-mount" data-project-mount data-dashboard-mount></div>
+              <div class="dashboard-fallback" data-project-fallback data-dashboard-fallback>
                 <img
                   src="/visuals/macroeconomic-dashboard.webp"
                   width="1440"
@@ -482,7 +545,7 @@
                   decoding="async"
                   alt="The live Macroeconomic Dashboard showing 2025 GDP growth, country rankings and a world map."
                 />
-                <p class="visually-hidden" data-dashboard-fallback-copy>
+                <p class="visually-hidden" data-project-fallback-copy data-dashboard-fallback-copy>
                   A static capture is shown. Use the link above to open the live dashboard.
                 </p>
               </div>
@@ -491,6 +554,72 @@
             <footer class="live-project__meta">
               <p>Macroeconomic Dashboard · Jun 2025</p>
               <p>HTML · CSS · JavaScript · GitHub Pages</p>
+            </footer>
+          </article>
+
+          <div class="project-intro project-intro--second" data-reveal>
+            <p>02 · AI product</p>
+            <div>
+              <h3>AdoptAI</h3>
+              <p>
+                A guided product that turns business context into a prioritised AI opportunity
+                roadmap, with value and feasibility considered before investment.
+              </p>
+            </div>
+          </div>
+
+          <article
+            class="live-project live-project--adopt"
+            aria-label="Live preview of AdoptAI"
+            data-live-project
+            data-project-url="https://ai-adopt.github.io/"
+            data-project-width="1440"
+            data-project-height="780"
+            data-project-title="AdoptAI live product"
+            data-reveal
+          >
+            <header class="live-project__bar">
+              <div class="live-project__identity">
+                <span aria-hidden="true"><i></i><i></i><i></i></span>
+                <p>ai-adopt.github.io</p>
+                <strong>Live</strong>
+              </div>
+              <nav aria-label="AdoptAI controls">
+                <button type="button" data-dashboard-fullscreen hidden>Full screen</button>
+                <a href="https://ai-adopt.github.io/" target="_blank" rel="noopener noreferrer">
+                  Open in a new tab <span aria-hidden="true">↗</span>
+                </a>
+              </nav>
+              <span class="live-project__camera" aria-hidden="true"></span>
+            </header>
+
+            <div class="live-project__stage" aria-busy="false" data-project-stage>
+              <p class="visually-hidden" role="status" aria-live="polite" data-project-status>
+                AdoptAI ready to load.
+              </p>
+              <div class="dashboard-loader" data-project-loader hidden>
+                <div aria-hidden="true"><span></span><span></span><span></span></div>
+                <p aria-hidden="true">Connecting to the live product…</p>
+              </div>
+              <div class="dashboard-mount" data-project-mount></div>
+              <div class="dashboard-fallback" data-project-fallback>
+                <img
+                  src="/visuals/adopt-ai-preview.png"
+                  width="1440"
+                  height="780"
+                  loading="lazy"
+                  decoding="async"
+                  alt="AdoptAI presenting a guided assessment for prioritising business AI opportunities."
+                />
+                <p class="visually-hidden" data-project-fallback-copy>
+                  A static capture is shown. Use the link above to open AdoptAI.
+                </p>
+              </div>
+            </div>
+
+            <footer class="live-project__meta">
+              <p>AdoptAI · AI opportunity intelligence</p>
+              <p>Product strategy · UX · Web delivery</p>
             </footer>
           </article>
         </div>
@@ -537,8 +666,8 @@
             </div>
           </div>
 
-          <div class="contact" data-reveal>
-            <h3>Let’s discuss the product problem behind the roadmap.</h3>
+          <div class="contact" data-star-section data-star-anchor="edge" data-reveal>
+            <h3 data-star-title>Let’s discuss the product problem behind the roadmap.</h3>
             <div>
               <a class="button button-primary" href="mailto:lozpastor@gmail.com">Email me <span aria-hidden="true">→</span></a>
               <a class="contact-link" href="https://www.linkedin.com/in/alejandro-lozano-pastor" target="_blank" rel="noreferrer">

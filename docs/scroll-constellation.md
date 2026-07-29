@@ -13,11 +13,14 @@ The shooting star is a progressive enhancement implemented in
 - Scroll updates a target path length. One `requestAnimationFrame` loop eases the
   star to that target, updates the SVG transform and stops when it arrives.
 - Before scrolling, only the star is visible. Once launched, `strokeDashoffset`
-  draws the permanent route. The luminous trail is rebuilt from sampled points
-  on that same path, so its endpoint always coincides with the star. Returning
-  upwards reverses both elements along the shared geometry.
-- The first scroll triggers the launch flare once. Proximity to a section adds a
-  short deceleration and briefly marks its `data-star-title`.
+  draws the travelled route. The luminous trail is sampled from that same path,
+  so its endpoint always coincides with the star.
+- The drawn route is based on the current position, not the furthest position.
+  Scrolling upwards therefore retracts the route and removes the old line.
+- Reaching a chapter marks it as invoked. Its eyebrow becomes fully visible and
+  reverses to its latent state when the star travels back above it.
+- The final contact panel is a real stop. Its left edge anchors the star and its
+  portfolio-colour background animates during the arrival pulse.
 - `ResizeObserver`, `document.fonts.ready` and viewport changes rebuild the
   geometry after layout changes.
 - Under `prefers-reduced-motion`, the route is static and the star, trail, flare
@@ -37,5 +40,6 @@ The main visual controls are deliberately local:
 - Brightness and line weight: `.cosmic-*` rules and SVG gradients in
   `src/index.css` and `source.html`.
 
-To add a stop, mark the section with `data-star-section` and its heading with
-`data-star-title`. No coordinate table needs updating.
+To add a stop, mark the target with `data-star-section` and its heading with
+`data-star-title`. Add `data-star-anchor="edge"` when the star should touch the
+target border instead of following the outer rail.
