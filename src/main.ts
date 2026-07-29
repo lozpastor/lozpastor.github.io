@@ -188,7 +188,8 @@ const initDashboardEmbed = () => {
     try {
       const document = frame.contentDocument;
       if (!document) return false;
-      return Boolean(document.querySelector("header"));
+      const mapGeometry = document.querySelectorAll("svg path").length;
+      return Boolean(document.querySelector("header")) && mapGeometry > 200;
     } catch {
       return false;
     }
