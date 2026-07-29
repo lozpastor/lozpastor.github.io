@@ -344,6 +344,11 @@ export const initShootingStar = (): (() => void) => {
       }
     });
 
+    const contactStop = sectionStops.find(({ section }) => section.matches(".contact"));
+    const hasReachedContact =
+      contactStop !== undefined && currentLength >= contactStop.length - arrivalRadius;
+    guide.classList.toggle("is-star-docked", hasReachedContact);
+
     if (nearestDistance <= arrivalRadius) {
       if (nearestIndex !== activeStopIndex) {
         activeStopIndex = nearestIndex;
@@ -482,7 +487,7 @@ export const initShootingStar = (): (() => void) => {
     launchFlare.style.display = isReduced ? "none" : "";
 
     if (isReduced) {
-      guide.classList.remove("is-launched");
+      guide.classList.remove("is-launched", "is-star-docked");
       launchFlare.classList.remove("is-flaring");
       titleAnimations.forEach((animation) => animation.cancel());
       titleAnimations.clear();
@@ -536,7 +541,7 @@ export const initShootingStar = (): (() => void) => {
       title.classList.remove("is-star-pulsing");
     });
 
-    guide.classList.remove("is-ready", "is-launched", "is-reduced-motion");
+    guide.classList.remove("is-ready", "is-launched", "is-reduced-motion", "is-star-docked");
     document.documentElement.classList.remove("star-ready");
     comet.style.display = "";
     trailPath.style.display = "";

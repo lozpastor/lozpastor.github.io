@@ -64,32 +64,31 @@ const initHeroVideo = () => {
 
 const initReveals = () => {
   const elements = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
-  if (elements.length === 0 || reducedMotion.matches) return;
+  if (elements.length === 0 || reducedMotion.matches || !("IntersectionObserver" in window)) {
+    elements.forEach((element) => element.classList.add("is-visible"));
+    return;
+  }
 
   document.documentElement.classList.add("reveal-ready");
-  let animationFrame = 0;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const element = entry.target as HTMLElement;
+        element.classList.add("is-visible");
+        observer.unobserve(element);
+      });
+    },
+    { rootMargin: "0px 0px -16% 0px", threshold: 0.12 },
+  );
 
-  const render = () => {
-    animationFrame = 0;
-    const start = window.innerHeight * 0.76;
-    const end = window.innerHeight * 0.54;
-    const range = Math.max(1, start - end);
-
-    elements.forEach((element) => {
-      const bounds = element.getBoundingClientRect();
-      const progress = clamp((start - bounds.top) / range);
-      element.style.setProperty("--reveal-progress", progress.toFixed(4));
-    });
-  };
-
-  const requestRender = () => {
-    if (animationFrame) return;
-    animationFrame = window.requestAnimationFrame(render);
-  };
-
-  window.addEventListener("scroll", requestRender, { passive: true });
-  window.addEventListener("resize", requestRender, { passive: true });
-  requestRender();
+  elements.forEach((element) => {
+    if (element.getBoundingClientRect().top < window.innerHeight * 0.76) {
+      element.classList.add("is-visible");
+    } else {
+      observer.observe(element);
+    }
+  });
 };
 
 const initCareerTrajectory = () => {
@@ -97,33 +96,22 @@ const initCareerTrajectory = () => {
   const steps = Array.from(
     trajectory?.querySelectorAll<HTMLElement>("[data-trajectory-step]") ?? [],
   );
-  if (!trajectory || steps.length === 0 || reducedMotion.matches) return;
+  if (!trajectory || steps.length === 0) return;
+  if (reducedMotion.matches || !("IntersectionObserver" in window)) {
+    trajectory.classList.add("is-complete");
+    return;
+  }
 
-  trajectory.classList.add("is-scroll-driven");
-  let animationFrame = 0;
-
-  const render = () => {
-    animationFrame = 0;
-    const bounds = trajectory.getBoundingClientRect();
-    const travel = Math.max(window.innerHeight * 0.82, bounds.height * 1.7);
-    const progress = clamp((window.innerHeight * 0.72 - bounds.top) / travel);
-
-    trajectory.style.setProperty("--trajectory-progress", progress.toFixed(4));
-    steps.forEach((step, index) => {
-      const start = index * 0.31;
-      const stepProgress = clamp((progress - start) / 0.24);
-      step.style.setProperty("--step-progress", stepProgress.toFixed(4));
-    });
-  };
-
-  const requestRender = () => {
-    if (animationFrame) return;
-    animationFrame = window.requestAnimationFrame(render);
-  };
-
-  window.addEventListener("scroll", requestRender, { passive: true });
-  window.addEventListener("resize", requestRender, { passive: true });
-  requestRender();
+  trajectory.classList.add("is-sequenced");
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (!entry?.isIntersecting) return;
+      trajectory.classList.add("is-complete");
+      observer.disconnect();
+    },
+    { rootMargin: "0px 0px -12% 0px", threshold: 0.3 },
+  );
+  observer.observe(trajectory);
 };
 
 type CanvasPoint = {
@@ -143,7 +131,6 @@ const initReconciliation = () => {
 
   const pointCount = 100;
   let points: CanvasPoint[] = [];
-  let animationFrame = 0;
   let width = 1;
   let height = 1;
 
@@ -243,64 +230,87 @@ const initReconciliation = () => {
     });
   };
 
-  const render = () => {
-    animationFrame = 0;
-    if (reducedMotion.matches) {
-      draw(1);
-      return;
-    }
-    const bounds = figure.getBoundingClientRect();
-    const travel = Math.max(window.innerHeight * 0.68, bounds.height * 1.32);
-    const progress = clamp((window.innerHeight * 0.78 - bounds.top) / travel);
+  let progress = reducedMotion.matches ? 1 : 0;
+  let started = false;
+  let startedAt = 0;
+
+  const render = (time: number) => {
+    if (!startedAt) startedAt = time;
+    progress = clamp((time - startedAt) / 1900);
     draw(progress);
+    if (progress < 1) window.requestAnimationFrame(render);
+  };
+
+  const startAnimation = () => {
+    if (started || reducedMotion.matches) return;
+    started = true;
+    window.requestAnimationFrame(render);
   };
 
   const resizeObserver = new ResizeObserver(() => {
     rebuild();
-    render();
+    draw(progress);
   });
   resizeObserver.observe(canvas);
   rebuild();
-  const requestRender = () => {
-    if (animationFrame) return;
-    animationFrame = window.requestAnimationFrame(render);
-  };
+  draw(progress);
 
-  window.addEventListener("scroll", requestRender, { passive: true });
-  window.addEventListener("resize", requestRender, { passive: true });
-  requestRender();
+  if (reducedMotion.matches || !("IntersectionObserver" in window)) {
+    draw(1);
+  } else {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        observer.disconnect();
+        startAnimation();
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.32 },
+    );
+    observer.observe(figure);
+  }
 };
 
 const initWorkVisuals = () => {
   const visuals = Array.from(document.querySelectorAll<HTMLElement>("[data-work-visual]"));
   if (visuals.length === 0 || reducedMotion.matches) return;
-  let animationFrame = 0;
 
-  const render = () => {
-    animationFrame = 0;
-    visuals.forEach((visual) => {
-      const bounds = visual.getBoundingClientRect();
-      const travel = Math.max(window.innerHeight * 0.62, bounds.height * 1.28);
-      const progress = clamp((window.innerHeight * 0.78 - bounds.top) / travel);
-      visual.style.setProperty("--visual-progress", progress.toFixed(4));
+  const updateVisual = (visual: HTMLElement, progress: number) => {
+    visual.style.setProperty("--visual-progress", progress.toFixed(4));
+    if (!visual.hasAttribute("data-performance-visual")) return;
 
-      if (visual.hasAttribute("data-performance-visual")) {
-        const runtime = 1 - progress * 0.5;
-        visual.style.setProperty("--runtime-width", `${(runtime * 100).toFixed(2)}%`);
-        const output = visual.querySelector<HTMLElement>("[data-runtime-output]");
-        if (output) output.textContent = `${runtime.toFixed(2)}×`;
-      }
-    });
+    const runtime = 1 - progress * 0.5;
+    visual.style.setProperty("--runtime-width", `${(runtime * 100).toFixed(2)}%`);
+    const output = visual.querySelector<HTMLElement>("[data-runtime-output]");
+    if (output) output.textContent = `${runtime.toFixed(2)}×`;
   };
 
-  const requestRender = () => {
-    if (animationFrame) return;
-    animationFrame = window.requestAnimationFrame(render);
+  const animateVisual = (visual: HTMLElement) => {
+    let startedAt = 0;
+    const render = (time: number) => {
+      if (!startedAt) startedAt = time;
+      const progress = clamp((time - startedAt) / 1450);
+      updateVisual(visual, progress);
+      if (progress < 1) window.requestAnimationFrame(render);
+    };
+    window.requestAnimationFrame(render);
   };
 
-  window.addEventListener("scroll", requestRender, { passive: true });
-  window.addEventListener("resize", requestRender, { passive: true });
-  requestRender();
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const visual = entry.target as HTMLElement;
+        observer.unobserve(visual);
+        animateVisual(visual);
+      });
+    },
+    { rootMargin: "0px 0px -12% 0px", threshold: 0.32 },
+  );
+
+  visuals.forEach((visual) => {
+    updateVisual(visual, 0);
+    observer.observe(visual);
+  });
 };
 
 const initDashboardEmbed = () => {
@@ -601,6 +611,95 @@ const initAdoptEmbed = () => {
   }
 };
 
+type PointerTrailPoint = {
+  x: number;
+  y: number;
+  life: number;
+};
+
+const initContactInteraction = () => {
+  const contact = document.querySelector<HTMLElement>(".contact");
+  const canvas = contact?.querySelector<HTMLCanvasElement>("[data-contact-trail]");
+  const context = canvas?.getContext("2d");
+  if (!contact || !canvas || !context || reducedMotion.matches) return;
+
+  let width = 1;
+  let height = 1;
+  let frameId = 0;
+  let lastPoint: PointerTrailPoint | null = null;
+  let points: PointerTrailPoint[] = [];
+
+  const resize = () => {
+    const bounds = contact.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = Math.max(1, bounds.width);
+    height = Math.max(1, bounds.height);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+
+  const render = () => {
+    frameId = 0;
+    context.clearRect(0, 0, width, height);
+    points = points
+      .map((point) => ({ ...point, life: point.life - 0.028 }))
+      .filter((point) => point.life > 0);
+
+    points.forEach((point, index) => {
+      const previous = points[index - 1];
+      if (previous) {
+        context.beginPath();
+        context.moveTo(previous.x, previous.y);
+        context.lineTo(point.x, point.y);
+        context.strokeStyle = `rgba(126, 230, 209, ${point.life * 0.3})`;
+        context.lineWidth = 1.2 + point.life * 1.4;
+        context.stroke();
+      }
+
+      context.beginPath();
+      context.fillStyle = `rgba(226, 255, 249, ${point.life * 0.42})`;
+      context.arc(point.x, point.y, 1.2 + point.life * 2.2, 0, Math.PI * 2);
+      context.fill();
+    });
+
+    if (points.length > 0) frameId = window.requestAnimationFrame(render);
+  };
+
+  const requestRender = () => {
+    if (!frameId) frameId = window.requestAnimationFrame(render);
+  };
+
+  contact.addEventListener("pointermove", (event) => {
+    const bounds = contact.getBoundingClientRect();
+    const point: PointerTrailPoint = {
+      x: event.clientX - bounds.left,
+      y: event.clientY - bounds.top,
+      life: 1,
+    };
+    contact.style.setProperty("--pointer-x", `${point.x.toFixed(1)}px`);
+    contact.style.setProperty("--pointer-y", `${point.y.toFixed(1)}px`);
+    contact.classList.add("is-pointer-active");
+
+    if (!lastPoint || Math.hypot(point.x - lastPoint.x, point.y - lastPoint.y) > 5) {
+      points.push(point);
+      if (points.length > 42) points.shift();
+      lastPoint = point;
+    }
+    requestRender();
+  });
+
+  contact.addEventListener("pointerleave", () => {
+    contact.classList.remove("is-pointer-active");
+    lastPoint = null;
+    requestRender();
+  });
+
+  const resizeObserver = new ResizeObserver(resize);
+  resizeObserver.observe(contact);
+  resize();
+};
+
 const year = document.querySelector<HTMLElement>("[data-current-year]");
 if (year) year.textContent = String(new Date().getFullYear());
 
@@ -611,4 +710,5 @@ initReconciliation();
 initWorkVisuals();
 initDashboardEmbed();
 initAdoptEmbed();
+initContactInteraction();
 initShootingStar();

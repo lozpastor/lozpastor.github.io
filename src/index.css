@@ -439,12 +439,23 @@ main {
 }
 
 /* Thesis */
+.chapter--thesis {
+  min-height: 100svh;
+  padding: clamp(3.5rem, 6vh, 5rem) 0;
+  display: grid;
+  align-items: center;
+}
+
+.chapter--thesis .chapter__title {
+  font-size: clamp(2.8rem, 5vw, 5.2rem);
+}
+
 .thesis__body {
-  margin-top: clamp(4rem, 8vw, 7rem);
+  margin-top: clamp(2rem, 4vh, 3.25rem);
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--column-gap);
-  row-gap: clamp(4rem, 8vw, 7rem);
+  row-gap: clamp(1.5rem, 3vh, 2.5rem);
   align-items: start;
 }
 
@@ -458,8 +469,8 @@ main {
 .thesis__text > p {
   margin: 0;
   color: var(--mist);
-  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
-  line-height: 1.75;
+  font-size: clamp(0.95rem, 1.2vw, 1.08rem);
+  line-height: 1.62;
 }
 
 .thesis__text > p strong {
@@ -472,7 +483,7 @@ main {
   grid-column: 1 / -1;
   position: relative;
   margin: 0;
-  padding: clamp(2.5rem, 5vw, 4.5rem) 0 0;
+  padding: clamp(1.5rem, 3vh, 2.25rem) 0 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(3rem, 7vw, 7rem);
@@ -491,22 +502,26 @@ main {
   box-shadow: 0 0 12px rgba(126, 230, 209, 0.18);
   transform-origin: left center;
   transform: scaleX(var(--trajectory-progress));
+  transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .career-path li {
   --step-progress: 1;
   position: relative;
-  min-height: 14rem;
-  padding: 1.4rem 0 1.5rem;
+  min-height: clamp(9.5rem, 20vh, 11.25rem);
+  padding: 1rem 0 1.25rem;
   color: var(--mist);
   opacity: var(--step-progress);
   transform: translate3d(calc((1 - var(--step-progress)) * 22px), 0, 0);
+  transition:
+    opacity 540ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 540ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .career-path li:not(:last-child)::after {
   content: "→";
   position: absolute;
-  top: 4.5rem;
+  top: 3.75rem;
   right: calc(clamp(3rem, 7vw, 7rem) * -0.68);
   color: var(--telemetry);
   font-family: var(--font-data);
@@ -514,6 +529,35 @@ main {
   font-weight: 300;
   opacity: clamp(0, calc((var(--trajectory-progress) - 0.23) * 4), 1);
   transform: translateX(calc((1 - var(--step-progress)) * -12px));
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.career-path.is-sequenced {
+  --trajectory-progress: 0;
+}
+
+.career-path.is-sequenced li {
+  --step-progress: 0;
+}
+
+.career-path.is-sequenced.is-complete {
+  --trajectory-progress: 1;
+}
+
+.career-path.is-sequenced.is-complete li {
+  --step-progress: 1;
+}
+
+.career-path.is-sequenced li:nth-child(1) {
+  transition-delay: 120ms;
+}
+
+.career-path.is-sequenced li:nth-child(2) {
+  transition-delay: 460ms;
+}
+
+.career-path.is-sequenced li:nth-child(3) {
+  transition-delay: 800ms;
 }
 
 .career-path__node {
@@ -591,16 +635,18 @@ main {
 
 /* Selected work */
 .case-list {
-  margin-top: clamp(4rem, 8vw, 7rem);
+  margin-top: clamp(3rem, 6vh, 5rem);
   border-top: 1px solid var(--hairline);
 }
 
 .case {
-  padding: clamp(3rem, 6vw, 5rem) 0;
+  min-height: min(100svh, 900px);
+  padding: clamp(2rem, 4vh, 3.5rem) 0;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--column-gap);
-  row-gap: clamp(2.5rem, 5vw, 4.5rem);
+  row-gap: clamp(1.5rem, 3vh, 2.6rem);
+  align-content: center;
   align-items: start;
   border-bottom: 1px solid var(--hairline);
 }
@@ -681,7 +727,7 @@ main {
 
 .reconcile canvas {
   width: 100%;
-  height: clamp(300px, 31vw, 430px);
+  height: clamp(250px, 36svh, 360px);
 }
 
 .reconcile figcaption {
@@ -750,7 +796,7 @@ main {
 .performance-visual,
 .collaboration-visual {
   position: relative;
-  min-height: clamp(310px, 30vw, 410px);
+  min-height: clamp(270px, 36svh, 360px);
   overflow: hidden;
   border-block: 1px solid var(--hairline);
 }
@@ -1020,8 +1066,19 @@ main {
 }
 
 /* Live build: the actual shipped products are the visuals. */
+.project-scene {
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  gap: clamp(1.5rem, 3vh, 2.25rem);
+}
+
+.project-scene + .project-scene {
+  border-top: 1px solid var(--hairline);
+}
+
 .project-intro {
-  margin-top: clamp(4rem, 8vw, 7rem);
+  margin-top: 0;
   display: grid;
   grid-template-columns: 2fr 7fr 3fr;
   column-gap: var(--column-gap);
@@ -1066,8 +1123,8 @@ main {
 
 .live-project {
   position: relative;
-  width: min(100%, 860px);
-  margin: clamp(3rem, 6vw, 5rem) auto 2.5rem;
+  width: min(100%, 780px, calc((100svh - 15rem) * 1.44));
+  margin: 0 auto 1.5rem;
   padding: 0.7rem;
   border: 1px solid rgba(167, 184, 186, 0.32);
   border-radius: 1.15rem;
@@ -1402,6 +1459,8 @@ main {
 }
 
 .contact {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -1420,15 +1479,47 @@ main {
 .contact::before {
   content: "";
   position: absolute;
-  z-index: -1;
+  z-index: 0;
   inset: -45%;
   background:
     radial-gradient(circle at 20% 40%, rgba(126, 230, 209, 0.24), transparent 32%),
     radial-gradient(circle at 72% 58%, rgba(45, 95, 112, 0.48), transparent 38%),
     linear-gradient(115deg, #061a24, #163642 48%, #0a222c);
   background-size: 140% 140%;
-  opacity: 0.22;
+  opacity: 0.34;
   transform: translate3d(-8%, 0, 0);
+  animation: contact-ambient 13s ease-in-out infinite;
+  will-change: transform, background-position;
+}
+
+.contact::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: radial-gradient(
+    circle 180px at var(--pointer-x) var(--pointer-y),
+    rgba(126, 230, 209, 0.2),
+    rgba(45, 95, 112, 0.09) 34%,
+    transparent 72%
+  );
+  opacity: 0;
+  transition: opacity 260ms ease;
+  pointer-events: none;
+}
+
+.contact.is-pointer-active::after {
+  opacity: 1;
+}
+
+.contact__pointer-trail {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
 }
 
 .contact.is-star-active {
@@ -1438,7 +1529,12 @@ main {
 
 .contact.is-star-active::before {
   opacity: 0.74;
-  animation: contact-signal 1800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.contact h3,
+.contact > div {
+  position: relative;
+  z-index: 2;
 }
 
 .contact h3 {
@@ -1495,10 +1591,20 @@ main {
 
 /* Scroll-built entrances. Static HTML remains visible before JS. */
 .reveal-ready [data-reveal] {
-  opacity: var(--reveal-progress, 1);
-  filter: blur(calc((1 - var(--reveal-progress, 1)) * 3px));
-  transform: translate3d(0, calc((1 - var(--reveal-progress, 1)) * 26px), 0);
+  opacity: 0;
+  filter: blur(3px);
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 680ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 680ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 680ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, filter, transform;
+}
+
+.reveal-ready [data-reveal].is-visible {
+  opacity: 1;
+  filter: none;
+  transform: none;
 }
 
 /* Scroll constellation */
@@ -1543,6 +1649,7 @@ main {
   stroke-width: 2.1;
   opacity: 0;
   filter: drop-shadow(0 0 4px rgba(126, 230, 209, 0.38));
+  transition: opacity 140ms ease;
 }
 
 .cosmic-star,
@@ -1550,6 +1657,10 @@ main {
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
+}
+
+.cosmic-star {
+  transition: opacity 140ms ease;
 }
 
 .cosmic-guide.is-ready .cosmic-star {
@@ -1563,6 +1674,11 @@ main {
 
 .cosmic-guide.is-ready:not(.is-launched) .cosmic-star {
   animation: star-idle 2.4s ease-in-out infinite;
+}
+
+.cosmic-guide.is-star-docked .cosmic-star,
+.cosmic-guide.is-star-docked .cosmic-path-trail {
+  opacity: 0;
 }
 
 .cosmic-star circle:first-of-type,
@@ -1644,18 +1760,18 @@ main {
   }
 }
 
-@keyframes contact-signal {
+@keyframes contact-ambient {
   0% {
-    background-position: 0% 50%;
-    transform: translate3d(-8%, 0, 0) scale(1);
+    background-position: 0% 48%;
+    transform: translate3d(-8%, 0, 0) scale(1.02);
   }
-  48% {
+  50% {
     background-position: 100% 45%;
-    transform: translate3d(5%, -2%, 0) scale(1.04);
+    transform: translate3d(6%, -3%, 0) scale(1.06);
   }
   100% {
-    background-position: 35% 55%;
-    transform: translate3d(0, 0, 0) scale(1);
+    background-position: 0% 48%;
+    transform: translate3d(-8%, 0, 0) scale(1.02);
   }
 }
 
@@ -1754,6 +1870,12 @@ main {
     row-gap: 1.25rem;
   }
 
+  .chapter--thesis {
+    min-height: 0;
+    padding: var(--section-space) 0;
+    display: block;
+  }
+
   .chapter__index {
     margin: 0;
   }
@@ -1842,8 +1964,11 @@ main {
   }
 
   .case {
+    min-height: 0;
+    padding: clamp(3rem, 12vw, 4.5rem) 0;
     grid-template-columns: 1fr;
     row-gap: 1.5rem;
+    align-content: start;
   }
 
   .case__index,
@@ -1907,6 +2032,12 @@ main {
     margin-inline: auto;
     padding: 0.45rem;
     border-radius: 0.85rem;
+  }
+
+  .project-scene {
+    min-height: 0;
+    padding: 5rem 0;
+    gap: 2rem;
   }
 
   .live-project::before {
@@ -2029,5 +2160,13 @@ main {
 
   .contact.is-star-active::before {
     animation: none;
+  }
+
+  .contact::before {
+    animation: none;
+  }
+
+  .contact__pointer-trail {
+    display: none;
   }
 }
