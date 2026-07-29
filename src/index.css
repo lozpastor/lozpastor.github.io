@@ -488,21 +488,11 @@ main {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(3rem, 7vw, 7rem);
   list-style: none;
-  border-top: 1px solid var(--hairline);
+  border-top: 0;
 }
 
 .career-path::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--telemetry);
-  box-shadow: 0 0 12px rgba(126, 230, 209, 0.18);
-  transform-origin: left center;
-  transform: scaleX(var(--trajectory-progress));
-  transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+  display: none;
 }
 
 .career-path li {
@@ -598,7 +588,7 @@ main {
 
 .career-path li.is-current {
   padding-top: 1.4rem;
-  border-top: 2px solid var(--telemetry);
+  border-top: 0;
   transform: translate3d(calc((1 - var(--step-progress)) * 22px), -2px, 0);
 }
 
@@ -1074,6 +1064,11 @@ main {
 }
 
 .project-scene + .project-scene {
+  border-top: 1px solid var(--hairline);
+}
+
+.project-scene:first-of-type {
+  margin-top: clamp(4rem, 8vw, 7rem);
   border-top: 1px solid var(--hairline);
 }
 
@@ -1607,102 +1602,234 @@ main {
   transform: none;
 }
 
-/* Scroll constellation */
-.cosmic-guide {
-  position: absolute;
-  inset: 0 0 auto;
-  z-index: 8;
-  width: 100%;
-  height: 0;
-  overflow: visible;
+/* Section progress: a compact constellation after the hero. */
+.journey-nav {
+  --journey-star-y: 1.8rem;
+  --journey-progress-height: 0px;
+  --departure-progress: 0;
+  position: fixed;
+  top: 42%;
+  left: clamp(0.5rem, 1vw, 1rem);
+  z-index: 24;
+  width: 2.75rem;
+  opacity: 0;
   pointer-events: none;
+  transform: translate3d(-12px, -50%, 0);
+  transition: opacity 220ms ease, transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.cosmic-guide > svg {
+.journey-nav.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, -50%, 0);
+}
+
+.journey-nav.is-docked {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(-10px, -50%, 0);
+}
+
+.journey-nav__panel {
+  position: relative;
+  width: 2.75rem;
+  padding: 0.7rem 0.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(167, 184, 186, 0.2);
+  border-radius: 0.85rem;
+  background: rgba(5, 21, 29, 0.96);
+  opacity: calc(1 - var(--departure-progress));
+  transform: translateX(calc(var(--departure-progress) * -8px));
+  transition:
+    width 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms ease,
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.journey-nav:hover .journey-nav__panel,
+.journey-nav:focus-within .journey-nav__panel {
+  width: 13.25rem;
+  border-color: rgba(167, 184, 186, 0.34);
+}
+
+.journey-nav ol {
+  position: relative;
+  z-index: 2;
+  width: 12.15rem;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+  list-style: none;
+}
+
+.journey-nav a {
+  height: 2.2rem;
+  padding: 0 0.4rem;
+  display: grid;
+  grid-template-columns: 1.05rem minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: center;
+  border-radius: 0.55rem;
+  color: var(--faint);
+  font-family: var(--font-data);
+  font-size: 0.68rem;
+  letter-spacing: 0.025em;
+  white-space: nowrap;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.journey-nav a:hover,
+.journey-nav a:focus-visible,
+.journey-nav a.is-active {
+  color: var(--salt);
+  background: rgba(126, 230, 209, 0.075);
+}
+
+.journey-nav a:focus-visible {
+  outline: 1px solid var(--telemetry);
+  outline-offset: -1px;
+}
+
+.journey-nav__dot {
+  width: 5px;
+  height: 5px;
+  justify-self: center;
+  border: 1px solid rgba(167, 184, 186, 0.64);
+  border-radius: 50%;
+  background: var(--abyss);
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.journey-nav a.is-active .journey-nav__dot {
+  border-color: var(--telemetry);
+  background: var(--telemetry);
+}
+
+.journey-nav__label {
+  overflow: hidden;
+  opacity: 0;
+  text-overflow: ellipsis;
+  transform: translateX(-6px);
+  transition: opacity 140ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.journey-nav:hover .journey-nav__label,
+.journey-nav:focus-within .journey-nav__label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.journey-nav__label small {
+  margin-right: 0.55rem;
+  color: var(--telemetry);
+  font: inherit;
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+}
+
+.journey-nav__rail {
+  position: absolute;
+  z-index: 1;
+  top: 1.8rem;
+  bottom: 1.8rem;
+  left: 1.03rem;
+  width: 1px;
+  overflow: hidden;
+  background: rgba(167, 184, 186, 0.2);
+}
+
+.journey-nav__rail > span {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
-  max-width: none;
-  overflow: visible;
+  height: var(--journey-progress-height);
+  background: var(--telemetry);
+  box-shadow: 0 0 8px rgba(126, 230, 209, 0.24);
 }
 
-.cosmic-path {
+.journey-nav__star {
+  position: absolute;
+  z-index: 4;
+  top: var(--journey-star-y);
+  left: 1.03rem;
+  width: 14px;
+  height: 14px;
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  transition:
+    top 160ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 100ms ease;
+}
+
+.journey-nav__star::before,
+.journey-nav__star::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #f5fffc;
+  clip-path: polygon(50% 0, 57% 42%, 100% 50%, 57% 58%, 50% 100%, 43% 58%, 0 50%, 43% 42%);
+}
+
+.journey-nav__star::before {
+  filter: blur(4px);
+  opacity: 0.58;
+  transform: scale(1.6);
+}
+
+.journey-nav__star::after {
+  transform: scale(0.72);
+}
+
+.journey-nav.is-departing .journey-nav__star {
+  opacity: 0;
+}
+
+.journey-fall {
+  position: fixed;
+  inset: 0;
+  z-index: 23;
+  width: 100vw;
+  height: 100vh;
+  overflow: visible;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.journey-fall.is-visible {
+  opacity: 1;
+}
+
+.journey-fall__path,
+.journey-fall__trail {
   fill: none;
+  stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
 
-.cosmic-path-base {
-  stroke: transparent;
-  stroke-width: 1;
+.journey-fall__path {
+  stroke: rgba(126, 230, 209, 0.5);
+  stroke-width: 1.2;
+  filter: drop-shadow(0 0 3px rgba(126, 230, 209, 0.24));
 }
 
-.cosmic-path-progress {
-  stroke: url("#cosmic-line");
-  stroke-linecap: round;
-  stroke-width: 1.25;
-  opacity: 0;
-  transition: opacity 180ms ease;
+.journey-fall__trail {
+  stroke: rgba(242, 255, 251, 0.88);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 5px rgba(126, 230, 209, 0.38));
 }
 
-.cosmic-path-trail {
-  stroke: rgba(225, 255, 248, 0.82);
-  stroke-linecap: round;
-  stroke-width: 2.1;
-  opacity: 0;
-  filter: drop-shadow(0 0 4px rgba(126, 230, 209, 0.38));
-  transition: opacity 140ms ease;
-}
-
-.cosmic-star,
-.cosmic-launch-flare {
-  opacity: 0;
+.journey-fall__star {
   transform-box: fill-box;
   transform-origin: center;
 }
 
-.cosmic-star {
-  transition: opacity 140ms ease;
-}
-
-.cosmic-guide.is-ready .cosmic-star {
-  opacity: 1;
-}
-
-.cosmic-guide.is-launched .cosmic-path-progress,
-.cosmic-guide.is-launched .cosmic-path-trail {
-  opacity: 1;
-}
-
-.cosmic-guide.is-ready:not(.is-launched) .cosmic-star {
-  animation: star-idle 2.4s ease-in-out infinite;
-}
-
-.cosmic-guide.is-star-docked .cosmic-star,
-.cosmic-guide.is-star-docked .cosmic-path-trail {
-  opacity: 0;
-}
-
-.cosmic-star circle:first-of-type,
-.cosmic-star-glint {
+.journey-fall__star path,
+.journey-fall__star circle {
   fill: #f5fffc;
-}
-
-.cosmic-star-core {
-  fill: #ffffff;
-}
-
-.cosmic-star-glint {
-  opacity: 0.72;
-}
-
-.cosmic-launch-flare line {
-  stroke: rgba(242, 255, 251, 0.42);
-  stroke-width: 0.8;
-}
-
-.cosmic-launch-flare.is-flaring > * {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: launch-flare-scale 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes breathe {
@@ -1908,18 +2035,6 @@ main {
     border-top: 0;
   }
 
-  .career-path::after {
-    top: 0;
-    left: 1.05rem;
-    width: 1px;
-    height: 100%;
-    transform-origin: center top;
-  }
-
-  .career-path::after {
-    transform: scaleY(var(--trajectory-progress));
-  }
-
   .career-path li,
   .career-path li.is-current {
     min-height: 12rem;
@@ -1942,7 +2057,7 @@ main {
   .career-path li.is-current {
     min-height: 13rem;
     padding: 1rem 0 2rem;
-    border-top: 2px solid var(--telemetry);
+    border-top: 0;
   }
 
   .career-path__node {
@@ -2038,6 +2153,15 @@ main {
     min-height: 0;
     padding: 5rem 0;
     gap: 2rem;
+  }
+
+  .project-scene:first-of-type {
+    margin-top: 3rem;
+  }
+
+  .journey-nav,
+  .journey-fall {
+    display: none;
   }
 
   .live-project::before {
@@ -2148,14 +2272,14 @@ main {
     transform: none;
   }
 
-  .cosmic-path-progress {
-    opacity: 0.35;
+  .journey-fall {
+    display: none;
   }
 
-  .cosmic-path-trail,
-  .cosmic-star,
-  .cosmic-launch-flare {
-    display: none;
+  .journey-nav,
+  .journey-nav__panel,
+  .journey-nav__star {
+    transition: none;
   }
 
   .contact.is-star-active::before {

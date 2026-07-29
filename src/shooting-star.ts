@@ -1,16 +1,17 @@
-type Point = {
-  x: number;
-  y: number;
-};
-
-type SectionStop = {
+type JourneyStop = {
+  link: HTMLAnchorElement;
+  dot: HTMLElement;
   section: HTMLElement;
-  title: HTMLElement;
-  length: number;
+  title: HTMLElement | null;
+  scrollAnchor: number;
+  markerY: number;
 };
 
-const clamp = (value: number, minimum: number, maximum: number): number =>
+const clamp = (value: number, minimum = 0, maximum = 1): number =>
   Math.min(maximum, Math.max(minimum, value));
+
+const interpolate = (from: number, to: number, progress: number): number =>
+  from + (to - from) * progress;
 
 const meaningfulTextRect = (element: HTMLElement): DOMRect => {
   const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
@@ -26,10 +27,7 @@ const meaningfulTextRect = (element: HTMLElement): DOMRect => {
       range.setEnd(node, Math.min(value.length, firstCharacter + 1));
       const rect = range.getBoundingClientRect();
       range.detach();
-
-      if (rect.width > 0 || rect.height > 0) {
-        return rect;
-      }
+      if (rect.width > 0 || rect.height > 0) return rect;
     }
 
     node = walker.nextNode();
@@ -38,513 +36,269 @@ const meaningfulTextRect = (element: HTMLElement): DOMRect => {
   return element.getBoundingClientRect();
 };
 
-const createBezierPath = (points: Point[]): string => {
-  if (points.length === 0) {
-    return "";
-  }
-
-  return points.slice(1).reduce((path, point, index) => {
-    const previous = points[index];
-    const verticalDistance = Math.max(1, point.y - previous.y);
-    const handle = clamp(verticalDistance * 0.42, 48, 260);
-    const firstControl: Point = {
-      x: previous.x,
-      y: previous.y + handle,
-    };
-    const secondControl: Point = {
-      x: point.x,
-      y: point.y - handle,
-    };
-
-    return `${path} C ${firstControl.x.toFixed(2)} ${firstControl.y.toFixed(2)}, ${secondControl.x.toFixed(2)} ${secondControl.y.toFixed(2)}, ${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
-  }, `M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`);
-};
-
 /**
- * Connects the hero to the page chapters with one scroll-driven shooting star.
- * The returned function removes every observer, listener and pending animation.
+ * Turns the former page-length shooting star into a compact section navigator.
+ * The star tracks the current section, then leaves the rail only for the final CTA.
  */
 export const initShootingStar = (): (() => void) => {
-  const guide = document.querySelector<HTMLElement>("[data-scroll-star]");
-  const svg = guide?.querySelector<SVGSVGElement>("[data-star-svg]");
-  const basePath = guide?.querySelector<SVGPathElement>("[data-star-base]");
-  const progressPath = guide?.querySelector<SVGPathElement>("[data-star-progress]");
-  const trailPath = guide?.querySelector<SVGPathElement>("[data-star-trail]");
-  const launchFlare = guide?.querySelector<SVGGElement>("[data-star-launch]");
-  const comet = guide?.querySelector<SVGGElement>("[data-star-comet]");
-  const hero = document.querySelector<HTMLElement>("#hero");
-  const heroTitle = document.querySelector<HTMLElement>("#hero-title");
-  const shell = document.querySelector<HTMLElement>(".shell");
-  const sectionElements = Array.from(
-    document.querySelectorAll<HTMLElement>("[data-star-section]"),
+  const nav = document.querySelector<HTMLElement>("[data-scroll-star]");
+  const panel = nav?.querySelector<HTMLElement>(".journey-nav__panel");
+  const star = nav?.querySelector<HTMLElement>("[data-journey-star]");
+  const progressLine = nav?.querySelector<HTMLElement>("[data-journey-progress]");
+  const links = Array.from(
+    nav?.querySelectorAll<HTMLAnchorElement>("[data-journey-link]") ?? [],
   );
+  const hero = document.querySelector<HTMLElement>("#hero");
+  const contact = document.querySelector<HTMLElement>(".contact");
+  const contactTitle = contact?.querySelector<HTMLElement>("[data-star-title]");
+  const fallSvg = document.querySelector<SVGSVGElement>("[data-journey-fall]");
+  const fallPath = fallSvg?.querySelector<SVGPathElement>("[data-journey-fall-path]");
+  const fallTrail = fallSvg?.querySelector<SVGPathElement>("[data-journey-fall-trail]");
+  const fallStar = fallSvg?.querySelector<SVGGElement>("[data-journey-fall-star]");
 
   if (
-    !guide ||
-    !svg ||
-    !basePath ||
-    !progressPath ||
-    !trailPath ||
-    !launchFlare ||
-    !comet ||
+    !nav ||
+    !panel ||
+    !star ||
+    !progressLine ||
+    links.length === 0 ||
     !hero ||
-    !heroTitle ||
-    !shell ||
-    sectionElements.length === 0
+    !contact ||
+    !contactTitle ||
+    !fallSvg ||
+    !fallPath ||
+    !fallTrail ||
+    !fallStar
   ) {
     return () => undefined;
   }
 
-  const geometryPath = basePath;
-  const drawnPath = progressPath;
-  const movingTrail = trailPath;
-  const movingComet = comet;
-  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const titleTimers = new Set<number>();
-  const titleAnimations = new Set<Animation>();
-
-  let destroyed = false;
-  let geometryDirty = true;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const compactScreen = window.matchMedia("(max-width: 760px)");
+  let stops: JourneyStop[] = [];
   let frameId: number | null = null;
-  let previousFrameTime = performance.now();
-  let pageHeight = Math.max(document.documentElement.scrollHeight, window.innerHeight);
-  let totalLength = 1;
-  let currentLength = 0;
-  let targetLength = 0;
-  let hasPositionedComet = false;
-  let hasLaunched = false;
-  let latestScrollY = window.scrollY;
-  let lastMovementDirection = 1;
-  let activeStopIndex = -1;
-  let startPoint: Point = { x: 0, y: 0 };
-  let sectionStops: SectionStop[] = [];
+  let geometryDirty = true;
+  let destroyed = false;
 
-  const setPathGeometry = (pathData: string): void => {
-    basePath.setAttribute("d", pathData);
-    progressPath.setAttribute("d", pathData);
-    trailPath.setAttribute("d", "");
-  };
+  const readStops = (): JourneyStop[] =>
+    links.flatMap((link) => {
+      const targetId = link.hash.slice(1);
+      const section = targetId ? document.getElementById(targetId) : null;
+      const dot = link.querySelector<HTMLElement>(".journey-nav__dot");
+      if (!section || !dot) return [];
 
-  const findLengthAtY = (targetY: number): number => {
-    let low = 0;
-    let high = totalLength;
+      const sectionRect = section.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      const dotRect = dot.getBoundingClientRect();
 
-    for (let index = 0; index < 22; index += 1) {
-      const middle = (low + high) / 2;
-      const point = basePath.getPointAtLength(middle);
-
-      if (point.y < targetY) {
-        low = middle;
-      } else {
-        high = middle;
-      }
-    }
-
-    return (low + high) / 2;
-  };
-
-  const railPosition = (): number => {
-    const shellRect = shell.getBoundingClientRect();
-    const outerGap = clamp(shellRect.left * 0.34, 10, 30);
-    return Math.max(10, shellRect.left - outerGap);
-  };
-
-  const buildGeometry = (): void => {
-    const oldTotalLength = totalLength;
-    const oldCurrentRatio = oldTotalLength > 0 ? currentLength / oldTotalLength : 0;
-    const titleRect = meaningfulTextRect(heroTitle);
-    const heroRect = hero.getBoundingClientRect();
-    const documentTop = window.scrollY;
-    const documentHeight = Math.max(
-      document.documentElement.scrollHeight,
-      document.body.scrollHeight,
-      window.innerHeight,
-    );
-    const compact = window.innerWidth < 720;
-    const railX = railPosition();
-    const startOffset = compact ? 10 : 28;
-
-    pageHeight = documentHeight;
-    startPoint = {
-      x: clamp(titleRect.left - startOffset, compact ? 12 : 22, window.innerWidth - 18),
-      y: titleRect.top + documentTop - (compact ? 14 : 18),
-    };
-
-    const heroBottom = heroRect.bottom + documentTop;
-    const launchExitY = Math.max(startPoint.y + 120, heroBottom - (compact ? 12 : 28));
-    const shellLeft = shell.getBoundingClientRect().left;
-    const safeRightEdge = Math.max(10, shellLeft - (compact ? 6 : 12));
-    const variation = compact ? 2.5 : 7;
-    const points: Point[] = [
-      startPoint,
-      {
-        x: Math.min(safeRightEdge, railX + variation),
-        y: launchExitY,
-      },
-    ];
-
-    const stopsWithoutLengths: Array<Omit<SectionStop, "length">> = [];
-
-    sectionElements.forEach((section, index) => {
-      const title = section.querySelector<HTMLElement>("[data-star-title]");
-
-      if (!title) {
-        return;
-      }
-
-      const titleBox = title.getBoundingClientRect();
-      const sectionShell =
-        section.querySelector<HTMLElement>(".shell")?.getBoundingClientRect() ??
-        shell.getBoundingClientRect();
-      const sectionOuterGap = clamp(sectionShell.left * 0.34, 10, 30);
-      const sectionRail = Math.max(10, sectionShell.left - sectionOuterGap);
-      const sectionSafeRight = Math.max(10, sectionShell.left - (compact ? 6 : 12));
-      const offset = Math.sin(index * 1.71 + 0.5) * variation;
-
-      const touchesTargetEdge = section.dataset.starAnchor === "edge";
-      points.push({
-        x: touchesTargetEdge
-          ? clamp(titleBox.left - 18, sectionShell.left, titleBox.left)
-          : Math.min(sectionSafeRight, sectionRail + offset),
-        y: titleBox.top + documentTop + clamp(titleBox.height * 0.34, 18, 54),
-      });
-      stopsWithoutLengths.push({ section, title });
+      return [
+        {
+          link,
+          dot,
+          section,
+          title: section.querySelector<HTMLElement>("[data-star-title]"),
+          scrollAnchor:
+            sectionRect.top + window.scrollY - window.innerHeight * 0.38,
+          markerY: dotRect.top - panelRect.top + dotRect.height / 2,
+        },
+      ];
     });
 
-    const lastPoint = points[points.length - 1] ?? startPoint;
-    const footer = document.querySelector<HTMLElement>(".site-footer");
-    const footerRect = footer?.getBoundingClientRect();
-    const finalY = Math.max(
-      lastPoint.y + 180,
-      footerRect ? footerRect.bottom + documentTop - 36 : documentHeight - 36,
-    );
-
-    points.push({
-      x: railX,
-      y: Math.min(documentHeight - 18, finalY),
-    });
-
-    svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${documentHeight}`);
-    svg.setAttribute("width", String(window.innerWidth));
-    svg.setAttribute("height", String(documentHeight));
-    svg.style.height = `${documentHeight}px`;
-
-    setPathGeometry(createBezierPath(points));
-    totalLength = Math.max(1, basePath.getTotalLength());
-
-    basePath.style.strokeDasharray = `${totalLength}`;
-    basePath.style.strokeDashoffset = "0";
-    progressPath.style.strokeDasharray = `${totalLength}`;
-    trailPath.style.removeProperty("stroke-dasharray");
-    trailPath.style.removeProperty("stroke-dashoffset");
-
-    sectionStops = stopsWithoutLengths.map((stop, index) => ({
-      ...stop,
-      length: findLengthAtY(points[index + 2].y),
-    }));
-
-    launchFlare.setAttribute(
-      "transform",
-      `translate(${startPoint.x.toFixed(2)} ${startPoint.y.toFixed(2)})`,
-    );
-
-    if (hasPositionedComet) {
-      currentLength = clamp(oldCurrentRatio * totalLength, 0, totalLength);
-    }
-
+  const rebuildGeometry = (): void => {
+    stops = readStops();
+    fallSvg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
+    fallSvg.setAttribute("width", String(window.innerWidth));
+    fallSvg.setAttribute("height", String(window.innerHeight));
     geometryDirty = false;
-    updateTarget();
+  };
 
-    if (!hasPositionedComet) {
-      currentLength = targetLength;
-      hasPositionedComet = true;
+  const journeyPosition = (): { index: number; markerY: number } => {
+    if (stops.length === 0) return { index: -1, markerY: 0 };
+
+    const currentScroll = window.scrollY;
+    let index = 0;
+
+    for (let stopIndex = 1; stopIndex < stops.length; stopIndex += 1) {
+      if (currentScroll >= stops[stopIndex].scrollAnchor) index = stopIndex;
     }
 
-    renderPaths(0);
-    guide.classList.add("is-ready");
-    document.documentElement.classList.add("star-ready");
+    const current = stops[index];
+    const next = stops[index + 1];
+    if (!next) return { index, markerY: current.markerY };
+
+    const interval = Math.max(1, next.scrollAnchor - current.scrollAnchor);
+    const progress = clamp((currentScroll - current.scrollAnchor) / interval);
+    return {
+      index,
+      markerY: interpolate(current.markerY, next.markerY, progress),
+    };
   };
 
-  const scrollProgress = (): number => {
-    const maximumScroll = Math.max(1, pageHeight - window.innerHeight);
-    return clamp(latestScrollY / maximumScroll, 0, 1);
+  const finalProgress = (): number => {
+    const contactRect = contact.getBoundingClientRect();
+    const departureLine = window.innerHeight * 0.86;
+    const dockingLine = window.innerHeight * 0.54;
+    return clamp((departureLine - contactRect.top) / (departureLine - dockingLine));
   };
 
-  const applySectionMagnet = (length: number): number => {
-    let adjusted = length;
-    const zone = clamp(window.innerHeight * 0.085, 54, 112);
-
-    for (const stop of sectionStops) {
-      const distance = adjusted - stop.length;
-      const absoluteDistance = Math.abs(distance);
-
-      if (absoluteDistance >= zone) {
-        continue;
+  const setActiveStop = (index: number, navIsVisible: boolean, departure: number): void => {
+    stops.forEach((stop, stopIndex) => {
+      const isActive = stopIndex === index && navIsVisible && departure < 0.7;
+      stop.link.classList.toggle("is-active", isActive);
+      if (isActive) {
+        stop.link.setAttribute("aria-current", "location");
+      } else {
+        stop.link.removeAttribute("aria-current");
       }
 
-      const normalisedDistance = absoluteDistance / zone;
-      const resistance = 0.24 + 0.76 * normalisedDistance * normalisedDistance;
-      adjusted = stop.length + distance * resistance;
-      break;
-    }
-
-    return adjusted;
-  };
-
-  function updateTarget(): void {
-    const progress = scrollProgress();
-    const initialViewportPosition = clamp(
-      startPoint.y - latestScrollY,
-      window.innerHeight * 0.2,
-      window.innerHeight * 0.44,
-    );
-    const finalViewportPosition = window.innerHeight * 0.78;
-    const viewportPosition =
-      initialViewportPosition + (finalViewportPosition - initialViewportPosition) * progress;
-    const targetY = clamp(
-      latestScrollY + viewportPosition,
-      startPoint.y,
-      pageHeight - 24,
-    );
-
-    targetLength = applySectionMagnet(findLengthAtY(targetY));
-  }
-
-  const pulseSection = (index: number): void => {
-    if (reducedMotionQuery.matches || index < 0 || index >= sectionStops.length) {
-      return;
-    }
-
-    const { section, title } = sectionStops[index];
-    section.classList.add("is-star-active");
-    title.classList.add("is-star-pulsing");
-
-    const pulseDuration = section.matches(".contact") ? 1900 : 1120;
-    const timer = window.setTimeout(() => {
-      section.classList.remove("is-star-active");
-      title.classList.remove("is-star-pulsing");
-      titleTimers.delete(timer);
-    }, pulseDuration);
-    titleTimers.add(timer);
-  };
-
-  const updateSectionArrival = (): void => {
-    const arrivalRadius = clamp(window.innerHeight * 0.018, 10, 18);
-    let nearestIndex = -1;
-    let nearestDistance = Number.POSITIVE_INFINITY;
-
-    sectionStops.forEach((stop, index) => {
-      const distance = Math.abs(currentLength - stop.length);
-      const hasBeenInvoked = currentLength >= stop.length - arrivalRadius;
-      stop.section.classList.toggle("is-star-invoked", hasBeenInvoked);
-
-      if (distance < nearestDistance) {
-        nearestDistance = distance;
-        nearestIndex = index;
-      }
+      stop.section.classList.toggle(
+        "is-star-invoked",
+        navIsVisible && stopIndex <= index,
+      );
+      stop.section.classList.toggle("is-star-active", isActive);
     });
-
-    const contactStop = sectionStops.find(({ section }) => section.matches(".contact"));
-    const hasReachedContact =
-      contactStop !== undefined && currentLength >= contactStop.length - arrivalRadius;
-    guide.classList.toggle("is-star-docked", hasReachedContact);
-
-    if (nearestDistance <= arrivalRadius) {
-      if (nearestIndex !== activeStopIndex) {
-        activeStopIndex = nearestIndex;
-        pulseSection(nearestIndex);
-      }
-    } else if (nearestDistance > arrivalRadius * 2.2) {
-      activeStopIndex = -1;
-    }
   };
 
-  function renderPaths(movement: number): void {
-    const point = geometryPath.getPointAtLength(currentLength);
+  const renderFall = (progress: number): void => {
+    const starRect = star.getBoundingClientRect();
+    const titleRect = meaningfulTextRect(contactTitle);
+    const startX = starRect.left + starRect.width / 2;
+    const startY = starRect.top + starRect.height / 2;
+    const endX = Math.max(contact.getBoundingClientRect().left + 18, titleRect.left - 12);
+    const endY = titleRect.top + clamp(titleRect.height * 0.44, 24, 72);
+    const fallDistance = Math.max(80, endY - startY);
+    const pathData = [
+      `M ${startX.toFixed(2)} ${startY.toFixed(2)}`,
+      `C ${startX.toFixed(2)} ${(startY + fallDistance * 0.45).toFixed(2)},`,
+      `${(endX - 62).toFixed(2)} ${(endY - fallDistance * 0.34).toFixed(2)},`,
+      `${endX.toFixed(2)} ${endY.toFixed(2)}`,
+    ].join(" ");
 
-    if (Math.abs(movement) > 0.01) {
-      lastMovementDirection = movement > 0 ? 1 : -1;
-    }
+    fallPath.setAttribute("d", pathData);
+    fallTrail.setAttribute("d", pathData);
+    const totalLength = Math.max(1, fallPath.getTotalLength());
+    const currentLength = totalLength * progress;
+    const point = fallPath.getPointAtLength(currentLength);
+    const trailLength = clamp(totalLength * 0.24, 34, 86);
 
-    movingComet.setAttribute(
+    fallPath.style.strokeDasharray = `${totalLength}`;
+    fallPath.style.strokeDashoffset = `${totalLength - currentLength}`;
+    fallTrail.style.strokeDasharray = `${trailLength} ${totalLength}`;
+    fallTrail.style.strokeDashoffset = `${trailLength - currentLength}`;
+    fallStar.setAttribute(
       "transform",
       `translate(${point.x.toFixed(2)} ${point.y.toFixed(2)})`,
     );
 
-    const permanentLength = reducedMotionQuery.matches ? totalLength : currentLength;
-    drawnPath.style.strokeDashoffset = `${Math.max(0, totalLength - permanentLength)}`;
+    const arrivalFade = 1 - clamp((progress - 0.84) / 0.16);
+    fallStar.style.opacity = String(arrivalFade);
+    fallPath.style.opacity = String(progress < 0.97 ? 1 : arrivalFade);
+    fallTrail.style.opacity = String(progress < 0.97 ? 1 : arrivalFade);
+  };
 
-    if (!hasLaunched || reducedMotionQuery.matches) {
-      movingTrail.setAttribute("d", "");
-    } else {
-      const trailLength = clamp(totalLength * 0.022, 120, 210);
-      const trailStart =
-        lastMovementDirection < 0
-          ? clamp(currentLength + trailLength, 0, totalLength)
-          : clamp(currentLength - trailLength, 0, totalLength);
-      const sampleCount = 18;
-      const trailData = Array.from({ length: sampleCount }, (_, index) => {
-        const ratio = index / (sampleCount - 1);
-        const length = trailStart + (currentLength - trailStart) * ratio;
-        const sample = geometryPath.getPointAtLength(length);
-        return `${index === 0 ? "M" : "L"} ${sample.x.toFixed(2)} ${sample.y.toFixed(2)}`;
-      }).join(" ");
-      movingTrail.setAttribute("d", trailData);
-    }
-
-    updateSectionArrival();
-  }
-
-  const renderFrame = (time: number): void => {
+  const render = (): void => {
     frameId = null;
+    if (destroyed) return;
+    if (geometryDirty) rebuildGeometry();
+    if (stops.length === 0) return;
 
-    if (destroyed) {
-      return;
+    const navThreshold = hero.getBoundingClientRect().bottom + window.scrollY - 64;
+    const navIsVisible = !compactScreen.matches && window.scrollY >= navThreshold;
+    const position = journeyPosition();
+    const departure = navIsVisible ? finalProgress() : 0;
+    const firstMarker = stops[0].markerY;
+
+    nav.style.setProperty("--journey-star-y", `${position.markerY.toFixed(2)}px`);
+    nav.style.setProperty(
+      "--journey-progress-height",
+      `${Math.max(0, position.markerY - firstMarker).toFixed(2)}px`,
+    );
+    nav.style.setProperty("--departure-progress", departure.toFixed(4));
+    nav.classList.toggle("is-visible", navIsVisible);
+    nav.classList.toggle("is-departing", departure > 0.01);
+    nav.classList.toggle("is-docked", departure >= 0.985);
+    nav.inert = !navIsVisible || departure >= 0.985;
+    nav.setAttribute(
+      "aria-hidden",
+      !navIsVisible || departure >= 0.985 ? "true" : "false",
+    );
+    fallSvg.classList.toggle(
+      "is-visible",
+      navIsVisible && departure > 0.01 && !reducedMotion.matches,
+    );
+
+    setActiveStop(position.index, navIsVisible, departure);
+
+    if (departure > 0.01 && !reducedMotion.matches) {
+      renderFall(departure);
     }
 
-    if (geometryDirty) {
-      buildGeometry();
-    } else {
-      updateTarget();
-    }
-
-    if (reducedMotionQuery.matches) {
-      currentLength = targetLength;
-      renderPaths(0);
-      return;
-    }
-
-    const deltaTime = clamp(time - previousFrameTime, 1, 34);
-    previousFrameTime = time;
-    const previousLength = currentLength;
-    const smoothing = 1 - Math.exp(-deltaTime * 0.0105);
-    currentLength += (targetLength - currentLength) * smoothing;
-
-    if (Math.abs(targetLength - currentLength) < 0.08) {
-      currentLength = targetLength;
-    }
-
-    renderPaths(currentLength - previousLength);
-
-    if (Math.abs(targetLength - currentLength) > 0.08) {
-      requestFrame();
-    }
+    const contactIsActive = departure > 0.78;
+    contact.classList.toggle("is-star-active", contactIsActive);
+    contact.classList.toggle("is-star-invoked", departure >= 0.96);
   };
 
-  function requestFrame(): void {
+  const requestRender = (): void => {
     if (frameId === null && !destroyed) {
-      frameId = window.requestAnimationFrame(renderFrame);
+      frameId = window.requestAnimationFrame(render);
     }
-  }
-
-  const triggerLaunch = (): void => {
-    if (hasLaunched || reducedMotionQuery.matches || latestScrollY <= 2) {
-      return;
-    }
-
-    hasLaunched = true;
-    guide.classList.add("is-launched");
-    launchFlare.classList.add("is-flaring");
-
-    const animation = launchFlare.animate(
-      [
-        { opacity: 0, filter: "brightness(1)" },
-        { opacity: 1, filter: "brightness(1.34)", offset: 0.18 },
-        { opacity: 0, filter: "brightness(1)" },
-      ],
-      {
-        duration: 820,
-        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
-      },
-    );
-    titleAnimations.add(animation);
-    animation.addEventListener(
-      "finish",
-      () => {
-        titleAnimations.delete(animation);
-        launchFlare.classList.remove("is-flaring");
-      },
-      { once: true },
-    );
-  };
-
-  const onScroll = (): void => {
-    latestScrollY = window.scrollY;
-    triggerLaunch();
-    requestFrame();
   };
 
   const markGeometryDirty = (): void => {
     geometryDirty = true;
-    requestFrame();
+    requestRender();
   };
 
-  const applyMotionPreference = (): void => {
-    const isReduced = reducedMotionQuery.matches;
-    guide.classList.toggle("is-reduced-motion", isReduced);
-    comet.style.display = isReduced ? "none" : "";
-    trailPath.style.display = isReduced ? "none" : "";
-    launchFlare.style.display = isReduced ? "none" : "";
-
-    if (isReduced) {
-      guide.classList.remove("is-launched", "is-star-docked");
-      launchFlare.classList.remove("is-flaring");
-      titleAnimations.forEach((animation) => animation.cancel());
-      titleAnimations.clear();
-      sectionStops.forEach(({ section, title }) => {
-        section.classList.remove("is-star-active", "is-star-invoked");
-        title.classList.remove("is-star-pulsing");
-      });
-      activeStopIndex = -1;
-    }
-
-    geometryDirty = true;
-    requestFrame();
+  const onMotionPreference = (): void => {
+    nav.classList.toggle("is-reduced-motion", reducedMotion.matches);
+    markGeometryDirty();
   };
 
   const resizeObserver = new ResizeObserver(markGeometryDirty);
   resizeObserver.observe(document.documentElement);
+  resizeObserver.observe(panel);
   resizeObserver.observe(hero);
-  resizeObserver.observe(shell);
-  sectionElements.forEach((section) => resizeObserver.observe(section));
-
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", markGeometryDirty, { passive: true });
-  reducedMotionQuery.addEventListener("change", applyMotionPreference);
-
-  document.fonts.ready.then(() => {
-    if (!destroyed) {
-      markGeometryDirty();
-    }
+  resizeObserver.observe(contact);
+  links.forEach((link) => {
+    const section = document.querySelector<HTMLElement>(link.hash);
+    if (section) resizeObserver.observe(section);
   });
 
-  applyMotionPreference();
-  requestFrame();
+  window.addEventListener("scroll", requestRender, { passive: true });
+  window.addEventListener("resize", markGeometryDirty, { passive: true });
+  reducedMotion.addEventListener("change", onMotionPreference);
+  compactScreen.addEventListener("change", markGeometryDirty);
+  document.fonts.ready.then(markGeometryDirty);
+
+  nav.classList.add("is-ready");
+  document.documentElement.classList.add("star-ready");
+  onMotionPreference();
+  requestRender();
 
   return () => {
     destroyed = true;
-
-    if (frameId !== null) {
-      window.cancelAnimationFrame(frameId);
-    }
-
+    if (frameId !== null) window.cancelAnimationFrame(frameId);
     resizeObserver.disconnect();
-    window.removeEventListener("scroll", onScroll);
+    window.removeEventListener("scroll", requestRender);
     window.removeEventListener("resize", markGeometryDirty);
-    reducedMotionQuery.removeEventListener("change", applyMotionPreference);
-    titleTimers.forEach((timer) => window.clearTimeout(timer));
-    titleTimers.clear();
-    titleAnimations.forEach((animation) => animation.cancel());
-    titleAnimations.clear();
-    sectionStops.forEach(({ section, title }) => {
-      section.classList.remove("is-star-active", "is-star-invoked");
-      title.classList.remove("is-star-pulsing");
+    reducedMotion.removeEventListener("change", onMotionPreference);
+    compactScreen.removeEventListener("change", markGeometryDirty);
+    stops.forEach((stop) => {
+      stop.link.classList.remove("is-active");
+      stop.link.removeAttribute("aria-current");
+      stop.section.classList.remove("is-star-active", "is-star-invoked");
     });
-
-    guide.classList.remove("is-ready", "is-launched", "is-reduced-motion", "is-star-docked");
+    contact.classList.remove("is-star-active", "is-star-invoked");
+    nav.classList.remove(
+      "is-ready",
+      "is-visible",
+      "is-departing",
+      "is-docked",
+      "is-reduced-motion",
+    );
+    nav.inert = false;
+    nav.removeAttribute("aria-hidden");
+    fallSvg.classList.remove("is-visible");
     document.documentElement.classList.remove("star-ready");
-    comet.style.display = "";
-    trailPath.style.display = "";
-    launchFlare.style.display = "";
   };
 };
