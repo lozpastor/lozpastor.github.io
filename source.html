@@ -9,7 +9,7 @@
     <title>Alejandro Lozano — Technical Product Manager</title>
     <meta
       name="description"
-      content="Technical Product Manager Alejandro Lozano combines product ownership in regulated industries with hands-on data engineering across banking risk, BI and regulatory pipelines."
+      content="Technical Product Manager Alejandro Lozano combines product delivery in life insurance with hands-on data engineering across banking risk, BI and regulatory pipelines."
     />
     <meta
       name="keywords"
@@ -26,6 +26,7 @@
       type="font/woff2"
       crossorigin
     />
+
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://lozpastor.github.io/" />
     <meta property="og:title" content="Alejandro Lozano — Technical Product Manager" />
@@ -74,14 +75,66 @@
       }
     </script>
   </head>
+
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
 
-    <header class="site-header">
+    <div class="cosmic-guide" aria-hidden="true" data-scroll-star>
+      <svg data-star-svg preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="cosmic-line" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.08" />
+            <stop offset="0.3" stop-color="#7ee6d1" stop-opacity="0.42" />
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0.1" />
+          </linearGradient>
+          <linearGradient id="cosmic-trail" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#7ee6d1" stop-opacity="0" />
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0.76" />
+          </linearGradient>
+          <filter id="star-glow" x="-300%" y="-300%" width="600%" height="600%">
+            <feGaussianBlur stdDeviation="4.6" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <radialGradient id="launch-flare">
+            <stop offset="0" stop-color="#ffffff" stop-opacity="0.96" />
+            <stop offset="0.2" stop-color="#dff8eb" stop-opacity="0.5" />
+            <stop offset="1" stop-color="#7ee6d1" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+
+        <path class="cosmic-path cosmic-path-base" data-star-base />
+        <path class="cosmic-path cosmic-path-progress" data-star-progress />
+        <path class="cosmic-path cosmic-path-trail" data-star-trail />
+
+        <g class="cosmic-launch-flare" data-star-launch>
+          <circle r="52" fill="url(#launch-flare)" />
+          <circle r="7" fill="#ffffff" filter="url(#star-glow)" />
+          <line x1="-42" y1="0" x2="42" y2="0" />
+          <line x1="0" y1="-42" x2="0" y2="42" />
+        </g>
+
+        <g class="cosmic-star" data-star-comet>
+          <line class="cosmic-star-tail cosmic-star-tail-wide" x1="-42" y1="0" x2="-5" y2="0" />
+          <line class="cosmic-star-tail" x1="-25" y1="0" x2="-4" y2="0" />
+          <path
+            class="cosmic-star-glint"
+            d="M0 -10 L1.8 -1.8 L10 0 L1.8 1.8 L0 10 L-1.8 1.8 L-10 0 L-1.8 -1.8 Z"
+          />
+          <circle r="4.2" filter="url(#star-glow)" />
+          <circle r="1.3" class="cosmic-star-core" />
+        </g>
+      </svg>
+    </div>
+
+    <header class="site-header" id="site-header">
       <a class="brand" href="#hero" aria-label="Alejandro Lozano, home">Alejandro Lozano</a>
       <nav aria-label="Primary navigation">
         <a href="#work">Work</a>
         <a href="#capabilities">Capabilities</a>
+        <a href="#build-log">Build log</a>
         <a href="#about">About</a>
       </nav>
       <a
@@ -126,330 +179,408 @@
         </a>
       </section>
 
-      <section class="proof-transition" aria-labelledby="impact-title">
-        <h2 class="visually-hidden" id="impact-title">Selected evidence</h2>
-        <dl class="proof-strip">
-          <div>
-            <dt><strong>100+</strong><span aria-hidden="true">→</span><strong>6</strong></dt>
-            <dd>Recurring reports consolidated into production dashboards</dd>
-          </div>
-          <div>
-            <dt><strong>−90%</strong></dt>
-            <dd>Reporting workload after consolidation</dd>
-          </div>
-          <div>
-            <dt><strong>&gt;50%</strong></dt>
-            <dd>Efficiency gain across regulatory ETL</dd>
-          </div>
-        </dl>
-        <div class="proof-footer">
-          <p><span>Current chapter</span> Product work in life insurance</p>
-          <div class="hero-actions" aria-label="Contact and CV links">
-            <a class="button button-primary" href="/Alejandro-Lozano-Technical-Product-Manager-CV.pdf" download>
-              Download CV
-            </a>
-            <a class="text-link" href="https://www.linkedin.com/in/alejandro-lozano-pastor" target="_blank" rel="noreferrer">
-              LinkedIn <span aria-hidden="true">↗</span>
-            </a>
-            <a class="text-link" href="mailto:lozpastor@gmail.com">Email <span aria-hidden="true">↗</span></a>
-          </div>
-        </div>
-      </section>
-
-      <section class="section thesis reveal" id="thesis" aria-labelledby="thesis-title">
-        <div class="section-heading">
-          <p class="eyebrow">Trajectory</p>
-          <h2 id="thesis-title">I moved upstream: from building the data to deciding what the product asks of it.</h2>
-        </div>
-        <div class="thesis-copy">
-          <p class="section-lead">I trained as a computer engineer and learned product from the infrastructure inward.</p>
-          <p>Two years in banking risk showed me how regulatory logic, data quality and delivery constraints shape every product promise.</p>
-          <aside class="current-chapter" aria-labelledby="current-title">
-            <p class="chapter-label">Current chapter</p>
-            <h3 id="current-title">Life-insurance product</h3>
-            <p>I now apply that system-aware discipline to product work across business, operations and technology.</p>
-            <dl>
-              <div><dt>Frame</dt><dd>Value and operational impact</dd></div>
-              <div><dt>Translate</dt><dd>Scope and acceptance evidence</dd></div>
-              <div><dt>Learn</dt><dd>KPIs and production feedback</dd></div>
-            </dl>
-          </aside>
-        </div>
-        <ol class="trajectory-rail" aria-label="Career progression">
-          <li>
-            <span>2019—2023</span>
-            <strong>Engineering</strong>
-            <small>Computer science foundation</small>
-          </li>
-          <li>
-            <span>2023—2025</span>
-            <strong>Banking data</strong>
-            <small>Risk, BI and regulatory systems</small>
-          </li>
-          <li class="is-current">
-            <span>Now</span>
-            <strong>Product</strong>
-            <small>Life insurance</small>
-          </li>
-        </ol>
-
-        <figure class="story-visual story-visual--systems scroll-scene" data-scroll-scene>
-          <div class="story-visual__window">
-            <img
-              src="/visuals/systems-journey.webp"
-              width="1536"
-              height="1024"
-              loading="lazy"
-              decoding="async"
-              alt="A physical data model passes through validation layers and converges into one product decision."
-              data-parallax-layer
-            />
-            <span class="story-visual__signal" aria-hidden="true"></span>
-          </div>
-          <figcaption>
-            <span>System model</span>
-            Product choices become stronger when data constraints are visible before delivery.
-          </figcaption>
-        </figure>
-      </section>
-
-      <section class="section work reveal" id="work" aria-labelledby="work-title">
-        <div class="section-heading">
-          <p class="eyebrow">Selected evidence</p>
-          <h2 id="work-title">What changed because I was in the system.</h2>
-        </div>
-
-        <div class="evidence-list">
-          <article class="case-study">
-            <header class="case-code">
-              <span>BI</span>
-              <p>Decision layer</p>
-            </header>
-            <div class="case-proof">
-              <p class="case-metric">100+<span aria-hidden="true">→</span>6</p>
-              <h3>Reporting became one governed view.</h3>
+      <section class="signals" aria-labelledby="impact-title">
+        <div class="shell">
+          <h2 class="visually-hidden" id="impact-title">Headline outcomes</h2>
+          <dl class="signals__grid">
+            <div class="signal" data-reveal>
+              <dt class="signal__value" data-count="100" data-suffix="+">100+</dt>
+              <dd class="signal__label">Reports consolidated into <strong>6 dashboards</strong></dd>
             </div>
-            <dl class="case-story">
-              <div>
-                <dt>Context</dt>
-                <dd>Recurring risk reporting was split across more than 100 reports.</dd>
-              </div>
-              <div>
-                <dt>Decision</dt>
-                <dd>Replace duplicated logic with one data model and six production Power BI dashboards.</dd>
-              </div>
-              <div>
-                <dt>Result</dt>
-                <dd>Reporting workload fell by more than 90%.</dd>
-              </div>
-            </dl>
-          </article>
-
-          <article class="case-study">
-            <header class="case-code">
-              <span>Regulatory</span>
-              <p>COREP pipeline</p>
-            </header>
-            <div class="case-proof">
-              <p class="case-metric">&gt;50%</p>
-              <h3>Controls moved into the pipeline.</h3>
+            <div class="signal" data-reveal>
+              <dt class="signal__value"><b>−</b><span data-count="90" data-suffix="%">90%</span></dt>
+              <dd class="signal__label">Recurring reporting workload</dd>
             </div>
-            <dl class="case-story">
-              <div>
-                <dt>Context</dt>
-                <dd>European regulatory capital reporting for a G-SIB depended on recurring manual processes.</dd>
-              </div>
-              <div>
-                <dt>Decision</dt>
-                <dd>Automate SAS and SQL flows with reconciliations across capital, risk-weighted assets and provisions.</dd>
-              </div>
-              <div>
-                <dt>Result</dt>
-                <dd>Manual load ended and process efficiency improved by more than 50%.</dd>
-              </div>
-            </dl>
-          </article>
-
-          <article class="case-study">
-            <header class="case-code">
-              <span>Product</span>
-              <p>Delivery control</p>
-            </header>
-            <div class="case-proof">
-              <p class="case-metric case-metric--words">Roadmap<span aria-hidden="true">→</span>release</p>
-              <h3>One decision view across four functions.</h3>
+            <div class="signal" data-reveal>
+              <dt class="signal__value"><b>&gt;</b><span data-count="50" data-suffix="%">50%</span></dt>
+              <dd class="signal__label">Efficiency gain on regulatory ETL</dd>
             </div>
-            <dl class="case-story">
-              <div>
-                <dt>Context</dt>
-                <dd>Recoveries and underwriting initiatives crossed business, technology, risk and operations.</dd>
-              </div>
-              <div>
-                <dt>Decision</dt>
-                <dd>Turn scope into a prioritised backlog, acceptance criteria and UAT evidence before release.</dd>
-              </div>
-              <div>
-                <dt>Result</dt>
-                <dd>Stakeholders worked from one roadmap, milestone and KPI view.</dd>
-              </div>
-            </dl>
-          </article>
-        </div>
-      </section>
+          </dl>
 
-      <section class="section capabilities reveal" id="capabilities" aria-labelledby="capabilities-title">
-        <div class="section-heading">
-          <p class="eyebrow">Operating system</p>
-          <h2 id="capabilities-title">Where I enter the product system.</h2>
-        </div>
-
-        <figure class="story-visual story-visual--decision scroll-scene" data-scroll-scene>
-          <div class="story-visual__window">
-            <img
-              src="/visuals/decision-engine.webp"
-              width="1200"
-              height="1200"
-              loading="lazy"
-              decoding="async"
-              alt="Four coordinated system layers converge around a single product decision."
-              data-parallax-layer
-            />
-            <span class="story-visual__signal" aria-hidden="true"></span>
-          </div>
-          <figcaption>
-            <span>Decision engine</span>
-            Value, feasibility, delivery and evidence must move together.
-          </figcaption>
-        </figure>
-
-        <div class="operating-map">
-          <ol>
-            <li>
-              <span>Own</span>
-              <h3>Frame</h3>
-              <p>Business outcome<br />Stakeholder alignment</p>
-            </li>
-            <li>
-              <span>Own</span>
-              <h3>Shape</h3>
-              <p>Backlog and roadmap<br />Stories and acceptance criteria</p>
-            </li>
-            <li>
-              <span>Validate</span>
-              <h3>Ship</h3>
-              <p>Agile delivery<br />UAT and release readiness</p>
-            </li>
-            <li>
-              <span>Build &amp; read</span>
-              <h3>Measure</h3>
-              <p>KPI design<br />Analytics and data quality</p>
-            </li>
-          </ol>
-          <div class="foundation-line">
-            <span>Data foundation</span>
-            <p>SQL · SAS · ETL design · Data modelling · Power BI</p>
-          </div>
-          <div class="domain-line">
-            <span>Domain context</span>
-            <p>Credit risk · COREP · IFRS 9 · Recoveries · Underwriting · Life insurance</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section build-log reveal" id="build-log" aria-labelledby="build-title">
-        <div class="section-heading">
-          <p class="eyebrow">Selected project</p>
-          <h2 id="build-title">Macroeconomic Dashboard.</h2>
-        </div>
-
-        <article
-          class="live-project"
-          aria-labelledby="build-title"
-          data-dashboard-embed
-        >
-          <header class="live-project__bar">
-            <div>
-              <span>Live product · Jun 2025</span>
-              <strong>Macroeconomic Dashboard</strong>
-            </div>
-            <nav aria-label="Dashboard controls">
-              <button type="button" data-dashboard-fullscreen hidden>Full screen</button>
-              <a href="https://lozpastor.github.io/Macroeconomic-Dashboard/" target="_blank" rel="noopener noreferrer">
-                Open in a new tab <span aria-hidden="true">↗</span>
+          <div class="signals__footer">
+            <p><span>Current chapter</span> Product work in life insurance</p>
+            <div aria-label="Contact and CV links">
+              <a class="button button-primary" href="/Alejandro-Lozano-Technical-Product-Manager-CV.pdf" download>
+                Download CV
               </a>
-            </nav>
-          </header>
-
-          <div class="live-project__stage" aria-busy="false" data-dashboard-stage>
-            <p class="visually-hidden" role="status" aria-live="polite" data-dashboard-status>
-              Dashboard ready to load.
-            </p>
-            <div class="dashboard-loader" data-dashboard-loader hidden>
-              <div aria-hidden="true"><span></span><span></span><span></span></div>
-              <p aria-hidden="true">Connecting to the live product…</p>
+              <a class="text-link" href="https://www.linkedin.com/in/alejandro-lozano-pastor" target="_blank" rel="noreferrer">
+                LinkedIn <span aria-hidden="true">↗</span>
+              </a>
+              <a class="text-link" href="mailto:lozpastor@gmail.com">Email <span aria-hidden="true">↗</span></a>
             </div>
-            <div class="dashboard-mount" data-dashboard-mount></div>
-            <div class="dashboard-fallback" data-dashboard-fallback>
-              <img
-                src="/visuals/macroeconomic-dashboard.webp"
-                width="1440"
-                height="1000"
-                loading="lazy"
-                decoding="async"
-                alt="The live Macroeconomic Dashboard showing 2025 GDP growth, country rankings and a world map."
-              />
-              <p class="visually-hidden" data-dashboard-fallback-copy>
-                A static capture is shown. Use the link above to open the live dashboard.
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="chapter chapter--thesis"
+        id="thesis"
+        aria-labelledby="thesis-title"
+        data-star-section
+      >
+        <div class="shell">
+          <div class="chapter__head" data-reveal>
+            <p class="chapter__index">01 · Thesis</p>
+            <h2 class="chapter__title" id="thesis-title" data-star-title>
+              The roadmap is only as credible as the system beneath it.
+            </h2>
+          </div>
+
+          <div class="thesis__body">
+            <div class="thesis__text" data-reveal>
+              <p>
+                I trained as a computer engineer and spent two years building regulated data
+                pipelines for banking risk teams. That work showed me where product promises meet
+                data quality, controls and delivery constraints.
+              </p>
+              <p>
+                <strong>I now work upstream in life insurance, shaping backlog and delivery decisions.</strong>
+                The move was deliberate: I wanted to decide what gets built with a clear view of
+                what the system can actually support.
+              </p>
+              <ol class="career-path" aria-label="Career progression">
+                <li><span>01</span>Engineering</li>
+                <li><span>02</span>Data</li>
+                <li class="is-current"><span>03</span>Product</li>
+              </ol>
+            </div>
+
+            <figure class="thesis__visual scroll-scene" data-scroll-scene data-reveal>
+              <div>
+                <img
+                  src="/visuals/systems-journey.webp"
+                  width="1536"
+                  height="1024"
+                  loading="lazy"
+                  decoding="async"
+                  alt="A physical data system passes through validation layers and converges into one product decision."
+                />
+                <span aria-hidden="true"></span>
+              </div>
+              <figcaption>
+                <b>System model</b>
+                Better product choices expose constraints before delivery.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="chapter work"
+        id="work"
+        aria-labelledby="work-title"
+        data-star-section
+      >
+        <div class="shell">
+          <div class="chapter__head" data-reveal>
+            <p class="chapter__index">02 · Selected work</p>
+            <h2 class="chapter__title" id="work-title" data-star-title>
+              Three problems. One operating pattern.
+            </h2>
+          </div>
+
+          <div class="work__control" data-reveal>
+            <div class="segmented" role="group" aria-label="Case-study reading depth">
+              <button type="button" data-depth-brief aria-pressed="true">Brief</button>
+              <button type="button" data-depth-full aria-pressed="false">Full detail</button>
+            </div>
+            <p class="work__hint" data-depth-hint>Thirty seconds. Switch for the full breakdown.</p>
+          </div>
+
+          <div class="case-list" id="work-cases">
+            <article class="case" data-reveal>
+              <p class="case__index">BI · Decision layer</p>
+              <div class="case__summary">
+                <h3>From 100+ reports to one governed view.</h3>
+                <p>
+                  Fragmented recurring risk reporting rebuilt as six Power BI dashboards on one
+                  data model.
+                </p>
+              </div>
+              <p class="case__outcome"><b>−90%</b><span>reporting workload</span></p>
+
+              <figure class="reconcile" data-reconcile>
+                <canvas data-reconcile-canvas aria-hidden="true"></canvas>
+                <figcaption>
+                  <span>100+ recurring reports → 6 dashboards</span>
+                  <button type="button" data-reconcile-replay>Replay</button>
+                </figcaption>
+              </figure>
+
+              <div class="case__depth" data-case-depth>
+                <div>
+                  <dl class="depth__grid">
+                    <div>
+                      <dt>Context</dt>
+                      <dd>More than 100 recurring reports created duplicated work and inconsistent views.</dd>
+                    </div>
+                    <div>
+                      <dt>My role</dt>
+                      <dd>I owned requirements, data modelling, ETL and production dashboards.</dd>
+                    </div>
+                    <div>
+                      <dt>Decision</dt>
+                      <dd>Consolidate repeated logic into one model and six recurring decision views.</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </article>
+
+            <article class="case" data-reveal>
+              <p class="case__index">Regulatory · COREP</p>
+              <div class="case__summary">
+                <h3>Regulatory reporting without recurring manual load.</h3>
+                <p>
+                  COREP (European regulatory capital reporting) moved from manual assembly to
+                  controlled SAS and SQL pipelines.
+                </p>
+              </div>
+              <p class="case__outcome"><b>&gt;50%</b><span>efficiency gain</span></p>
+
+              <div class="case__depth" data-case-depth>
+                <div>
+                  <dl class="depth__grid">
+                    <div>
+                      <dt>Context</dt>
+                      <dd>A G-SIB needed repeatable capital reporting that could withstand supervisory review.</dd>
+                    </div>
+                    <div>
+                      <dt>My role</dt>
+                      <dd>I designed and optimised critical data pipelines for credit-risk portfolios.</dd>
+                    </div>
+                    <div>
+                      <dt>Decision</dt>
+                      <dd>Move validation, reconciliation and controls for RWA, CET1 and provisions into the pipeline.</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </article>
+
+            <article class="case" data-reveal>
+              <p class="case__index">Life insurance · Product delivery</p>
+              <div class="case__summary">
+                <h3>Turning product change into release-ready work.</h3>
+                <p>
+                  Life-insurance initiatives structured into a shared backlog across business,
+                  technology, operations and compliance.
+                </p>
+              </div>
+              <p class="case__outcome case__outcome--words"><b>One view</b><span>for release decisions</span></p>
+
+              <div class="case__depth" data-case-depth>
+                <div>
+                  <dl class="depth__grid">
+                    <div>
+                      <dt>Context</dt>
+                      <dd>Product changes crossed business, technology, operations and compliance.</dd>
+                    </div>
+                    <div>
+                      <dt>My role</dt>
+                      <dd>I shape backlog priorities, acceptance criteria and delivery controls.</dd>
+                    </div>
+                    <div>
+                      <dt>Decision</dt>
+                      <dd>Connect user stories, acceptance criteria, UAT evidence and milestones in one delivery view.</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="chapter capabilities"
+        id="capabilities"
+        aria-labelledby="capabilities-title"
+        data-star-section
+      >
+        <div class="shell">
+          <div class="chapter__head" data-reveal>
+            <p class="chapter__index">03 · Capabilities</p>
+            <h2 class="chapter__title" id="capabilities-title" data-star-title>
+              Built for the space between a roadmap and its data.
+            </h2>
+          </div>
+
+          <div class="capability-grid" data-reveal>
+            <section>
+              <p class="capability-grid__scope">Own the decision</p>
+              <h3>Product &amp; Delivery</h3>
+              <ul>
+                <li>Product backlog</li>
+                <li>User stories &amp; acceptance criteria</li>
+                <li>Roadmap management</li>
+                <li>UAT</li>
+                <li>Agile / Scrum</li>
+                <li>Stakeholder management</li>
+              </ul>
+            </section>
+            <section>
+              <p class="capability-grid__scope">Read the system</p>
+              <h3>Data &amp; BI</h3>
+              <ul>
+                <li>SQL</li>
+                <li>SAS</li>
+                <li>Power BI</li>
+                <li>ETL design</li>
+                <li>Data modelling</li>
+                <li>KPI design</li>
+              </ul>
+            </section>
+            <section>
+              <p class="capability-grid__scope">Understand the stakes</p>
+              <h3>Regulated domains</h3>
+              <ul>
+                <li>Credit risk</li>
+                <li>Life insurance</li>
+                <li>Underwriting</li>
+                <li>Regulatory reporting (COREP)</li>
+                <li>IFRS 9</li>
+                <li>RWA / CET1</li>
+              </ul>
+            </section>
+          </div>
+          <p class="capability-tools" data-reveal>Working tools · Jira · Confluence · Excel · PowerPoint</p>
+        </div>
+      </section>
+
+      <section
+        class="chapter build-log"
+        id="build-log"
+        aria-labelledby="build-title"
+        data-star-section
+      >
+        <div class="shell">
+          <div class="chapter__head" data-reveal>
+            <p class="chapter__index">04 · Build log</p>
+            <h2 class="chapter__title" id="build-title" data-star-title>
+              A product I designed, coded and deployed.
+            </h2>
+          </div>
+          <p class="build-log__lede" data-reveal>
+            The Macroeconomic Dashboard started as a Power BI concept and became a responsive web
+            product for indicators, time series and multi-country comparison.
+          </p>
+
+          <article class="live-project" aria-labelledby="build-title" data-dashboard-embed data-reveal>
+            <header class="live-project__bar">
+              <div class="live-project__identity">
+                <span aria-hidden="true"><i></i><i></i><i></i></span>
+                <p>lozpastor.github.io/Macroeconomic-Dashboard</p>
+                <strong>Live</strong>
+              </div>
+              <nav aria-label="Dashboard controls">
+                <button type="button" data-dashboard-fullscreen hidden>Full screen</button>
+                <a href="https://lozpastor.github.io/Macroeconomic-Dashboard/" target="_blank" rel="noopener noreferrer">
+                  Open in a new tab <span aria-hidden="true">↗</span>
+                </a>
+              </nav>
+            </header>
+
+            <div class="live-project__stage" aria-busy="false" data-dashboard-stage>
+              <p class="visually-hidden" role="status" aria-live="polite" data-dashboard-status>
+                Dashboard ready to load.
+              </p>
+              <div class="dashboard-loader" data-dashboard-loader hidden>
+                <div aria-hidden="true"><span></span><span></span><span></span></div>
+                <p aria-hidden="true">Connecting to the live product…</p>
+              </div>
+              <div class="dashboard-mount" data-dashboard-mount></div>
+              <div class="dashboard-fallback" data-dashboard-fallback>
+                <img
+                  src="/visuals/macroeconomic-dashboard.webp"
+                  width="1440"
+                  height="1000"
+                  loading="lazy"
+                  decoding="async"
+                  alt="The live Macroeconomic Dashboard showing 2025 GDP growth, country rankings and a world map."
+                />
+                <p class="visually-hidden" data-dashboard-fallback-copy>
+                  A static capture is shown. Use the link above to open the live dashboard.
+                </p>
+              </div>
+            </div>
+
+            <footer class="live-project__meta">
+              <p>Macroeconomic Dashboard · Jun 2025</p>
+              <p>HTML · CSS · JavaScript · GitHub Pages</p>
+            </footer>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="chapter about"
+        id="about"
+        aria-labelledby="about-title"
+        data-star-section
+      >
+        <div class="shell">
+          <div class="chapter__head" data-reveal>
+            <p class="chapter__index">05 · About</p>
+            <h2 class="chapter__title" id="about-title" data-star-title>
+              Next: products where constraints shape the roadmap.
+            </h2>
+          </div>
+
+          <div class="about__grid">
+            <div class="about__text" data-reveal>
+              <p>
+                Based in Barcelona and trained in computer engineering. I want to work on regulated
+                or data-intensive products where choices depend on real technical constraints.
               </p>
             </div>
+
+            <div class="facts" data-reveal>
+              <section>
+                <h3>Education</h3>
+                <p><strong>MSc Business Consulting, Data Science</strong><span>ICADE · 2023—2025</span></p>
+                <p><strong>BSc Computer Engineering</strong><span>Universidad Miguel Hernández · 2019—2023</span></p>
+              </section>
+              <section>
+                <h3>Certifications</h3>
+                <p><strong>Generative AI with Large Language Models</strong><span>DeepLearning.AI · 2025</span></p>
+                <p><strong>Python 101 + Data Analysis with Python</strong><span>IBM · 2022</span></p>
+              </section>
+              <section>
+                <h3>Languages</h3>
+                <p><strong>Spanish + Catalan</strong><span>Native</span></p>
+                <p><strong>English</strong><span>Professional · Mandarin: Beginner</span></p>
+              </section>
+            </div>
           </div>
 
-          <footer class="live-project__meta">
-            <p>A responsive web product for economic indicators, time series and multi-country comparison.</p>
-            <p>HTML · CSS · JavaScript · GitHub Pages</p>
-          </footer>
-
-        </article>
-      </section>
-
-      <section class="section about reveal" id="about" aria-labelledby="about-title">
-        <div class="section-heading">
-          <p class="eyebrow">Operating coordinates</p>
-          <h2 id="about-title">I want the product problem with a system underneath it.</h2>
-        </div>
-        <div class="about-intro">
-          <p>I’m based in Barcelona. I work best on regulated or data-intensive products where business choices depend on real technical constraints.</p>
-        </div>
-
-        <div class="credentials">
-          <div class="credential-group">
-            <h3>Education</h3>
-            <p><strong>MSc Business Consulting, Data Science</strong><span>ICADE · 2023—2025</span></p>
-            <p><strong>BSc Computer Engineering</strong><span>Universidad Miguel Hernández · 2019—2023</span></p>
-          </div>
-          <div class="credential-group">
-            <h3>Certifications</h3>
-            <p><strong>Generative AI with Large Language Models</strong><span>DeepLearning.AI · 2025</span></p>
-            <p><strong>Python 101 + Data Analysis with Python</strong><span>IBM · 2022</span></p>
-          </div>
-          <div class="credential-group">
-            <h3>Languages</h3>
-            <p><strong>Spanish + Catalan</strong><span>Native</span></p>
-            <p><strong>English</strong><span>Professional</span></p>
-            <p><strong>Mandarin</strong><span>Beginner</span></p>
+          <div class="contact" data-reveal>
+            <h3>Let’s discuss the product problem behind the roadmap.</h3>
+            <div>
+              <a class="button button-primary" href="mailto:lozpastor@gmail.com">Email me <span aria-hidden="true">→</span></a>
+              <a class="contact-link" href="https://www.linkedin.com/in/alejandro-lozano-pastor" target="_blank" rel="noreferrer">
+                LinkedIn <span aria-hidden="true">↗</span>
+              </a>
+              <a class="contact-link" href="/Alejandro-Lozano-Technical-Product-Manager-CV.pdf" download>
+                Download CV <span aria-hidden="true">↓</span>
+              </a>
+            </div>
           </div>
         </div>
-
-        <footer class="contact-strip">
-          <p>Build something the system can sustain.</p>
-          <div>
-            <a href="mailto:lozpastor@gmail.com">Email <span aria-hidden="true">↗</span></a>
-            <a href="https://www.linkedin.com/in/alejandro-lozano-pastor" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
-            <a href="/Alejandro-Lozano-Technical-Product-Manager-CV.pdf" download>Download CV <span aria-hidden="true">↓</span></a>
-          </div>
-        </footer>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <div class="shell">
+        <p>© <span data-current-year>2026</span> Alejandro Lozano · Barcelona</p>
+        <nav aria-label="Footer links">
+          <a href="https://github.com/lozpastor" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/alejandro-lozano-pastor" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="mailto:lozpastor@gmail.com">Email</a>
+        </nav>
+      </div>
+    </footer>
 
     <script type="module" src="/src/main.ts"></script>
   </body>
