@@ -49,6 +49,7 @@ export const initShootingStar = (): (() => void) => {
     nav?.querySelectorAll<HTMLAnchorElement>("[data-journey-link]") ?? [],
   );
   const hero = document.querySelector<HTMLElement>("#hero");
+  const heroTitle = document.querySelector<HTMLElement>("#hero-title");
   const contact = document.querySelector<HTMLElement>(".contact");
   const contactTitle = contact?.querySelector<HTMLElement>("[data-star-title]");
   const fallSvg = document.querySelector<SVGSVGElement>("[data-journey-fall]");
@@ -63,6 +64,7 @@ export const initShootingStar = (): (() => void) => {
     !progressLine ||
     links.length === 0 ||
     !hero ||
+    !heroTitle ||
     !contact ||
     !contactTitle ||
     !fallSvg ||
@@ -79,6 +81,7 @@ export const initShootingStar = (): (() => void) => {
   let frameId: number | null = null;
   let geometryDirty = true;
   let destroyed = false;
+  let launchStart = { x: 22, y: 150 };
 
   const readStops = (): JourneyStop[] =>
     links.flatMap((link) => {
@@ -106,6 +109,11 @@ export const initShootingStar = (): (() => void) => {
 
   const rebuildGeometry = (): void => {
     stops = readStops();
+    const titleRect = meaningfulTextRect(heroTitle);
+    launchStart = {
+      x: clamp(titleRect.left - 18, 22, window.innerWidth - 22),
+      y: titleRect.top + window.scrollY - 58,
+    };
     fallSvg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
     fallSvg.setAttribute("width", String(window.innerWidth));
     fallSvg.setAttribute("height", String(window.innerHeight));
@@ -159,21 +167,11 @@ export const initShootingStar = (): (() => void) => {
     });
   };
 
-  const renderFall = (progress: number): void => {
-    const starRect = star.getBoundingClientRect();
-    const titleRect = meaningfulTextRect(contactTitle);
-    const startX = starRect.left + starRect.width / 2;
-    const startY = starRect.top + starRect.height / 2;
-    const endX = Math.max(contact.getBoundingClientRect().left + 18, titleRect.left - 12);
-    const endY = titleRect.top + clamp(titleRect.height * 0.44, 24, 72);
-    const fallDistance = Math.max(80, endY - startY);
-    const pathData = [
-      `M ${startX.toFixed(2)} ${startY.toFixed(2)}`,
-      `C ${startX.toFixed(2)} ${(startY + fallDistance * 0.45).toFixed(2)},`,
-      `${(endX - 62).toFixed(2)} ${(endY - fallDistance * 0.34).toFixed(2)},`,
-      `${endX.toFixed(2)} ${endY.toFixed(2)}`,
-    ].join(" ");
-
+  const paintJourneyPath = (
+    pathData: string,
+    progress: number,
+    fadeStart: number,
+  ): void => {
     fallPath.setAttribute("d", pathData);
     fallTrail.setAttribute("d", pathData);
     const totalLength = Math.max(1, fallPath.getTotalLength());
@@ -190,10 +188,50 @@ export const initShootingStar = (): (() => void) => {
       `translate(${point.x.toFixed(2)} ${point.y.toFixed(2)})`,
     );
 
-    const arrivalFade = 1 - clamp((progress - 0.84) / 0.16);
+    const arrivalFade = 1 - clamp((progress - fadeStart) / (1 - fadeStart));
     fallStar.style.opacity = String(arrivalFade);
     fallPath.style.opacity = String(progress < 0.97 ? 1 : arrivalFade);
     fallTrail.style.opacity = String(progress < 0.97 ? 1 : arrivalFade);
+  };
+
+  const renderLaunch = (progress: number): void => {
+    const firstDotRect = stops[0].dot.getBoundingClientRect();
+    const startX = launchStart.x;
+    const startY = launchStart.y;
+    const endX = firstDotRect.left + firstDotRect.width / 2 + 12;
+    const endY = firstDotRect.top + firstDotRect.height / 2;
+    const fallDistance = Math.max(160, endY - startY);
+    const pathData = [
+      `M ${startX.toFixed(2)} ${startY.toFixed(2)}`,
+      `C ${(startX - 16).toFixed(2)} ${(startY + fallDistance * 0.38).toFixed(2)},`,
+      `${(endX + 24).toFixed(2)} ${(endY - fallDistance * 0.34).toFixed(2)},`,
+      `${endX.toFixed(2)} ${endY.toFixed(2)}`,
+    ].join(" ");
+
+    paintJourneyPath(pathData, progress, 0.88);
+  };
+
+  const renderFall = (progress: number): void => {
+    const starRect = star.getBoundingClientRect();
+    const titleRect = meaningfulTextRect(contactTitle);
+    const contactRect = contact.getBoundingClientRect();
+    const startX = starRect.left + starRect.width / 2;
+    const startY = starRect.top + starRect.height / 2;
+    const endX = contactRect.left + 1;
+    const endY = clamp(
+      titleRect.top + titleRect.height * 0.44,
+      contactRect.top + 30,
+      contactRect.bottom - 30,
+    );
+    const fallDistance = Math.max(80, endY - startY);
+    const pathData = [
+      `M ${startX.toFixed(2)} ${startY.toFixed(2)}`,
+      `C ${startX.toFixed(2)} ${(startY + fallDistance * 0.45).toFixed(2)},`,
+      `${(endX - 62).toFixed(2)} ${(endY - fallDistance * 0.34).toFixed(2)},`,
+      `${endX.toFixed(2)} ${endY.toFixed(2)}`,
+    ].join(" ");
+
+    paintJourneyPath(pathData, progress, 0.84);
   };
 
   const render = (): void => {
@@ -204,6 +242,9 @@ export const initShootingStar = (): (() => void) => {
 
     const navThreshold = hero.getBoundingClientRect().bottom + window.scrollY - 64;
     const navIsVisible = !compactScreen.matches && window.scrollY >= navThreshold;
+    const launchProgress = clamp(window.scrollY / Math.max(1, navThreshold));
+    const launchIsVisible =
+      !compactScreen.matches && !reducedMotion.matches && !navIsVisible;
     const position = journeyPosition();
     const departure = navIsVisible ? finalProgress() : 0;
     const firstMarker = stops[0].markerY;
@@ -224,18 +265,23 @@ export const initShootingStar = (): (() => void) => {
     );
     fallSvg.classList.toggle(
       "is-visible",
-      navIsVisible && departure > 0.01 && !reducedMotion.matches,
+      launchIsVisible ||
+        (navIsVisible && departure > 0.01 && !reducedMotion.matches),
     );
+    fallSvg.classList.toggle("is-launching", launchIsVisible);
+    fallSvg.classList.toggle("is-arriving", navIsVisible && departure > 0.01);
 
     setActiveStop(position.index, navIsVisible, departure);
 
-    if (departure > 0.01 && !reducedMotion.matches) {
+    if (launchIsVisible) {
+      renderLaunch(launchProgress);
+    } else if (departure > 0.01 && !reducedMotion.matches) {
       renderFall(departure);
     }
 
     const contactIsActive = departure > 0.78;
     contact.classList.toggle("is-star-active", contactIsActive);
-    contact.classList.toggle("is-star-invoked", departure >= 0.96);
+    contact.classList.toggle("is-star-invoked", departure >= 0.985);
   };
 
   const requestRender = (): void => {
@@ -298,7 +344,7 @@ export const initShootingStar = (): (() => void) => {
     );
     nav.inert = false;
     nav.removeAttribute("aria-hidden");
-    fallSvg.classList.remove("is-visible");
+    fallSvg.classList.remove("is-visible", "is-launching", "is-arriving");
     document.documentElement.classList.remove("star-ready");
   };
 };

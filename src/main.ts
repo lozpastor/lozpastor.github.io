@@ -230,21 +230,59 @@ const initReconciliation = () => {
     });
   };
 
+  const replayDelay = 3200;
   let progress = reducedMotion.matches ? 1 : 0;
-  let started = false;
+  let isVisible = false;
+  let frameId = 0;
+  let timerId = 0;
+  let cycle = 0;
   let startedAt = 0;
 
   const render = (time: number) => {
+    if (!isVisible) return;
     if (!startedAt) startedAt = time;
     progress = clamp((time - startedAt) / 1900);
     draw(progress);
-    if (progress < 1) window.requestAnimationFrame(render);
+    if (progress < 1) {
+      frameId = window.requestAnimationFrame(render);
+    } else {
+      scheduleReplay();
+    }
+  };
+
+  const clearCycle = () => {
+    window.cancelAnimationFrame(frameId);
+    window.clearTimeout(timerId);
+    frameId = 0;
+    timerId = 0;
+    figure.classList.remove("is-restarting");
   };
 
   const startAnimation = () => {
-    if (started || reducedMotion.matches) return;
-    started = true;
-    window.requestAnimationFrame(render);
+    if (!isVisible || reducedMotion.matches) return;
+    clearCycle();
+    cycle += 1;
+    figure.dataset.visualCycle = String(cycle);
+    progress = 0;
+    startedAt = 0;
+    draw(0);
+    frameId = window.requestAnimationFrame(render);
+  };
+
+  const scheduleReplay = () => {
+    if (!isVisible || reducedMotion.matches) return;
+    timerId = window.setTimeout(() => {
+      if (!isVisible) return;
+      figure.classList.add("is-restarting");
+      timerId = window.setTimeout(() => {
+        progress = 0;
+        draw(0);
+        timerId = window.setTimeout(() => {
+          figure.classList.remove("is-restarting");
+          startAnimation();
+        }, 380);
+      }, 460);
+    }, replayDelay);
   };
 
   const resizeObserver = new ResizeObserver(() => {
@@ -256,13 +294,22 @@ const initReconciliation = () => {
   draw(progress);
 
   if (reducedMotion.matches || !("IntersectionObserver" in window)) {
-    draw(1);
+    if (reducedMotion.matches) {
+      draw(1);
+    } else {
+      isVisible = true;
+      startAnimation();
+    }
   } else {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry?.isIntersecting) return;
-        observer.disconnect();
-        startAnimation();
+        if (!entry) return;
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          startAnimation();
+        } else {
+          clearCycle();
+        }
       },
       { rootMargin: "0px 0px -12% 0px", threshold: 0.32 },
     );
@@ -284,24 +331,68 @@ const initWorkVisuals = () => {
     if (output) output.textContent = `${runtime.toFixed(2)}×`;
   };
 
-  const animateVisual = (visual: HTMLElement) => {
+  type VisualLoop = {
+    visible: boolean;
+    frameId: number;
+    timerId: number;
+    cycle: number;
+  };
+
+  const loops = new Map<HTMLElement, VisualLoop>();
+  const replayDelay = 3200;
+
+  const clearLoop = (visual: HTMLElement, loop: VisualLoop) => {
+    window.cancelAnimationFrame(loop.frameId);
+    window.clearTimeout(loop.timerId);
+    loop.frameId = 0;
+    loop.timerId = 0;
+    visual.classList.remove("is-restarting");
+  };
+
+  const animateVisual = (visual: HTMLElement, loop: VisualLoop) => {
+    if (!loop.visible) return;
+    clearLoop(visual, loop);
+    loop.cycle += 1;
+    visual.dataset.visualCycle = String(loop.cycle);
+    updateVisual(visual, 0);
     let startedAt = 0;
+
     const render = (time: number) => {
+      if (!loop.visible) return;
       if (!startedAt) startedAt = time;
       const progress = clamp((time - startedAt) / 1450);
       updateVisual(visual, progress);
-      if (progress < 1) window.requestAnimationFrame(render);
+      if (progress < 1) {
+        loop.frameId = window.requestAnimationFrame(render);
+      } else {
+        loop.timerId = window.setTimeout(() => {
+          if (!loop.visible) return;
+          visual.classList.add("is-restarting");
+          loop.timerId = window.setTimeout(() => {
+            updateVisual(visual, 0);
+            loop.timerId = window.setTimeout(() => {
+              visual.classList.remove("is-restarting");
+              animateVisual(visual, loop);
+            }, 380);
+          }, 460);
+        }, replayDelay);
+      }
     };
-    window.requestAnimationFrame(render);
+    loop.frameId = window.requestAnimationFrame(render);
   };
 
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
         const visual = entry.target as HTMLElement;
-        observer.unobserve(visual);
-        animateVisual(visual);
+        const loop = loops.get(visual);
+        if (!loop) return;
+        loop.visible = entry.isIntersecting;
+        if (loop.visible) {
+          animateVisual(visual, loop);
+        } else {
+          clearLoop(visual, loop);
+        }
       });
     },
     { rootMargin: "0px 0px -12% 0px", threshold: 0.32 },
@@ -309,6 +400,7 @@ const initWorkVisuals = () => {
 
   visuals.forEach((visual) => {
     updateVisual(visual, 0);
+    loops.set(visual, { visible: false, frameId: 0, timerId: 0, cycle: 0 });
     observer.observe(visual);
   });
 };
