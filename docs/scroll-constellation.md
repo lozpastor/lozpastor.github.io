@@ -1,25 +1,40 @@
-﻿# Scroll constellation
+# Scroll constellation
 
-The scroll guide is implemented in `src/components/scroll-constellation.tsx`.
+The shooting star is a progressive enhancement implemented in
+`src/shooting-star.ts`. The page content never depends on it.
 
-- The component finds every element marked with `data-cosmic-section` and builds one responsive cubic Bézier SVG path through those sections.
-- Scroll updates only a target path length. A single `requestAnimationFrame` loop interpolates the star towards that target and updates SVG transforms and dash offsets. The loop stops when the star reaches its target and restarts on the next scroll input.
-- The permanent line uses `strokeDasharray` / `strokeDashoffset`, so it appears to be drawn as the star advances. A second short dash creates the temporary luminous trail.
-- The first user scroll triggers a one-second SVG launch flare at the origin. It runs once per page visit and is independent from the scroll-driven star, so reversing the scroll never replays it.
-- Before the first scroll, the same SVG star remains visible at the hero origin with a restrained idle glint. On scroll it becomes the moving comet; there is no visual swap between two different objects.
-- Geometry is recalculated only after layout changes, font loading or resize. Section proximity activates the `cosmic-active` title pulse.
-- A small magnetic pull is applied inside a 7.5% viewport radius around each section point, producing the subtle arrival deceleration without detaching the star from the user scroll.
-- With `prefers-reduced-motion`, the complete static line remains visible and the moving star and trail are removed.
+- The origin comes from the real first text box of `#hero-title`, measured with a
+  DOM `Range`. It therefore stays beside the first line when the type wraps.
+- A hidden exit waypoint moves the trajectory into the outer margin before the
+  video ends. Every later waypoint is derived from the left edge of its `.shell`,
+  so the path cannot cross readable content.
+- One document-height SVG path connects the hero and all elements marked with
+  `data-star-section`. Cubic Bézier controls keep the path monotonic in Y.
+- Scroll updates a target path length. One `requestAnimationFrame` loop eases the
+  star to that target, updates the SVG transform and stops when it arrives.
+- `strokeDashoffset` draws the permanent route. A separate short dash produces
+  the moving luminous trail. Returning upwards reverses the star while the route
+  already travelled remains visible.
+- The first scroll triggers the launch flare once. Proximity to a section adds a
+  short deceleration and briefly marks its `data-star-title`.
+- `ResizeObserver`, `document.fonts.ready` and viewport changes rebuild the
+  geometry after layout changes, including the Brief / Full case-study toggle.
+- Under `prefers-reduced-motion`, the route is static and the star, trail, flare
+  and title pulse are removed.
 
-## Main controls
+## Controls
 
-At the top of `scroll-constellation.tsx`:
+The main visual controls are deliberately local:
 
-- `DESKTOP_X` and `MOBILE_X`: horizontal route for the hero origin and every section stop, expressed as viewport percentages. Desktop stops stay between `1.8%` and `2.5%`, in the outer editorial margin immediately beside the section labels; mobile stops stay between `1.2%` and `2.2%`. This keeps the complete route outside readable content at every breakpoint. The hero origin remains at `29%` on desktop and `18%` on mobile.
-- `STAR_VIEWPORT_OFFSET`: where the star sits vertically in the viewport while scrolling. It is currently `0.66`; increasing it makes the star travel lower on screen.
-- `TRAIL_LENGTH`: length of the temporary tail in SVG units.
-- `GLOW_STRENGTH`: trail opacity.
+- Origin: `startOffset` and the Y offset inside `buildGeometry()`.
+- Route position: `railPosition()` and `sectionOuterGap`.
+- Curve softness: the `verticalDistance * 0.42` handle inside
+  `createBezierPath()`.
+- Follow speed: the `0.0105` exponential smoothing value in `renderFrame()`.
+- Stop resistance: `zone` and `resistance` in `applySectionMagnet()`.
+- Trail length: the `96–180` clamp used for `trailLength`.
+- Brightness and line weight: `.cosmic-*` rules and SVG gradients in
+  `src/index.css` and `source.html`.
 
-The launch flare size and brightness live in `.cosmic-launch-flare`, `@keyframes cosmic-launch` and the `launch-flare` radial gradient. The stationary shimmer is controlled by `.cosmic-star.is-idle` and `@keyframes idle-star-glint`; the travelling star appearance is controlled by `.cosmic-star-tail`, `.cosmic-star-tail-wide` and the `star-glow` filter.
-
-Add `data-cosmic-section` to any new section and `data-cosmic-title` to the element that should briefly illuminate when the star arrives. Keep the same number of route entries in `DESKTOP_X` / `MOBILE_X` as the hero origin plus section stops when you want full manual control of every curve.
+To add a stop, mark the section with `data-star-section` and its heading with
+`data-star-title`. No coordinate table needs updating.
