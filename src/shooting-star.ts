@@ -123,7 +123,7 @@ export const initShootingStar = (): (() => void) => {
   const setPathGeometry = (pathData: string): void => {
     basePath.setAttribute("d", pathData);
     progressPath.setAttribute("d", pathData);
-    trailPath.setAttribute("d", pathData);
+    trailPath.setAttribute("d", "");
   };
 
   const findLengthAtY = (targetY: number): number => {
@@ -233,8 +233,8 @@ export const initShootingStar = (): (() => void) => {
     basePath.style.strokeDasharray = `${totalLength}`;
     basePath.style.strokeDashoffset = "0";
     progressPath.style.strokeDasharray = `${totalLength}`;
-    const trailLength = clamp(totalLength * 0.018, 96, 180);
-    trailPath.style.strokeDasharray = `${trailLength} ${totalLength + 100}`;
+    trailPath.style.removeProperty("stroke-dasharray");
+    trailPath.style.removeProperty("stroke-dashoffset");
 
     sectionStops = stopsWithoutLengths.map((stop, index) => ({
       ...stop,
@@ -316,36 +316,11 @@ export const initShootingStar = (): (() => void) => {
     section.classList.add("is-star-active");
     title.classList.add("is-star-pulsing");
 
-    const animation = title.animate(
-      [
-        { filter: "brightness(1)", opacity: 1 },
-        {
-          filter: "brightness(1.18)",
-          opacity: 0.9,
-          offset: 0.34,
-        },
-        { filter: "brightness(1)", opacity: 1 },
-      ],
-      {
-        duration: 460,
-        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
-      },
-    );
-
-    titleAnimations.add(animation);
-    animation.addEventListener(
-      "finish",
-      () => {
-        titleAnimations.delete(animation);
-      },
-      { once: true },
-    );
-
     const timer = window.setTimeout(() => {
       section.classList.remove("is-star-active");
       title.classList.remove("is-star-pulsing");
       titleTimers.delete(timer);
-    }, 520);
+    }, 960);
     titleTimers.add(timer);
   };
 
@@ -375,25 +350,14 @@ export const initShootingStar = (): (() => void) => {
 
   function renderPaths(movement: number): void {
     const point = geometryPath.getPointAtLength(currentLength);
-    const tangentDistance = Math.min(2.5, Math.max(0.8, totalLength * 0.001));
-    const previousPoint = geometryPath.getPointAtLength(
-      clamp(currentLength - tangentDistance, 0, totalLength),
-    );
-    const nextPoint = geometryPath.getPointAtLength(
-      clamp(currentLength + tangentDistance, 0, totalLength),
-    );
-    const tangentAngle =
-      (Math.atan2(nextPoint.y - previousPoint.y, nextPoint.x - previousPoint.x) * 180) /
-      Math.PI;
 
     if (Math.abs(movement) > 0.01) {
       lastMovementDirection = movement > 0 ? 1 : -1;
     }
 
-    const cometAngle = tangentAngle + (lastMovementDirection < 0 ? 180 : 0);
     movingComet.setAttribute(
       "transform",
-      `translate(${point.x.toFixed(2)} ${point.y.toFixed(2)}) rotate(${cometAngle.toFixed(2)})`,
+      `translate(${point.x.toFixed(2)} ${point.y.toFixed(2)})`,
     );
 
     const permanentLength = reducedMotionQuery.matches
@@ -401,11 +365,23 @@ export const initShootingStar = (): (() => void) => {
       : Math.max(currentLength, totalLength * furthestLengthRatio);
     drawnPath.style.strokeDashoffset = `${Math.max(0, totalLength - permanentLength)}`;
 
-    const trailLength = clamp(totalLength * 0.018, 96, 180);
-    movingTrail.style.strokeDashoffset =
-      lastMovementDirection < 0
-        ? `${-currentLength}`
-        : `${trailLength - currentLength}`;
+    if (!hasLaunched || reducedMotionQuery.matches) {
+      movingTrail.setAttribute("d", "");
+    } else {
+      const trailLength = clamp(totalLength * 0.022, 120, 210);
+      const trailStart =
+        lastMovementDirection < 0
+          ? clamp(currentLength + trailLength, 0, totalLength)
+          : clamp(currentLength - trailLength, 0, totalLength);
+      const sampleCount = 18;
+      const trailData = Array.from({ length: sampleCount }, (_, index) => {
+        const ratio = index / (sampleCount - 1);
+        const length = trailStart + (currentLength - trailStart) * ratio;
+        const sample = geometryPath.getPointAtLength(length);
+        return `${index === 0 ? "M" : "L"} ${sample.x.toFixed(2)} ${sample.y.toFixed(2)}`;
+      }).join(" ");
+      movingTrail.setAttribute("d", trailData);
+    }
 
     updateSectionArrival();
   }

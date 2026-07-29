@@ -96,72 +96,38 @@ const initReveals = () => {
     .forEach((element) => observer.observe(element));
 };
 
-const initMetricCounters = () => {
-  const counters = Array.from(document.querySelectorAll<HTMLElement>("[data-count]"));
-  if (counters.length === 0 || reducedMotion.matches || !("IntersectionObserver" in window)) {
-    return;
-  }
-
-  const animate = (element: HTMLElement) => {
-    const target = Number(element.dataset.count ?? 0);
-    const suffix = element.dataset.suffix ?? "";
-    const duration = 720;
-    const start = performance.now();
-
-    const frame = (time: number) => {
-      const progress = clamp((time - start) / duration);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      element.textContent = `${Math.round(target * eased)}${suffix}`;
-      if (progress < 1) window.requestAnimationFrame(frame);
-    };
-
-    element.textContent = `0${suffix}`;
-    window.requestAnimationFrame(frame);
-  };
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const element = entry.target as HTMLElement;
-        animate(element);
-        observer.unobserve(element);
-      });
-    },
-    { threshold: 0.45 },
+const initCareerTrajectory = () => {
+  const trajectory = document.querySelector<HTMLElement>("[data-career-trajectory]");
+  const steps = Array.from(
+    trajectory?.querySelectorAll<HTMLElement>("[data-trajectory-step]") ?? [],
   );
+  if (!trajectory || steps.length === 0 || reducedMotion.matches) return;
 
-  counters.forEach((counter) => observer.observe(counter));
-};
+  trajectory.classList.add("is-scroll-driven");
+  let animationFrame = 0;
 
-const initDepthToggle = () => {
-  const work = document.querySelector<HTMLElement>(".work");
-  const briefButton = work?.querySelector<HTMLButtonElement>("[data-depth-brief]");
-  const fullButton = work?.querySelector<HTMLButtonElement>("[data-depth-full]");
-  const hint = work?.querySelector<HTMLElement>("[data-depth-hint]");
-  const details = Array.from(work?.querySelectorAll<HTMLElement>("[data-case-depth]") ?? []);
+  const render = () => {
+    animationFrame = 0;
+    const bounds = trajectory.getBoundingClientRect();
+    const travel = Math.max(window.innerHeight * 0.62, bounds.height * 0.72);
+    const progress = clamp((window.innerHeight * 0.84 - bounds.top) / travel);
 
-  if (!work || !briefButton || !fullButton || !hint || details.length === 0) return;
-
-  work.classList.add("has-depth-toggle");
-
-  const setMode = (brief: boolean) => {
-    work.classList.toggle("is-brief", brief);
-    briefButton.setAttribute("aria-pressed", String(brief));
-    fullButton.setAttribute("aria-pressed", String(!brief));
-    hint.textContent = brief
-      ? "Thirty seconds. Switch for the full breakdown."
-      : "Context, role and the decision behind each outcome.";
-
-    details.forEach((detail) => {
-      detail.setAttribute("aria-hidden", String(brief));
-      detail.inert = brief;
+    trajectory.style.setProperty("--trajectory-progress", progress.toFixed(4));
+    steps.forEach((step, index) => {
+      const start = index * 0.23;
+      const stepProgress = clamp((progress - start) / 0.3);
+      step.style.setProperty("--step-progress", stepProgress.toFixed(4));
     });
   };
 
-  briefButton.addEventListener("click", () => setMode(true));
-  fullButton.addEventListener("click", () => setMode(false));
-  setMode(true);
+  const requestRender = () => {
+    if (animationFrame) return;
+    animationFrame = window.requestAnimationFrame(render);
+  };
+
+  window.addEventListener("scroll", requestRender, { passive: true });
+  window.addEventListener("resize", requestRender, { passive: true });
+  requestRender();
 };
 
 type CanvasPoint = {
@@ -174,11 +140,10 @@ type CanvasPoint = {
 const initReconciliation = () => {
   const figure = document.querySelector<HTMLElement>("[data-reconcile]");
   const canvas = figure?.querySelector<HTMLCanvasElement>("[data-reconcile-canvas]");
-  const replay = figure?.querySelector<HTMLButtonElement>("[data-reconcile-replay]");
   const context = canvas?.getContext("2d");
   if (!figure || !canvas || !context) return;
 
-  const pointCount = 108;
+  const pointCount = 100;
   let points: CanvasPoint[] = [];
   let animationFrame = 0;
   let width = 1;
@@ -202,122 +167,93 @@ const initReconciliation = () => {
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const random = randomSequence();
-    const pad = Math.max(14, width * 0.025);
-    const usableWidth = width - pad * 2;
-    const usableHeight = height - pad * 2;
-    const blockGap = Math.max(8, width * 0.015);
-    const blockWidth = (usableWidth - blockGap * 2) / 3;
-    const blockHeight = (usableHeight - blockGap) / 2;
+    const pad = Math.max(18, width * 0.035);
+    const sourceWidth = width * 0.34;
+    const sourceHeight = height - pad * 2;
+    const targetLeft = width * 0.52;
+    const targetWidth = width - targetLeft - pad;
+    const gap = Math.max(10, width * 0.018);
+    const groupWidth = (targetWidth - gap * 2) / 3;
+    const groupHeight = (sourceHeight - gap) / 2;
 
     points = Array.from({ length: pointCount }, (_, index) => {
-      const column = index % 12;
-      const row = Math.floor(index / 12);
+      const column = index % 10;
+      const row = Math.floor(index / 10);
       const targetBlock = index % 6;
       const targetColumn = targetBlock % 3;
       const targetRow = Math.floor(targetBlock / 3);
-      const withinX = 0.14 + random() * 0.72;
-      const withinY = 0.18 + random() * 0.64;
+      const withinX = 0.18 + random() * 0.64;
+      const withinY = 0.2 + random() * 0.6;
 
       return {
-        fromX: pad + (column / 11) * usableWidth + (random() - 0.5) * 6,
-        fromY: pad + (row / 8) * usableHeight + (random() - 0.5) * 6,
-        toX: pad + targetColumn * (blockWidth + blockGap) + withinX * blockWidth,
-        toY: pad + targetRow * (blockHeight + blockGap) + withinY * blockHeight,
+        fromX: pad + (column / 9) * sourceWidth + (random() - 0.5) * 8,
+        fromY: pad + (row / 9) * sourceHeight + (random() - 0.5) * 8,
+        toX: targetLeft + targetColumn * (groupWidth + gap) + withinX * groupWidth,
+        toY: pad + targetRow * (groupHeight + gap) + withinY * groupHeight,
       };
     });
   };
 
   const draw = (progress: number) => {
     context.clearRect(0, 0, width, height);
-    context.strokeStyle = "rgba(126, 230, 209, 0.16)";
-    context.lineWidth = 1;
+    const pad = Math.max(18, width * 0.035);
+    const targetLeft = width * 0.52;
+    const targetWidth = width - targetLeft - pad;
+    const gap = Math.max(10, width * 0.018);
+    const groupWidth = (targetWidth - gap * 2) / 3;
+    const groupHeight = (height - pad * 2 - gap) / 2;
 
-    if (progress > 0.62) {
-      const blockProgress = clamp((progress - 0.62) / 0.38);
-      const pad = Math.max(14, width * 0.025);
-      const gap = Math.max(8, width * 0.015);
-      const blockWidth = (width - pad * 2 - gap * 2) / 3;
-      const blockHeight = (height - pad * 2 - gap) / 2;
-      context.globalAlpha = blockProgress;
+    if (progress > 0.48) {
+      const groupProgress = clamp((progress - 0.48) / 0.42);
+      context.strokeStyle = "rgba(126, 230, 209, 0.2)";
+      context.lineWidth = 1;
+      context.globalAlpha = groupProgress;
       for (let index = 0; index < 6; index += 1) {
         const column = index % 3;
         const row = Math.floor(index / 3);
-        context.strokeRect(
-          pad + column * (blockWidth + gap),
-          pad + row * (blockHeight + gap),
-          blockWidth,
-          blockHeight,
+        context.beginPath();
+        context.roundRect(
+          targetLeft + column * (groupWidth + gap),
+          pad + row * (groupHeight + gap),
+          groupWidth,
+          groupHeight,
+          5,
         );
+        context.stroke();
       }
       context.globalAlpha = 1;
     }
 
-    const eased = 1 - Math.pow(1 - progress, 3);
+    const eased = progress * progress * (3 - 2 * progress);
     points.forEach((point, index) => {
       const x = point.fromX + (point.toX - point.fromX) * eased;
       const y = point.fromY + (point.toY - point.fromY) * eased;
       context.beginPath();
       context.fillStyle =
-        index % 9 === 0 ? "rgba(242, 245, 243, 0.88)" : "rgba(126, 230, 209, 0.66)";
-      context.arc(x, y, index % 9 === 0 ? 1.75 : 1.15, 0, Math.PI * 2);
+        index % 10 === 0 ? "rgba(242, 245, 243, 0.94)" : "rgba(126, 230, 209, 0.72)";
+      context.arc(x, y, index % 10 === 0 ? 2.15 : 1.45, 0, Math.PI * 2);
       context.fill();
     });
   };
 
-  const play = () => {
-    window.cancelAnimationFrame(animationFrame);
-    const duration = reducedMotion.matches ? 0 : 920;
-    const start = performance.now();
-
-    const frame = (time: number) => {
-      const progress = duration === 0 ? 1 : clamp((time - start) / duration);
-      draw(progress);
-      if (progress < 1) animationFrame = window.requestAnimationFrame(frame);
-    };
-
-    animationFrame = window.requestAnimationFrame(frame);
+  const render = () => {
+    animationFrame = 0;
+    if (reducedMotion.matches) {
+      draw(1);
+      return;
+    }
+    const bounds = figure.getBoundingClientRect();
+    const travel = Math.max(window.innerHeight * 0.5, bounds.height * 0.72);
+    const progress = clamp((window.innerHeight * 0.82 - bounds.top) / travel);
+    draw(progress);
   };
 
   const resizeObserver = new ResizeObserver(() => {
     rebuild();
-    draw(1);
+    render();
   });
   resizeObserver.observe(canvas);
   rebuild();
-  draw(reducedMotion.matches ? 1 : 0);
-
-  if ("IntersectionObserver" in window && !reducedMotion.matches) {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) return;
-        play();
-        observer.disconnect();
-      },
-      { threshold: 0.35 },
-    );
-    observer.observe(figure);
-  } else {
-    draw(1);
-  }
-
-  replay?.addEventListener("click", play);
-};
-
-const initScrollScene = () => {
-  const scene = document.querySelector<HTMLElement>("[data-scroll-scene]");
-  if (!scene || reducedMotion.matches) return;
-
-  let animationFrame = 0;
-  const render = () => {
-    animationFrame = 0;
-    const bounds = scene.getBoundingClientRect();
-    if (bounds.bottom < -120 || bounds.top > window.innerHeight + 120) return;
-    const progress = clamp((window.innerHeight - bounds.top) / (window.innerHeight + bounds.height));
-    const reveal = clamp((progress - 0.05) / 0.72);
-    scene.style.setProperty("--scene-progress", reveal.toFixed(4));
-    scene.style.setProperty("--scene-inset", `${((1 - reveal) * 5).toFixed(2)}%`);
-    scene.style.setProperty("--scene-shift", `${((0.5 - progress) * 22).toFixed(2)}px`);
-  };
   const requestRender = () => {
     if (animationFrame) return;
     animationFrame = window.requestAnimationFrame(render);
@@ -351,6 +287,14 @@ const initDashboardEmbed = () => {
   let timeoutTimer: number | undefined;
   let loadObserver: IntersectionObserver | undefined;
   let started = false;
+
+  const syncDashboardScale = () => {
+    const scale = stage.clientWidth / 1440;
+    stage.style.setProperty("--dashboard-scale", scale.toFixed(5));
+  };
+  const stageObserver = new ResizeObserver(syncDashboardScale);
+  stageObserver.observe(stage);
+  syncDashboardScale();
 
   const clearTimers = () => {
     if (readinessTimer !== undefined) window.clearInterval(readinessTimer);
@@ -501,9 +445,7 @@ if (year) year.textContent = String(new Date().getFullYear());
 
 initHeroVideo();
 initReveals();
-initMetricCounters();
-initDepthToggle();
+initCareerTrajectory();
 initReconciliation();
-initScrollScene();
 initDashboardEmbed();
 initShootingStar();
