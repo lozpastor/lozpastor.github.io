@@ -589,6 +589,8 @@ const initAdoptEmbed = () => {
   const fallback = project?.querySelector<HTMLElement>("[data-project-fallback]");
   const fallbackCopy = project?.querySelector<HTMLElement>("[data-project-fallback-copy]");
   const status = project?.querySelector<HTMLElement>("[data-project-status]");
+  const interactionButton =
+    project?.querySelector<HTMLButtonElement>("[data-adopt-interact]");
   const fullscreenButton =
     project?.querySelector<HTMLButtonElement>("[data-dashboard-fullscreen]");
 
@@ -611,6 +613,7 @@ const initAdoptEmbed = () => {
   let timeoutTimer: number | undefined;
   let started = false;
   let isVisible = false;
+  let isInteractive = false;
   let panAnimation: Animation | null = null;
 
   const stopAutoScroll = () => {
@@ -625,6 +628,7 @@ const initAdoptEmbed = () => {
       !frame ||
       !mount.classList.contains("is-ready") ||
       !isVisible ||
+      isInteractive ||
       reducedMotion.matches ||
       compactViewport.matches
     ) {
@@ -638,17 +642,42 @@ const initAdoptEmbed = () => {
     panAnimation = mount.animate(
       [
         { transform: "translate3d(0, 0, 0)", offset: 0 },
-        { transform: "translate3d(0, 0, 0)", offset: 0.14 },
-        { transform: `translate3d(0, ${(-travel).toFixed(2)}px, 0)`, offset: 0.86 },
+        { transform: `translate3d(0, ${(-travel).toFixed(2)}px, 0)`, offset: 0.88 },
         { transform: `translate3d(0, ${(-travel).toFixed(2)}px, 0)`, offset: 1 },
       ],
       {
-        duration: 12_000,
+        delay: 1_000,
+        duration: 11_000,
         easing: "cubic-bezier(0.65, 0, 0.35, 1)",
         direction: "alternate",
         iterations: Number.POSITIVE_INFINITY,
       },
     );
+  };
+
+  const setInteractiveMode = (enabled: boolean) => {
+    if (!frame || enabled === isInteractive) return;
+    isInteractive = enabled;
+    stopAutoScroll();
+    project.classList.toggle("is-interactive", enabled);
+    stage.style.setProperty(
+      "--project-source-height",
+      `${enabled ? viewportHeight : contentHeight}px`,
+    );
+    interactionButton?.setAttribute("aria-pressed", String(enabled));
+
+    if (enabled) {
+      frame.removeAttribute("scrolling");
+      if (interactionButton) interactionButton.textContent = "Resume preview";
+      status.textContent =
+        "Interactive AdoptAI mode enabled. The automatic preview is paused.";
+      window.requestAnimationFrame(() => frame?.focus());
+    } else {
+      frame.setAttribute("scrolling", "no");
+      if (interactionButton) interactionButton.textContent = "Explore";
+      status.textContent = "Automatic AdoptAI preview resumed.";
+      window.requestAnimationFrame(syncAutoScroll);
+    }
   };
 
   const syncScale = () => {
@@ -683,6 +712,9 @@ const initAdoptEmbed = () => {
     loader.hidden = true;
     stage.setAttribute("aria-busy", "false");
     stopAutoScroll();
+    project.classList.remove("is-interactive");
+    isInteractive = false;
+    if (interactionButton) interactionButton.disabled = true;
     fallbackCopy.textContent = message;
     status.textContent = "Static AdoptAI preview shown. A direct link is available.";
   };
@@ -695,6 +727,10 @@ const initAdoptEmbed = () => {
     mount.classList.add("is-ready");
     stage.setAttribute("aria-busy", "false");
     frame.tabIndex = 0;
+    if (interactionButton) {
+      interactionButton.disabled = false;
+      interactionButton.setAttribute("aria-pressed", "false");
+    }
     status.textContent = "Live AdoptAI product loaded. The page preview scrolls automatically.";
     syncAutoScroll();
   };
@@ -763,6 +799,15 @@ const initAdoptEmbed = () => {
       window.requestAnimationFrame(syncAutoScroll);
     });
   }
+
+  interactionButton?.addEventListener("click", () => {
+    setInteractiveMode(!isInteractive);
+  });
+  window.addEventListener("blur", () => {
+    window.setTimeout(() => {
+      if (frame && document.activeElement === frame) setInteractiveMode(true);
+    }, 0);
+  });
 
   reducedMotion.addEventListener("change", syncAutoScroll);
   compactViewport.addEventListener("change", syncAutoScroll);

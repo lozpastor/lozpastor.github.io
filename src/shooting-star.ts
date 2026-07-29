@@ -171,6 +171,7 @@ export const initShootingStar = (): (() => void) => {
     pathData: string,
     progress: number,
     fadeStart: number,
+    visibilityProgress = progress,
   ): void => {
     fallPath.setAttribute("d", pathData);
     fallTrail.setAttribute("d", pathData);
@@ -188,21 +189,31 @@ export const initShootingStar = (): (() => void) => {
       `translate(${point.x.toFixed(2)} ${point.y.toFixed(2)})`,
     );
 
-    const arrivalFade = 1 - clamp((progress - fadeStart) / (1 - fadeStart));
+    const arrivalFade =
+      1 - clamp((visibilityProgress - fadeStart) / (1 - fadeStart));
     fallStar.style.opacity = String(arrivalFade);
-    fallPath.style.opacity = String(progress < 0.97 ? 1 : arrivalFade);
-    fallTrail.style.opacity = String(progress < 0.97 ? 1 : arrivalFade);
+    fallPath.style.opacity = String(
+      visibilityProgress < 0.97 ? 1 : arrivalFade,
+    );
+    fallTrail.style.opacity = String(
+      visibilityProgress < 0.97 ? 1 : arrivalFade,
+    );
   };
 
   const renderLaunch = (progress: number): void => {
-    const firstDotRect = stops[0].dot.getBoundingClientRect();
+    const panelStarRect = star.getBoundingClientRect();
+    const navTransform = new DOMMatrixReadOnly(
+      window.getComputedStyle(nav).transform,
+    );
     const startX = launchStart.x;
     const startY = launchStart.y;
-    const endX = firstDotRect.left + firstDotRect.width / 2 + 12;
+    const endX =
+      panelStarRect.left + panelStarRect.width / 2 - navTransform.m41;
     const heroEnd = hero.getBoundingClientRect().bottom + window.scrollY - 64;
-    const endY = heroEnd + firstDotRect.top + firstDotRect.height / 2;
+    const endY = heroEnd + panelStarRect.top + panelStarRect.height / 2;
     const fallDistance = Math.max(160, endY - startY);
     const launchHeight = Math.ceil(endY + 48);
+    const positionProgress = clamp(progress / 0.995);
     const pathData = [
       `M ${startX.toFixed(2)} ${startY.toFixed(2)}`,
       `C ${(startX - 16).toFixed(2)} ${(startY + fallDistance * 0.38).toFixed(2)},`,
@@ -214,7 +225,7 @@ export const initShootingStar = (): (() => void) => {
     fallSvg.setAttribute("width", String(window.innerWidth));
     fallSvg.setAttribute("height", String(launchHeight));
     fallSvg.style.setProperty("--journey-launch-height", `${launchHeight}px`);
-    paintJourneyPath(pathData, progress, 0.88);
+    paintJourneyPath(pathData, positionProgress, 0.985, progress);
   };
 
   const renderFall = (progress: number): void => {
@@ -254,6 +265,8 @@ export const initShootingStar = (): (() => void) => {
     const launchProgress = clamp(window.scrollY / Math.max(1, navThreshold));
     const launchIsVisible =
       !compactScreen.matches && !reducedMotion.matches && !navIsVisible;
+    const receptionProgress = clamp((launchProgress - 0.9) / 0.1);
+    const navIsReceiving = launchIsVisible && receptionProgress > 0;
     const position = journeyPosition();
     const departure = navIsVisible ? finalProgress() : 0;
     const firstMarker = stops[0].markerY;
@@ -264,7 +277,9 @@ export const initShootingStar = (): (() => void) => {
       `${Math.max(0, position.markerY - firstMarker).toFixed(2)}px`,
     );
     nav.style.setProperty("--departure-progress", departure.toFixed(4));
+    nav.style.setProperty("--arrival-progress", receptionProgress.toFixed(4));
     nav.classList.toggle("is-visible", navIsVisible);
+    nav.classList.toggle("is-receiving", navIsReceiving);
     nav.classList.toggle("is-departing", departure > 0.01);
     nav.classList.toggle("is-docked", departure >= 0.985);
     nav.inert = !navIsVisible || departure >= 0.985;
@@ -347,6 +362,7 @@ export const initShootingStar = (): (() => void) => {
     nav.classList.remove(
       "is-ready",
       "is-visible",
+      "is-receiving",
       "is-departing",
       "is-docked",
       "is-reduced-motion",

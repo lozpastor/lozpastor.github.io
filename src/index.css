@@ -1146,12 +1146,14 @@ main {
 }
 
 .project-scene + .project-scene {
+  margin-top: clamp(7rem, 12vw, 10rem);
   border-top: 1px solid var(--hairline);
 }
 
 .project-scene:first-of-type {
-  margin-top: clamp(8rem, 14vw, 12rem);
-  border-top: 1px solid var(--hairline);
+  min-height: 0;
+  margin-top: clamp(3rem, 5vw, 4.5rem);
+  border-top: 0;
 }
 
 .project-intro {
@@ -1312,6 +1314,10 @@ main {
   color: var(--telemetry);
 }
 
+.live-project__bar [data-adopt-interact][aria-pressed="true"] {
+  color: var(--telemetry);
+}
+
 .live-project__stage {
   position: relative;
   width: 100%;
@@ -1319,6 +1325,10 @@ main {
   aspect-ratio: var(--project-ratio, 36 / 25);
   overflow: hidden;
   background: #06141b;
+}
+
+.live-project--adopt.is-interactive .live-project__stage {
+  box-shadow: inset 0 0 0 1px rgba(126, 230, 209, 0.28);
 }
 
 .live-project:not(.live-project--adopt) .live-project__stage {
@@ -1673,6 +1683,55 @@ main {
   gap: 1.25rem;
 }
 
+.back-to-top {
+  width: max-content;
+  margin: clamp(3.5rem, 7vw, 6rem) auto 0;
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+  color: var(--faint);
+  font-family: var(--font-data);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 180ms ease;
+}
+
+.back-to-top span {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  color: var(--mist);
+  font-family: var(--font-editorial);
+  font-size: 1rem;
+  animation: return-cue 2.2s ease-in-out infinite;
+  transition:
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.back-to-top strong {
+  font: inherit;
+  font-weight: 400;
+}
+
+.back-to-top:hover,
+.back-to-top:focus-visible {
+  color: var(--telemetry);
+}
+
+.back-to-top:hover span,
+.back-to-top:focus-visible span {
+  animation: none;
+  border-color: rgba(126, 230, 209, 0.55);
+  color: var(--telemetry);
+  transform: translateY(-4px);
+}
+
 .site-footer {
   padding: 1.5rem 0;
   border-top: 1px solid var(--hairline);
@@ -1731,6 +1790,7 @@ main {
   --journey-star-y: 1.8rem;
   --journey-progress-height: 0px;
   --departure-progress: 0;
+  --arrival-progress: 0;
   position: fixed;
   top: 48%;
   left: clamp(0.5rem, 1vw, 1rem);
@@ -1746,6 +1806,16 @@ main {
   opacity: 1;
   pointer-events: auto;
   transform: translate3d(0, -50%, 0);
+}
+
+.journey-nav.is-receiving {
+  opacity: var(--arrival-progress);
+  pointer-events: none;
+  transform: translate3d(
+    calc((1 - var(--arrival-progress)) * -12px),
+    -50%,
+    0
+  );
 }
 
 .journey-nav.is-docked {
@@ -1977,6 +2047,16 @@ main {
   50% {
     opacity: 1;
     transform: translateY(5px);
+  }
+}
+
+@keyframes return-cue {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
   }
 }
 
@@ -2318,6 +2398,10 @@ main {
   }
 
   .project-scene:first-of-type {
+    margin-top: 3rem;
+  }
+
+  .project-scene + .project-scene {
     margin-top: 5rem;
   }
 
