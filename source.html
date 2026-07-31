@@ -153,12 +153,22 @@
         <a href="#build-log">Build log</a>
         <a href="#about">About</a>
       </nav>
-      <a
-        class="header-contact"
-        href="https://www.linkedin.com/messaging/compose/?recipient=alejandro-lozano-pastor-52437a251"
-        target="_blank"
-        rel="noreferrer"
-      >Let’s talk <span aria-hidden="true">↗</span></a>
+      <div class="header-actions">
+        <label class="language-control">
+          <span class="visually-hidden">Language</span>
+          <select data-language-switcher aria-label="Language">
+            <option value="en">EN</option>
+            <option value="es">ES</option>
+            <option value="zh">中文</option>
+          </select>
+        </label>
+        <a
+          class="header-contact"
+          href="https://www.linkedin.com/messaging/compose/?recipient=alejandro-lozano-pastor-52437a251"
+          target="_blank"
+          rel="noreferrer"
+        >Let’s talk <span aria-hidden="true">↗</span></a>
+      </div>
     </header>
 
     <main id="main-content">
@@ -281,11 +291,6 @@
 
               <figure class="case-visual reconcile" data-reconcile>
                 <canvas data-reconcile-canvas aria-hidden="true"></canvas>
-                <figcaption>
-                  <span><b>100+</b> recurring reports</span>
-                  <span aria-hidden="true">→</span>
-                  <span><b>6</b> governed dashboards</span>
-                </figcaption>
               </figure>
 
               <div class="case__depth" data-case-depth>
@@ -381,11 +386,15 @@
                 aria-label="Product management connecting business, technology, operations and compliance"
               >
                 <svg viewBox="0 0 640 360" aria-hidden="true">
-                  <path pathLength="1" d="M320 180 C230 180 215 82 122 82" />
-                  <path pathLength="1" d="M320 180 C410 180 425 82 518 82" />
-                  <path pathLength="1" d="M320 180 C230 180 215 278 122 278" />
-                  <path pathLength="1" d="M320 180 C410 180 425 278 518 278" />
+                  <path class="collaboration-visual__route" pathLength="1" d="M320 180 C230 180 215 82 122 82" />
+                  <path class="collaboration-visual__route" pathLength="1" d="M320 180 C410 180 425 82 518 82" />
+                  <path class="collaboration-visual__route" pathLength="1" d="M320 180 C230 180 215 278 122 278" />
+                  <path class="collaboration-visual__route" pathLength="1" d="M320 180 C410 180 425 278 518 278" />
                 </svg>
+                <i class="collaboration-visual__signal collaboration-visual__signal--business" aria-hidden="true"></i>
+                <i class="collaboration-visual__signal collaboration-visual__signal--technology" aria-hidden="true"></i>
+                <i class="collaboration-visual__signal collaboration-visual__signal--operations" aria-hidden="true"></i>
+                <i class="collaboration-visual__signal collaboration-visual__signal--compliance" aria-hidden="true"></i>
                 <div class="collaboration-visual__core">
                   <span>Product</span>
                   <strong>Release decision</strong>

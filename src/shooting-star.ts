@@ -82,6 +82,11 @@ export const initShootingStar = (): (() => void) => {
   let geometryDirty = true;
   let destroyed = false;
   let launchStart = { x: 22, y: 150 };
+  let journeyHasEnteredNav = false;
+  let activePathMode: "launch" | "arrival" | "idle" = "idle";
+  let suppressArrival = false;
+  let previousScrollY = window.scrollY;
+  let previousScrollTime = performance.now();
 
   const readStops = (): JourneyStop[] =>
     links.flatMap((link) => {
@@ -200,6 +205,14 @@ export const initShootingStar = (): (() => void) => {
     );
   };
 
+  const clearJourneyPath = (): void => {
+    fallPath.removeAttribute("d");
+    fallTrail.removeAttribute("d");
+    fallPath.style.opacity = "0";
+    fallTrail.style.opacity = "0";
+    fallStar.style.opacity = "0";
+  };
+
   const renderLaunch = (progress: number): void => {
     const panelStarRect = star.getBoundingClientRect();
     const navTransform = new DOMMatrixReadOnly(
@@ -268,8 +281,27 @@ export const initShootingStar = (): (() => void) => {
     const receptionProgress = clamp((launchProgress - 0.9) / 0.1);
     const navIsReceiving = launchIsVisible && receptionProgress > 0;
     const position = journeyPosition();
-    const departure = navIsVisible ? finalProgress() : 0;
+    const rawDeparture = navIsVisible ? finalProgress() : 0;
+    if (!navIsVisible) {
+      journeyHasEnteredNav = false;
+      suppressArrival = false;
+    }
+    if (navIsVisible && rawDeparture <= 0.01) {
+      journeyHasEnteredNav = true;
+      suppressArrival = false;
+    }
+    const departure = journeyHasEnteredNav ? rawDeparture : 0;
+    const nextPathMode: "launch" | "arrival" | "idle" = launchIsVisible
+      ? "launch"
+      : navIsVisible && departure > 0.01 && !suppressArrival && !reducedMotion.matches
+        ? "arrival"
+        : "idle";
     const firstMarker = stops[0].markerY;
+
+    if (nextPathMode !== activePathMode) {
+      clearJourneyPath();
+      activePathMode = nextPathMode;
+    }
 
     nav.style.setProperty("--journey-star-y", `${position.markerY.toFixed(2)}px`);
     nav.style.setProperty(
@@ -287,20 +319,18 @@ export const initShootingStar = (): (() => void) => {
       "aria-hidden",
       !navIsVisible || departure >= 0.985 ? "true" : "false",
     );
-    fallSvg.classList.toggle(
-      "is-visible",
-      launchIsVisible ||
-        (navIsVisible && departure > 0.01 && !reducedMotion.matches),
-    );
+    fallSvg.classList.toggle("is-visible", nextPathMode !== "idle");
     fallSvg.classList.toggle("is-launching", launchIsVisible);
-    fallSvg.classList.toggle("is-arriving", navIsVisible && departure > 0.01);
+    fallSvg.classList.toggle("is-arriving", nextPathMode === "arrival");
 
     setActiveStop(position.index, navIsVisible, departure);
 
     if (launchIsVisible) {
       renderLaunch(launchProgress);
-    } else if (departure > 0.01 && !reducedMotion.matches) {
+    } else if (nextPathMode === "arrival") {
       renderFall(departure);
+    } else {
+      clearJourneyPath();
     }
 
     const contactIsActive = departure > 0.78;
@@ -312,6 +342,23 @@ export const initShootingStar = (): (() => void) => {
     if (frameId === null && !destroyed) {
       frameId = window.requestAnimationFrame(render);
     }
+  };
+
+  const onScroll = (): void => {
+    const now = performance.now();
+    const delta = window.scrollY - previousScrollY;
+    const elapsed = Math.max(8, now - previousScrollTime);
+    const speed = Math.abs(delta) / elapsed;
+    if (
+      delta > 0 &&
+      (speed > 3.2 || delta > window.innerHeight * 0.48)
+    ) {
+      suppressArrival = true;
+    }
+    if (delta < 0) suppressArrival = false;
+    previousScrollY = window.scrollY;
+    previousScrollTime = now;
+    requestRender();
   };
 
   const markGeometryDirty = (): void => {
@@ -334,7 +381,7 @@ export const initShootingStar = (): (() => void) => {
     if (section) resizeObserver.observe(section);
   });
 
-  window.addEventListener("scroll", requestRender, { passive: true });
+  window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", markGeometryDirty, { passive: true });
   reducedMotion.addEventListener("change", onMotionPreference);
   compactScreen.addEventListener("change", markGeometryDirty);
@@ -349,7 +396,7 @@ export const initShootingStar = (): (() => void) => {
     destroyed = true;
     if (frameId !== null) window.cancelAnimationFrame(frameId);
     resizeObserver.disconnect();
-    window.removeEventListener("scroll", requestRender);
+    window.removeEventListener("scroll", onScroll);
     window.removeEventListener("resize", markGeometryDirty);
     reducedMotion.removeEventListener("change", onMotionPreference);
     compactScreen.removeEventListener("change", markGeometryDirty);

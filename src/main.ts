@@ -1,4 +1,5 @@
 import "./index.css";
+import { initI18n } from "./i18n";
 import { initShootingStar } from "./shooting-star";
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -318,7 +319,9 @@ const initReconciliation = () => {
 };
 
 const initWorkVisuals = () => {
-  const visuals = Array.from(document.querySelectorAll<HTMLElement>("[data-work-visual]"));
+  const visuals = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-work-visual]:not([data-collaboration-visual])"),
+  );
   if (visuals.length === 0 || reducedMotion.matches) return;
 
   const updateVisual = (visual: HTMLElement, progress: number) => {
@@ -403,6 +406,40 @@ const initWorkVisuals = () => {
     loops.set(visual, { visible: false, frameId: 0, timerId: 0, cycle: 0 });
     observer.observe(visual);
   });
+};
+
+const initCollaborationVisual = () => {
+  const visual = document.querySelector<HTMLElement>("[data-collaboration-visual]");
+  if (!visual) return;
+
+  if (reducedMotion.matches || !("IntersectionObserver" in window)) {
+    visual.style.setProperty("--visual-progress", "1");
+    return;
+  }
+
+  visual.style.setProperty("--visual-progress", "0");
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (!entry?.isIntersecting) return;
+      observer.disconnect();
+      let startedAt = 0;
+
+      const render = (time: number) => {
+        if (!startedAt) startedAt = time;
+        const progress = clamp((time - startedAt) / 1450);
+        visual.style.setProperty("--visual-progress", progress.toFixed(4));
+        if (progress < 1) {
+          window.requestAnimationFrame(render);
+        } else {
+          visual.classList.add("is-live");
+        }
+      };
+
+      window.requestAnimationFrame(render);
+    },
+    { rootMargin: "0px 0px -12% 0px", threshold: 0.32 },
+  );
+  observer.observe(visual);
 };
 
 const initDashboardEmbed = () => {
@@ -959,11 +996,13 @@ const initContactInteraction = () => {
 const year = document.querySelector<HTMLElement>("[data-current-year]");
 if (year) year.textContent = String(new Date().getFullYear());
 
+initI18n();
 initHeroVideo();
 initReveals();
 initCareerTrajectory();
 initReconciliation();
 initWorkVisuals();
+initCollaborationVisual();
 initDashboardEmbed();
 initAdoptEmbed();
 initContactInteraction();
