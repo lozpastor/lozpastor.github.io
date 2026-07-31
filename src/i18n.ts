@@ -1,4 +1,8 @@
-type Locale = "en" | "es" | "zh";
+import { extraTranslations, type ExtraLocale } from "./i18n-extra";
+import { deTranslations } from "./i18n-de";
+import { reviewedOverrides } from "./i18n-overrides";
+
+type Locale = "en" | "es" | "zh" | ExtraLocale;
 type Translation = { es: string; zh: string };
 
 const copy: Record<string, Translation> = {
@@ -168,6 +172,39 @@ const copy: Record<string, Translation> = {
 };
 
 const normalise = (value: string) => value.replace(/\s+/g, " ").trim();
+const extraTranslationIndex = new Map(
+  Object.keys(copy).map((key, index) => [key, index]),
+);
+const supportedLocales = new Set<Locale>([
+  "en", "es", "ca", "fr", "de", "it", "pt", "zh", "ja", "ko",
+]);
+const htmlLocales: Record<Locale, string> = {
+  en: "en",
+  es: "es",
+  ca: "ca",
+  fr: "fr",
+  de: "de",
+  it: "it",
+  pt: "pt",
+  zh: "zh-CN",
+  ja: "ja",
+  ko: "ko",
+};
+const openGraphLocales: Record<Locale, string> = {
+  en: "en_US",
+  es: "es_ES",
+  ca: "ca_ES",
+  fr: "fr_FR",
+  de: "de_DE",
+  it: "it_IT",
+  pt: "pt_PT",
+  zh: "zh_CN",
+  ja: "ja_JP",
+  ko: "ko_KR",
+};
+
+const isExtraLocale = (value: Locale): value is ExtraLocale =>
+  value !== "en" && value !== "es" && value !== "zh";
 
 export const initI18n = () => {
   const selector = document.querySelector<HTMLSelectElement>("[data-language-switcher]");
@@ -182,12 +219,23 @@ export const initI18n = () => {
 
   try {
     const stored = window.localStorage.getItem("portfolio-language");
-    if (stored === "es" || stored === "zh") locale = stored;
+    if (stored && supportedLocales.has(stored as Locale)) locale = stored as Locale;
   } catch {
     // Storage can be unavailable in private browsing; English remains the safe default.
   }
 
-  const translatedValue = (key: string) => (locale === "en" ? key : copy[key]?.[locale] ?? key);
+  const translatedValue = (key: string) => {
+    if (locale === "en") return key;
+    if (locale === "es" || locale === "zh") return copy[key]?.[locale] ?? key;
+    if (isExtraLocale(locale)) {
+      const reviewed = reviewedOverrides[locale][key];
+      if (reviewed) return reviewed;
+      const index = extraTranslationIndex.get(key);
+      if (index === undefined) return key;
+      return (locale === "de" ? deTranslations[index] : extraTranslations[locale][index]) ?? key;
+    }
+    return key;
+  };
 
   const bindText = (node: Text) => {
     if (knownTextNodes.has(node)) return;
@@ -244,7 +292,7 @@ export const initI18n = () => {
 
   const applyLocale = (nextLocale: Locale) => {
     locale = nextLocale;
-    document.documentElement.lang = locale === "zh" ? "zh-CN" : locale;
+    document.documentElement.lang = htmlLocales[locale];
     selector.value = locale;
     textBindings.forEach(({ node, key, leading, trailing }) => {
       const value = translatedValue(key);
@@ -254,7 +302,7 @@ export const initI18n = () => {
       element.setAttribute(name, translatedValue(key));
     });
     const ogLocale = document.querySelector<HTMLMetaElement>('meta[property="og:locale"]');
-    if (ogLocale) ogLocale.content = locale === "es" ? "es_ES" : locale === "zh" ? "zh_CN" : "en_US";
+    if (ogLocale) ogLocale.content = openGraphLocales[locale];
     try {
       window.localStorage.setItem("portfolio-language", locale);
     } catch {
@@ -279,9 +327,7 @@ export const initI18n = () => {
   observer.observe(document.documentElement, { childList: true, subtree: true });
 
   selector.addEventListener("change", () => {
-    const nextLocale = selector.value;
-    if (nextLocale === "en" || nextLocale === "es" || nextLocale === "zh") {
-      applyLocale(nextLocale);
-    }
+    const nextLocale = selector.value as Locale;
+    if (supportedLocales.has(nextLocale)) applyLocale(nextLocale);
   });
 };

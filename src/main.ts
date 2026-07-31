@@ -6,6 +6,26 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const clamp = (value: number, minimum = 0, maximum = 1) =>
   Math.min(maximum, Math.max(minimum, value));
 
+const initPersistentHeader = () => {
+  const header = document.querySelector<HTMLElement>("#site-header");
+  const hero = document.querySelector<HTMLElement>("#hero");
+  if (!header || !hero) return;
+
+  let frameId = 0;
+  const render = () => {
+    frameId = 0;
+    const hasLeftHero = hero.getBoundingClientRect().bottom <= header.offsetHeight;
+    header.classList.toggle("is-scrolled", hasLeftHero);
+  };
+  const requestRender = () => {
+    if (!frameId) frameId = window.requestAnimationFrame(render);
+  };
+
+  window.addEventListener("scroll", requestRender, { passive: true });
+  window.addEventListener("resize", requestRender, { passive: true });
+  render();
+};
+
 const initHeroVideo = () => {
   const video = document.querySelector<HTMLVideoElement>(".hero-video");
   const source = video?.querySelector<HTMLSourceElement>("source[data-src]");
@@ -997,6 +1017,7 @@ const year = document.querySelector<HTMLElement>("[data-current-year]");
 if (year) year.textContent = String(new Date().getFullYear());
 
 initI18n();
+initPersistentHeader();
 initHeroVideo();
 initReveals();
 initCareerTrajectory();
